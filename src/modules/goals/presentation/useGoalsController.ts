@@ -8,9 +8,11 @@ import { DeleteGoalUseCase } from "../application/DeleteGoalUseCase";
 import { GetGoalsUseCase } from "../application/GetGoalsUseCase";
 import { LocalStorageGoalRepository } from "../infrastructure/LocalStorageGoalRepository";
 import { GoalRepositoryPort } from "../domain/GoalRepositoryPort";
+import { InMemoryEventBus, inMemoryEventBus as defaultEventBus } from "@/shared/infrastructure/InMemoryEventBus";
 
 export interface UseGoalsControllerProps {
   repository?: GoalRepositoryPort;
+  eventBus?: InMemoryEventBus;
   enabled?: boolean;
 }
 
@@ -19,9 +21,10 @@ export function useGoalsController(props?: UseGoalsControllerProps) {
     () => props?.repository || new LocalStorageGoalRepository(),
     [props?.repository]
   );
+  const eventBus = props?.eventBus || defaultEventBus;
 
   const getGoalsUseCase = useMemo(() => new GetGoalsUseCase(repository), [repository]);
-  const createGoalUseCase = useMemo(() => new CreateGoalUseCase(repository), [repository]);
+  const createGoalUseCase = useMemo(() => new CreateGoalUseCase(repository, eventBus), [repository, eventBus]);
   const updateGoalUseCase = useMemo(() => new UpdateGoalUseCase(repository), [repository]);
   const deleteGoalUseCase = useMemo(() => new DeleteGoalUseCase(repository), [repository]);
 

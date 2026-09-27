@@ -35,14 +35,17 @@ export interface BackupController {
   clearMessages: () => void;
 }
 
+const defaultBackupRepository = new LocalStorageBackupRepository();
+
 export function useBackupController(
   options: UseBackupControllerOptions = {}
 ): BackupController {
-  const {
-    repository = new LocalStorageBackupRepository(),
-    eventBus = defaultEventBus,
-    downloader = defaultDownloader,
-  } = options;
+  const repository = useMemo(
+    () => options.repository || defaultBackupRepository,
+    [options.repository]
+  );
+  const eventBus = options.eventBus || defaultEventBus;
+  const downloader = options.downloader || defaultDownloader;
 
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [isImporting, setIsImporting] = useState<boolean>(false);

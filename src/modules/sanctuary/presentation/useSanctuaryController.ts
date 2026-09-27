@@ -35,15 +35,18 @@ export interface SanctuaryController {
   refreshActions: () => Promise<void>;
 }
 
+const defaultSanctuaryRepository = new LocalStorageSanctuaryRepository();
+
 export function useSanctuaryController(
   options: UseSanctuaryControllerOptions = {}
 ): SanctuaryController {
-  const {
-    repository = new LocalStorageSanctuaryRepository(),
-    eventBus = defaultEventBus,
-    webAudioService = defaultWebAudioService,
-    autoLoad = true,
-  } = options;
+  const repository = useMemo(
+    () => options.repository || defaultSanctuaryRepository,
+    [options.repository]
+  );
+  const eventBus = options.eventBus || defaultEventBus;
+  const webAudioService = options.webAudioService || defaultWebAudioService;
+  const autoLoad = options.autoLoad !== false;
 
   const [actions, setActions] = useState<MicroAction[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);

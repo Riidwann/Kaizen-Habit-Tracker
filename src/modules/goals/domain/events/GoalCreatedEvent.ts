@@ -6,6 +6,8 @@ export interface GoalCreatedPayload {
   title: string;
   category: GoalCategory;
   whyText: string;
+  microAction?: string;
+  scaleDownFallback?: string;
 }
 
 export class GoalCreatedEvent implements DomainEvent {

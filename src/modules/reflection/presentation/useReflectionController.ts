@@ -49,15 +49,18 @@ const defaultStats: ConsistencyStats = {
   percentageGain: 0,
 };
 
+const defaultReflectionRepository = new LocalStorageReflectionRepository();
+
 export function useReflectionController(
   options: UseReflectionControllerOptions = {}
 ): ReflectionController {
-  const {
-    repository = new LocalStorageReflectionRepository(),
-    eventBus = defaultEventBus,
-    autoLoad = true,
-    referenceDate,
-  } = options;
+  const repository = useMemo(
+    () => options.repository || defaultReflectionRepository,
+    [options.repository]
+  );
+  const eventBus = options.eventBus || defaultEventBus;
+  const autoLoad = options.autoLoad !== false;
+  const referenceDate = options.referenceDate;
 
   const [stats, setStats] = useState<ConsistencyStats>(defaultStats);
   const [reflections, setReflections] = useState<HanseiReflection[]>([]);

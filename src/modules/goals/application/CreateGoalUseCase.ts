@@ -69,6 +69,8 @@ export class CreateGoalUseCase {
           title: goal.title,
           category: goal.category,
           whyText: whyStatement.whyText,
+          microAction: goal.microAction,
+          scaleDownFallback: goal.scaleDownFallback,
         })
       );
     }
