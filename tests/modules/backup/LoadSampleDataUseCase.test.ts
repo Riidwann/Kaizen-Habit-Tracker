@@ -66,8 +66,8 @@ describe("LoadSampleDataUseCase", () => {
     expect(mockRepo.restoreSnapshot).toHaveBeenCalledTimes(1);
 
     expect(publishedEvent).not.toBeNull();
-    expect(publishedEvent?.payload.source).toBe("sample_data");
-    expect(publishedEvent?.payload.goalCount).toBe(3);
-    expect(publishedEvent?.payload.microActionCount).toBe(3);
+    expect((publishedEvent as any)?.payload.source).toBe("sample_data");
+    expect((publishedEvent as any)?.payload.goalCount).toBe(3);
+    expect((publishedEvent as any)?.payload.microActionCount).toBe(3);
   });
 });

@@ -76,9 +76,9 @@ describe("Export and Import Backup Use Cases", () => {
       expect(mockRepo.getSnapshot).toHaveBeenCalledTimes(1);
 
       expect(publishedEvent).not.toBeNull();
-      expect(publishedEvent?.payload.goalCount).toBe(1);
-      expect(publishedEvent?.payload.microActionCount).toBe(1);
-      expect(publishedEvent?.payload.hanseiCount).toBe(1);
+      expect((publishedEvent as any)?.payload.goalCount).toBe(1);
+      expect((publishedEvent as any)?.payload.microActionCount).toBe(1);
+      expect((publishedEvent as any)?.payload.hanseiCount).toBe(1);
     });
 
     it("returns error if repository fails to get snapshot", async () => {
@@ -110,8 +110,8 @@ describe("Export and Import Backup Use Cases", () => {
       expect(mockRepo.restoreSnapshot).toHaveBeenCalledWith(sampleSnapshot);
 
       expect(publishedEvent).not.toBeNull();
-      expect(publishedEvent?.payload.source).toBe("import");
-      expect(publishedEvent?.payload.goalCount).toBe(1);
+      expect((publishedEvent as any)?.payload.source).toBe("import");
+      expect((publishedEvent as any)?.payload.goalCount).toBe(1);
     });
 
     it("rejects invalid JSON string without calling repository", async () => {

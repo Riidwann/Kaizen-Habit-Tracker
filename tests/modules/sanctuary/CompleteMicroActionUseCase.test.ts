@@ -56,7 +56,7 @@ describe("Sanctuary Application Use Cases", () => {
       expect(publishSpy).toHaveBeenCalled();
       const publishedEvent = publishSpy.mock.calls[0][0];
       expect(publishedEvent.eventName).toBe("MicroActionCompleted");
-      expect(publishedEvent.payload.microActionId).toBe("act-1");
+      expect((publishedEvent as any).payload.microActionId).toBe("act-1");
     });
 
     it("should return error if action is not found", async () => {
@@ -84,8 +84,8 @@ describe("Sanctuary Application Use Cases", () => {
       expect(publishSpy).toHaveBeenCalled();
       const event = publishSpy.mock.calls[0][0];
       expect(event.eventName).toBe("EmergencyScaleDownTriggered");
-      expect(event.payload.microActionId).toBe("act-1");
-      expect(event.payload.scaleDownTitle).toBe("Read 1 type definition");
+      expect((event as any).payload.microActionId).toBe("act-1");
+      expect((event as any).payload.scaleDownTitle).toBe("Read 1 type definition");
     });
 
     it("should return error if action to scale down is not found", async () => {

@@ -110,7 +110,7 @@ export function useSanctuaryController(
           }
           setActions((prev) => prev.map((a) => (a.id === id ? updated : a)));
         } else {
-          setError(result.getError());
+          setError(result.getError() || "Gagal menyelesaikan tindakan mikro");
         }
       } else {
         target.uncomplete();
@@ -128,7 +128,7 @@ export function useSanctuaryController(
         const updated = result.unwrap();
         setActions((prev) => prev.map((a) => (a.id === id ? updated : a)));
       } else {
-        setError(result.getError());
+        setError(result.getError() || "Gagal mengubah mode darurat");
       }
     },
     [scaleDownUseCase]
@@ -159,7 +159,7 @@ export function useSanctuaryController(
         await refreshActions();
         return true;
       } else {
-        setError(res.getError());
+        setError(res.getError() || "Gagal membuat tindakan mikro");
         return false;
       }
     },

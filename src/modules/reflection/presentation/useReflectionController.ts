@@ -176,7 +176,7 @@ export function useReflectionController(
           await Promise.all([refreshStats(), refreshReflections()]);
           closeHanseiModal();
         } else {
-          setError(result.getError());
+          setError(result.getError() || "Gagal menyimpan refleksi");
         }
         return result;
       } catch (err) {

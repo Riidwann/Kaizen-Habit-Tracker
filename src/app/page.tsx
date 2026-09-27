@@ -347,7 +347,9 @@ export default function HomePage() {
       <HanseiModal
         isOpen={reflectionController.isHanseiModalOpen}
         onClose={reflectionController.closeHanseiModal}
-        onSubmit={reflectionController.recordHansei}
+        onSubmit={async (data) => {
+          await reflectionController.recordHansei(data);
+        }}
         isSubmitting={reflectionController.isSubmitting}
       />
 

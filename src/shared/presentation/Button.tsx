@@ -3,7 +3,7 @@ import { motion, HTMLMotionProps } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { cn } from "./utils";
 
-export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "emergency";
+export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "emergency" | "danger" | "sage";
 export type ButtonSize = "sm" | "md" | "lg";
 
 export interface ButtonProps
@@ -19,6 +19,8 @@ export interface ButtonProps
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
     "bg-sage-600 text-white hover:bg-sage-700 active:bg-sage-800 shadow-sm focus-visible:ring-sage-500",
+  sage:
+    "bg-sage-600 text-white hover:bg-sage-700 active:bg-sage-800 shadow-sm focus-visible:ring-sage-500",
   secondary:
     "bg-sand-200 text-charcoal-800 hover:bg-sand-300 dark:bg-charcoal-800 dark:text-sand-100 dark:hover:bg-charcoal-700 shadow-xs focus-visible:ring-sand-400",
   outline:
@@ -27,6 +29,8 @@ const variantStyles: Record<ButtonVariant, string> = {
     "bg-transparent text-charcoal-700 dark:text-sand-200 hover:bg-sand-100/80 dark:hover:bg-charcoal-800/80 focus-visible:ring-sand-400",
   emergency:
     "bg-amber-600 text-white hover:bg-amber-700 active:bg-amber-800 shadow-sm focus-visible:ring-amber-500",
+  danger:
+    "bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 shadow-sm focus-visible:ring-rose-500",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
