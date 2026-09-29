@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/Header";
 import { TabNavigation, TabId } from "@/components/layout/TabNavigation";
 import { Footer } from "@/components/layout/Footer";
 import { KaizenGuideModal } from "@/components/layout/KaizenGuideModal";
+import { usePwaInstall } from "@/hooks/usePwaInstall";
 
 // Module Controllers & Views
 import {
@@ -54,6 +55,7 @@ export default function HomePage() {
   const sanctuaryController = useSanctuaryController();
   const reflectionController = useReflectionController();
   const backupController = useBackupController();
+  const { isInstallable, promptInstall } = usePwaInstall();
 
   const sanctuaryRef = useRef(sanctuaryController);
   sanctuaryRef.current = sanctuaryController;
@@ -142,6 +144,8 @@ export default function HomePage() {
         onOpenBackup={() => setIsBackupModalOpen(true)}
         onOpenGuide={() => setIsGuideModalOpen(true)}
         onLoadSample={handleLoadSample}
+        onInstallPwa={promptInstall}
+        canInstallPwa={isInstallable}
       />
 
       {/* 2. Responsive Tab Navigation (Top on desktop, fixed bottom on mobile) */}

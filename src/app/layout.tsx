@@ -5,8 +5,15 @@ export const metadata: Metadata = {
   title: "KaizenFlow - 1% Better Every Day",
   description:
     "Aplikasi pelacak kebiasaan dan tujuan hidup berbasis psikologi Kaizen: Too Small to Fail. Perubahan 1% setiap hari berlipat ganda menjadi hasil 37x lipat dalam setahun.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "KaizenFlow",
+  },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/icons/icon-192.svg",
+    apple: "/icons/icon-192.svg",
   },
 };
 
@@ -17,6 +24,7 @@ export const viewport: Viewport = {
   ],
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -26,8 +34,27 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" className="h-full scroll-smooth">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+      </head>
       <body className="min-h-screen flex flex-col bg-sand-50 text-charcoal-900 dark:bg-charcoal-950 dark:text-charcoal-100 antialiased selection:bg-sage-200 selection:text-sage-900 transition-colors duration-200">
         {children}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                    console.log('SW registration note:', err);
+                  });
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );
