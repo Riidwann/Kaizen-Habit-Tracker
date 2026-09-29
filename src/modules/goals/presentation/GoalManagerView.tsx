@@ -3,10 +3,9 @@ import { useGoalsController } from "./useGoalsController";
 import { GoalForgeWizard } from "./GoalForgeWizard";
 import { GoalTreeItem } from "./GoalTreeItem";
 import { Button } from "@/shared/presentation/Button";
-import { Badge } from "@/shared/presentation/Badge";
-import { GOAL_CATEGORY_LIST, GoalCategory } from "../domain/GoalCategory";
+import { GOAL_CATEGORY_LIST } from "../domain/GoalCategory";
 import { GoalStatus } from "../domain/Goal";
-import { Plus, Target, Compass, Sparkles } from "lucide-react";
+import { Plus, Target, Compass, Sparkles, Info } from "lucide-react";
 import { cn } from "@/shared/presentation/utils";
 
 export interface GoalManagerViewProps {
@@ -38,14 +37,14 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
   } = controller;
 
   const statusFilters: Array<{ id: GoalStatus | "all"; label: string }> = [
-    { id: "all", label: "All Status" },
-    { id: "active", label: "Active" },
-    { id: "paused", label: "Paused" },
-    { id: "achieved", label: "Achieved" },
+    { id: "all", label: "Semua Status" },
+    { id: "active", label: "Aktif" },
+    { id: "paused", label: "Dijeda" },
+    { id: "achieved", label: "Tercapai" },
   ];
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-8 flex flex-col gap-8">
+    <div className="w-full max-w-4xl mx-auto px-4 py-8 flex flex-col gap-6">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-sand-200/80 dark:border-charcoal-800">
         <div>
@@ -54,11 +53,11 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
               <Compass className="w-5 h-5" />
             </span>
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-charcoal-900 dark:text-sand-50">
-              Goal Forge & Decomposition
+              Goal Forge & Decomposition (Pohon Sasaran)
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-charcoal-500 dark:text-sand-400">
-            Deconstruct macroscopic ambitions into effortless atomic actions.
+            Dekomposisi visi makro menjadi tindakan mikro yang mudah dijalankan tanpa rasa malas.
           </p>
         </div>
 
@@ -66,11 +65,20 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
           type="button"
           variant="primary"
           onClick={openForgeModal}
+          aria-label="Forge New Goal"
           leftIcon={<Plus className="w-4 h-4" />}
-          className="shadow-sm"
+          className="shadow-sm font-semibold"
         >
-          Forge New Goal
+          Tempa Sasaran (Forge New Goal)
         </Button>
+      </div>
+
+      {/* Kaizen Goal Explanation Card */}
+      <div className="p-3.5 rounded-xl bg-sand-100/70 dark:bg-charcoal-800/50 border border-sand-200/70 dark:border-charcoal-700/70 flex items-start gap-2.5 text-xs text-charcoal-600 dark:text-sand-300">
+        <Info className="w-4 h-4 text-sage-600 shrink-0 mt-0.5" />
+        <p className="leading-relaxed">
+          <strong>Bagaimana ini bekerja?</strong> Setiap sasaran di sini dipecah menjadi tonggak pencapaian dan aksi mikro ≤ 2 menit. Aksi mikro yang Anda buat otomatis muncul di tab <strong>Fokus Harian (Sanctuary)</strong> untuk dikerjakan setiap hari.
+        </p>
       </div>
 
       {/* Filter Controls */}
@@ -87,7 +95,7 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
                 : "bg-sand-100 dark:bg-charcoal-800/80 text-charcoal-600 dark:text-sand-300 hover:bg-sand-200"
             )}
           >
-            All Realms
+            Semua Ranah (All Realms)
           </button>
           {GOAL_CATEGORY_LIST.map((cat) => (
             <button
@@ -130,7 +138,7 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
       <div className="flex flex-col gap-4">
         {isLoading && filteredGoals.length === 0 ? (
           <div className="py-16 text-center text-charcoal-400 dark:text-sand-500 text-sm">
-            Aligning your master goals...
+            Menyelaraskan sasaran Anda...
           </div>
         ) : filteredGoals.length === 0 ? (
           <div className="py-16 px-6 text-center flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-sand-300 dark:border-charcoal-800 bg-sand-50/50 dark:bg-charcoal-900/30">
@@ -138,10 +146,10 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
               <Target className="w-6 h-6" />
             </div>
             <h3 className="text-base font-semibold text-charcoal-800 dark:text-sand-100 mb-1">
-              No goals forged yet
+              Belum ada sasaran ditempa (No goals forged yet)
             </h3>
             <p className="text-xs sm:text-sm text-charcoal-500 dark:text-sand-400 max-w-sm mb-5">
-              Begin your journey by forging your first vision. Kaizen deconstructs large dreams into effortless daily momentum.
+              Mulai perjalanan Anda dengan menempa visi pertama. Kaizen memecah impian besar menjadi momentum harian tanpa rasa malas.
             </p>
             <Button
               type="button"
@@ -150,7 +158,7 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
               onClick={openForgeModal}
               leftIcon={<Sparkles className="w-4 h-4" />}
             >
-              Forge First Goal
+              Tempa Sasaran Pertama
             </Button>
           </div>
         ) : (

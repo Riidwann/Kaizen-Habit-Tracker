@@ -1,20 +1,23 @@
 import React, { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Calendar, Compass, ShieldCheck, Sun } from "lucide-react";
+import { Sparkles, Calendar, Compass, ShieldCheck, Sun, HelpCircle, Info } from "lucide-react";
 import { MicroActionCard } from "./MicroActionCard";
 import { ActionTimerModal } from "./ActionTimerModal";
 import { DailyCompletionState } from "./DailyCompletionState";
 import { useSanctuaryController, SanctuaryController } from "./useSanctuaryController";
 import { Card } from "@/shared/presentation/Card";
 import { Badge } from "@/shared/presentation/Badge";
+import { Button } from "@/shared/presentation/Button";
 
 export interface DailySanctuaryViewProps {
   controller?: SanctuaryController;
+  onOpenGuide?: () => void;
   className?: string;
 }
 
 export const DailySanctuaryView: React.FC<DailySanctuaryViewProps> = ({
   controller: injectedController,
+  onOpenGuide,
   className = "",
 }) => {
   const internalController = useSanctuaryController({ autoLoad: !injectedController });
@@ -71,9 +74,23 @@ export const DailySanctuaryView: React.FC<DailySanctuaryViewProps> = ({
             </h1>
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-sand-100 dark:bg-charcoal-800 text-charcoal-600 dark:text-sand-300 text-xs font-medium self-start sm:self-auto border border-sand-200/80 dark:border-charcoal-700">
-            <Calendar className="w-3.5 h-3.5 text-sage-600 dark:text-sage-400" />
-            <span>{todayFormatted}</span>
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            {onOpenGuide && (
+              <button
+                type="button"
+                onClick={onOpenGuide}
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-sage-100/70 text-sage-800 dark:bg-sage-950/40 dark:text-sage-300 text-xs font-medium hover:bg-sage-200 transition-colors"
+                title="Pelajari prinsip Kaizen & cara pakai"
+              >
+                <HelpCircle className="w-3.5 h-3.5 text-sage-600" />
+                <span>Panduan</span>
+              </button>
+            )}
+
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-sand-100 dark:bg-charcoal-800 text-charcoal-600 dark:text-sand-300 text-xs font-medium border border-sand-200/80 dark:border-charcoal-700">
+              <Calendar className="w-3.5 h-3.5 text-sage-600 dark:text-sage-400" />
+              <span>{todayFormatted}</span>
+            </div>
           </div>
         </div>
 
@@ -81,6 +98,14 @@ export const DailySanctuaryView: React.FC<DailySanctuaryViewProps> = ({
           Fokus pada 1–3 langkah mikro sederhana hari ini. Tidak ada daftar panjang yang membingungkan.
           Hanya kemajuan 1% yang terjangkau dan menenangkan.
         </p>
+
+        {/* Micro-guide callout */}
+        <div className="p-3 rounded-xl bg-sand-100/70 dark:bg-charcoal-800/50 border border-sand-200/70 dark:border-charcoal-700/70 flex items-start gap-2.5 text-xs text-charcoal-600 dark:text-sand-300">
+          <Info className="w-4 h-4 text-sage-600 shrink-0 mt-0.5" />
+          <p className="leading-relaxed">
+            <strong>Mengapa hanya 1–3 aksi?</strong> Kaizen membatasi tindakan harian agar otak terhindar dari kepanikan daftar tugas. Tiap aksi dirancang ≤ 2 menit agar Anda bisa mulai tanpa rasa malas.
+          </p>
+        </div>
       </header>
 
       {/* 1% Daily Progress Bar */}
@@ -140,8 +165,8 @@ export const DailySanctuaryView: React.FC<DailySanctuaryViewProps> = ({
             Belum ada fokus hari ini
           </h3>
           <p className="text-xs text-charcoal-500 dark:text-sand-400 max-w-sm mx-auto leading-relaxed">
-            Sanctuary Anda sedang tenang. Saat Anda menetapkan tujuan atau milestone,
-            tindakan mikro 2-menit akan muncul di sini. Nikmati istirahat Anda!
+            Sanctuary Anda sedang tenang. Tindakan harian akan muncul otomatis saat Anda membuat target di tab
+            <strong> Pohon Sasaran (Goal Forge)</strong> atau memuat contoh data.
           </p>
         </Card>
       ) : (

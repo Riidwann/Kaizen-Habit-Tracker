@@ -70,7 +70,7 @@ export const HanseiModal: React.FC<HanseiModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="🌙 Hansei: Refleksi Malam 30 Detik"
+      title="Hansei: Refleksi Malam 30 Detik"
       description={
         date
           ? `Refleksi untuk ${date} • Mengakui kemajuan dan merencanakan 1% perbaikan.`
@@ -87,7 +87,7 @@ export const HanseiModal: React.FC<HanseiModalProps> = ({
           <Moon className="w-5 h-5 text-amber-300 mt-0.5 shrink-0" />
           <p className="text-xs text-sand-300 leading-relaxed">
             <span className="font-semibold text-sand-100">Hansei (反省)</span> adalah ritual penutup hari.
-            Bukan untuk menilai diri, melainkan untuk merayakan 1 mikro-kemenangan dan menentukan 1 penyesuaian kecil.
+            Bukan untuk menghakimi diri, melainkan untuk merayakan 1 mikro-kemenangan dan menentukan 1 penyesuaian kecil tanpa rasa bersalah.
           </p>
         </div>
 

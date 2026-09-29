@@ -5,7 +5,7 @@ import { StreakBadge } from "./StreakBadge";
 import { HanseiHistoryList } from "./HanseiHistoryList";
 import { Card } from "@/shared/presentation/Card";
 import { Button } from "@/shared/presentation/Button";
-import { TrendingUp, ShieldAlert, Sparkles, Moon, Award, Activity } from "lucide-react";
+import { TrendingUp, ShieldAlert, Sparkles, Moon, Award, Activity, Info } from "lucide-react";
 import { cn } from "@/shared/presentation/utils";
 
 export interface CompoundVisualizerViewProps {
@@ -84,13 +84,15 @@ export const CompoundVisualizerView: React.FC<CompoundVisualizerViewProps> = ({
   const currentCoord = getSvgCoordinates(currentStep, compoundMultiplier);
 
   return (
-    <div className={cn("space-y-6 max-w-4xl mx-auto p-4 sm:p-6", className)}>
+    <div className={cn("space-y-6 max-w-4xl mx-auto p-3 sm:p-6", className)}>
       {/* Top Header & Streak Status */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xl">📈</span>
-            <h1 className="text-2xl font-bold tracking-tight text-charcoal-900 dark:text-sand-50">
+            <span className="p-1.5 rounded-lg bg-sage-100 dark:bg-sage-950/60 text-sage-700 dark:text-sage-300">
+              <TrendingUp className="w-5 h-5" />
+            </span>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-charcoal-900 dark:text-sand-50">
               1% Compound Engine
             </h1>
           </div>
@@ -99,31 +101,39 @@ export const CompoundVisualizerView: React.FC<CompoundVisualizerViewProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 self-start sm:self-auto">
           <StreakBadge currentStreak={currentStreak} isGracePeriod={isGracePeriod} />
           {onOpenHanseiModal && (
             <Button
               variant="primary"
               size="sm"
               onClick={onOpenHanseiModal}
-              className="gap-2 bg-charcoal-900 text-sand-50 hover:bg-charcoal-800 dark:bg-sand-100 dark:text-charcoal-900 dark:hover:bg-sand-200"
+              className="gap-1.5 bg-charcoal-900 text-sand-50 hover:bg-charcoal-800 dark:bg-sand-100 dark:text-charcoal-900 dark:hover:bg-sand-200 text-xs py-1.5 px-3 rounded-xl"
             >
-              <Moon className="w-4 h-4 text-amber-300" />
+              <Moon className="w-3.5 h-3.5 text-amber-300" />
               <span>Refleksi Hansei</span>
             </Button>
           )}
         </div>
       </div>
 
+      {/* Kaizen Compound Explanation Callout */}
+      <div className="p-3.5 rounded-xl bg-sand-100/70 dark:bg-charcoal-800/50 border border-sand-200/70 dark:border-charcoal-700/70 flex items-start gap-2.5 text-xs text-charcoal-600 dark:text-sand-300">
+        <Info className="w-4 h-4 text-sage-600 shrink-0 mt-0.5" />
+        <p className="leading-relaxed">
+          <strong>Bagaimana grafik ini bekerja?</strong> Setiap aksi mikro yang Anda selesaikan dihitung sebagai 1 Micro-Win yang melipatgandakan faktor kemajuan Anda.
+        </p>
+      </div>
+
       {/* Grace Period Warning Banner */}
       {isGracePeriod && (
-        <div className="rounded-xl p-4 bg-amber-500/10 border border-amber-500/30 flex items-start gap-3">
-          <ShieldAlert className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+        <div className="rounded-xl p-3.5 sm:p-4 bg-amber-500/10 border border-amber-500/30 flex items-start gap-2.5">
+          <ShieldAlert className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
           <div className="text-xs sm:text-sm">
             <p className="font-semibold text-amber-700 dark:text-amber-300">
               Mode Pemulihan Aktif (Never Miss Twice)
             </p>
-            <p className="text-amber-800/80 dark:text-amber-200/80 mt-0.5">
+            <p className="text-amber-800/80 dark:text-amber-200/80 mt-0.5 leading-relaxed">
               Kemarin kamu melewatkan rutinitasmu, tetapi streak tetap terlindungi hari ini! Ambil 1 aksi 2 menit hari ini untuk memulihkan momentummu.
             </p>
           </div>
@@ -131,83 +141,85 @@ export const CompoundVisualizerView: React.FC<CompoundVisualizerViewProps> = ({
       )}
 
       {/* Stats Metric Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <Card className="p-4 bg-white dark:bg-charcoal-900 border-sand-200/80 dark:border-charcoal-800">
-          <div className="flex items-center gap-2 text-sage-600 dark:text-sage-400 mb-1">
-            <TrendingUp className="w-4 h-4" />
-            <span className="text-xs font-semibold uppercase tracking-wider">Compound Multiplier</span>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
+        <Card className="p-3 sm:p-4 bg-white dark:bg-charcoal-900 border-sand-200/80 dark:border-charcoal-800">
+          <div className="flex items-center gap-1.5 text-sage-600 dark:text-sage-400 mb-1">
+            <TrendingUp className="w-3.5 h-3.5" />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider truncate">Multiplier</span>
           </div>
-          <div className="text-2xl font-bold text-charcoal-900 dark:text-sand-50">
+          <div className="text-xl sm:text-2xl font-bold text-charcoal-900 dark:text-sand-50">
             {compoundMultiplier.toFixed(2)}x
           </div>
-          <p className="text-[11px] text-charcoal-400 dark:text-sand-400 mt-0.5">
-            +{percentageGain.toFixed(1)}% pertumbuhan total
+          <p className="text-[10px] sm:text-[11px] text-charcoal-400 dark:text-sand-400 mt-0.5 truncate">
+            +{percentageGain.toFixed(1)}% total
           </p>
         </Card>
 
-        <Card className="p-4 bg-white dark:bg-charcoal-900 border-sand-200/80 dark:border-charcoal-800">
-          <div className="flex items-center gap-2 text-charcoal-600 dark:text-sand-300 mb-1">
-            <Activity className="w-4 h-4" />
-            <span className="text-xs font-semibold uppercase tracking-wider">Total Micro-Wins</span>
+        <Card className="p-3 sm:p-4 bg-white dark:bg-charcoal-900 border-sand-200/80 dark:border-charcoal-800">
+          <div className="flex items-center gap-1.5 text-charcoal-600 dark:text-sand-300 mb-1">
+            <Activity className="w-3.5 h-3.5" />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider truncate">Micro-Wins</span>
           </div>
-          <div className="text-2xl font-bold text-charcoal-900 dark:text-sand-50">
+          <div className="text-xl sm:text-2xl font-bold text-charcoal-900 dark:text-sand-50">
             {totalMicroWins}
           </div>
-          <p className="text-[11px] text-charcoal-400 dark:text-sand-400 mt-0.5">
+          <p className="text-[10px] sm:text-[11px] text-charcoal-400 dark:text-sand-400 mt-0.5 truncate">
             {totalMicroWins} Aksi Selesai
           </p>
         </Card>
 
-        <Card className="p-4 bg-white dark:bg-charcoal-900 border-sand-200/80 dark:border-charcoal-800">
-          <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 mb-1">
-            <Sparkles className="w-4 h-4" />
-            <span className="text-xs font-semibold uppercase tracking-wider">Streak Berjalan</span>
+        <Card className="p-3 sm:p-4 bg-white dark:bg-charcoal-900 border-sand-200/80 dark:border-charcoal-800">
+          <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 mb-1">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider truncate">Streak</span>
           </div>
-          <div className="text-2xl font-bold text-charcoal-900 dark:text-sand-50">
+          <div className="text-xl sm:text-2xl font-bold text-charcoal-900 dark:text-sand-50">
             {currentStreak} Hari
           </div>
-          <p className="text-[11px] text-charcoal-400 dark:text-sand-400 mt-0.5">
+          <p className="text-[10px] sm:text-[11px] text-charcoal-400 dark:text-sand-400 mt-0.5 truncate">
             {isGracePeriod ? "Status: Dilindungi" : "Konsistensi aktif"}
           </p>
         </Card>
 
-        <Card className="p-4 bg-white dark:bg-charcoal-900 border-sand-200/80 dark:border-charcoal-800">
-          <div className="flex items-center gap-2 text-charcoal-500 dark:text-sand-400 mb-1">
-            <Award className="w-4 h-4" />
-            <span className="text-xs font-semibold uppercase tracking-wider">Rekor Terbaik</span>
+        <Card className="p-3 sm:p-4 bg-white dark:bg-charcoal-900 border-sand-200/80 dark:border-charcoal-800">
+          <div className="flex items-center gap-1.5 text-charcoal-500 dark:text-sand-400 mb-1">
+            <Award className="w-3.5 h-3.5" />
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider truncate">Rekor</span>
           </div>
-          <div className="text-2xl font-bold text-charcoal-900 dark:text-sand-50">
+          <div className="text-xl sm:text-2xl font-bold text-charcoal-900 dark:text-sand-50">
             {longestStreak} Hari
           </div>
-          <p className="text-[11px] text-charcoal-400 dark:text-sand-400 mt-0.5">
-            Streak terpanjang tercatat
+          <p className="text-[10px] sm:text-[11px] text-charcoal-400 dark:text-sand-400 mt-0.5 truncate">
+            Rekor terpanjang
           </p>
         </Card>
       </div>
 
       {/* Visual Chart Card */}
-      <Card className="p-5 bg-white dark:bg-charcoal-900 border-sand-200/80 dark:border-charcoal-800 space-y-4">
-        <div className="flex items-center justify-between">
+      <Card className="p-4 sm:p-5 bg-white dark:bg-charcoal-900 border-sand-200/80 dark:border-charcoal-800 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h3 className="text-sm font-semibold text-charcoal-900 dark:text-sand-100">
+            <h3 className="text-xs sm:text-sm font-semibold text-charcoal-900 dark:text-sand-100">
               Kurva Pertumbuhan Majemuk 1% (Atomic Habits)
             </h3>
-            <p className="text-xs text-charcoal-500 dark:text-sand-400">
-              Perbandingan pertumbuhan $1.01^N$ vs kemunduran $0.99^N$
+            <p className="text-[11px] sm:text-xs text-charcoal-500 dark:text-sand-400">
+              Perbandingan pertumbuhan 1.01ᴺ vs kemunduran 0.99ᴺ
             </p>
           </div>
-          <div className="hidden sm:flex items-center gap-4 text-xs">
-            <div className="flex items-center gap-1.5 text-sage-600 dark:text-sage-400 font-medium">
-              <span className="w-3 h-0.5 bg-sage-500 inline-block rounded" />
-              <span>1% Lebih Baik (+1%)</span>
+
+          {/* Legend: visible on all screen sizes */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-[11px] sm:text-xs">
+            <div className="flex items-center gap-1 text-sage-600 dark:text-sage-400 font-medium">
+              <span className="w-2.5 h-0.5 bg-sage-500 inline-block rounded" />
+              <span>+1%</span>
             </div>
-            <div className="flex items-center gap-1.5 text-charcoal-400 dark:text-sand-400">
-              <span className="w-3 h-0.5 bg-charcoal-300 dark:bg-charcoal-600 inline-block rounded border-dashed" />
-              <span>Garis Netral (1.0x)</span>
+            <div className="flex items-center gap-1 text-charcoal-400 dark:text-sand-400">
+              <span className="w-2.5 h-0.5 bg-charcoal-300 dark:bg-charcoal-600 inline-block rounded border-dashed" />
+              <span>1.0x</span>
             </div>
-            <div className="flex items-center gap-1.5 text-rose-500 font-medium">
-              <span className="w-3 h-0.5 bg-rose-400 inline-block rounded" />
-              <span>1% Lebih Buruk (-1%)</span>
+            <div className="flex items-center gap-1 text-rose-500 font-medium">
+              <span className="w-2.5 h-0.5 bg-rose-400 inline-block rounded" />
+              <span>-1%</span>
             </div>
           </div>
         </div>
@@ -217,7 +229,7 @@ export const CompoundVisualizerView: React.FC<CompoundVisualizerViewProps> = ({
           <svg
             data-testid="compound-curve-svg"
             viewBox={`0 0 ${svgDimensions.width} ${svgDimensions.height}`}
-            className="w-full h-44 sm:h-52 select-none overflow-visible"
+            className="w-full h-40 sm:h-52 select-none overflow-visible"
           >
             {/* Grid & Axes */}
             <line
@@ -287,7 +299,7 @@ export const CompoundVisualizerView: React.FC<CompoundVisualizerViewProps> = ({
               textAnchor="end"
               className="text-[10px] fill-sage-600 dark:fill-sage-400 font-semibold"
             >
-              37.78x (1 Tahun)
+              37.78x (1 Thn)
             </text>
             <text
               x={svgDimensions.width - svgDimensions.padX}
@@ -306,7 +318,7 @@ export const CompoundVisualizerView: React.FC<CompoundVisualizerViewProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Moon className="w-4 h-4 text-charcoal-600 dark:text-sand-300" />
-            <h3 className="text-base font-semibold text-charcoal-900 dark:text-sand-100">
+            <h3 className="text-sm sm:text-base font-semibold text-charcoal-900 dark:text-sand-100">
               Riwayat Refleksi Hansei
             </h3>
           </div>

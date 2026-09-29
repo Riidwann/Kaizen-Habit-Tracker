@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { TabNavigation, TabId } from "@/components/layout/TabNavigation";
 import { Footer } from "@/components/layout/Footer";
+import { KaizenGuideModal } from "@/components/layout/KaizenGuideModal";
 
 // Module Controllers & Views
 import {
@@ -35,17 +36,18 @@ import { inMemoryEventBus } from "@/shared/infrastructure/InMemoryEventBus";
 // Icons
 import {
   Sparkles,
-  Target,
   Download,
   Upload,
   Database,
   ShieldCheck,
   Plus,
+  BookOpen,
 } from "lucide-react";
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<TabId>("sanctuary");
   const [isBackupModalOpen, setIsBackupModalOpen] = useState<boolean>(false);
+  const [isGuideModalOpen, setIsGuideModalOpen] = useState<boolean>(false);
 
   // Initialize Controllers
   const goalsController = useGoalsController();
@@ -138,15 +140,16 @@ export default function HomePage() {
         isGracePeriod={reflectionController.stats.isGracePeriod}
         onOpenHansei={reflectionController.openHanseiModal}
         onOpenBackup={() => setIsBackupModalOpen(true)}
+        onOpenGuide={() => setIsGuideModalOpen(true)}
       />
 
-      {/* 2. Zen Pill Tab Navigation */}
-      <div className="pt-6 pb-2">
+      {/* 2. Responsive Tab Navigation (Top on desktop, fixed bottom on mobile) */}
+      <div className="pt-2 sm:pt-6 pb-2">
         <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
 
-      {/* 3. Main Content Area */}
-      <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-6">
+      {/* 3. Main Content Area with safe bottom padding on mobile */}
+      <main className="flex-1 w-full max-w-5xl mx-auto px-3 sm:px-6 py-3 sm:py-6 space-y-5 sm:space-y-6 pb-24 sm:pb-8">
         {/* Welcoming Starter Banner (Rendered when storage is empty) */}
         {isStorageEmpty && (
           <motion.div
@@ -154,28 +157,39 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-sage-50/80 to-sand-100/90 dark:from-charcoal-900 dark:to-charcoal-800/90 border border-sage-200/90 dark:border-charcoal-700 shadow-sm">
+            <Card className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-sage-50/80 to-sand-100/90 dark:from-charcoal-900 dark:to-charcoal-800/90 border border-sage-200/90 dark:border-charcoal-700 shadow-sm">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="space-y-1.5 max-w-2xl">
                   <div className="flex items-center gap-2">
-                    <Badge variant="sage" size="sm">
-                      🌿 Filosofi Kaizen
+                    <Badge variant="sage" size="sm" className="gap-1">
+                      <Sparkles className="w-3 h-3 text-sage-600" />
+                      <span>Filosofi Kaizen</span>
                     </Badge>
                     <span className="text-xs font-semibold text-sage-700 dark:text-sage-400">
-                      Too Small to Fail
+                      Too Small to Fail (Mustahil Gagal)
                     </span>
                   </div>
-                  <h2 className="text-lg sm:text-xl font-bold tracking-tight text-charcoal-900 dark:text-sand-50">
+                  <h2 className="text-base sm:text-xl font-bold tracking-tight text-charcoal-900 dark:text-sand-50">
                     Selamat Datang di KaizenFlow
                   </h2>
                   <p className="text-xs sm:text-sm text-charcoal-600 dark:text-sand-300 leading-relaxed">
                     Perubahan besar dimulai dari tindakan mikro 2-menit yang terlalu kecil untuk
                     memicu rasa malas. Muat data percontohan untuk melihat ekosistem bekerja,
-                    atau tempa tujuan pertamamu sekarang.
+                    atau buka panduan singkat untuk memahami cara kerjanya.
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto shrink-0">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsGuideModalOpen(true)}
+                    leftIcon={<BookOpen className="w-3.5 h-3.5 text-sage-600" />}
+                    className="flex-1 sm:flex-initial text-xs font-medium justify-center"
+                  >
+                    Pelajari Kaizen
+                  </Button>
                   <Button
                     type="button"
                     variant="outline"
@@ -183,7 +197,7 @@ export default function HomePage() {
                     onClick={handleLoadSample}
                     disabled={backupController.isLoadingSample}
                     leftIcon={<Sparkles className="w-3.5 h-3.5 text-sage-600" />}
-                    className="flex-1 sm:flex-initial text-xs font-medium"
+                    className="flex-1 sm:flex-initial text-xs font-medium justify-center"
                   >
                     {backupController.isLoadingSample ? "Memuat..." : "Muat Contoh Data"}
                   </Button>
@@ -193,7 +207,7 @@ export default function HomePage() {
                     size="sm"
                     onClick={handleOpenForge}
                     leftIcon={<Plus className="w-3.5 h-3.5" />}
-                    className="flex-1 sm:flex-initial text-xs font-medium"
+                    className="flex-1 sm:flex-initial text-xs font-medium justify-center"
                   >
                     Tempa Sasaran Pertama
                   </Button>
@@ -216,7 +230,10 @@ export default function HomePage() {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
             >
-              <DailySanctuaryView controller={sanctuaryController} />
+              <DailySanctuaryView
+                controller={sanctuaryController}
+                onOpenGuide={() => setIsGuideModalOpen(true)}
+              />
             </motion.div>
           )}
 
@@ -269,16 +286,16 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="max-w-3xl mx-auto space-y-6"
+              className="max-w-3xl mx-auto space-y-5 sm:space-y-6"
             >
-              <Card className="p-6 rounded-2xl bg-white dark:bg-charcoal-900 border border-sand-200/90 dark:border-charcoal-800 space-y-6 shadow-sm">
-                <div className="flex items-center justify-between border-b border-sand-200/80 dark:border-charcoal-800 pb-4">
+              <Card className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-charcoal-900 border border-sand-200/90 dark:border-charcoal-800 space-y-5 sm:space-y-6 shadow-sm">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-sand-200/80 dark:border-charcoal-800 pb-3 sm:pb-4 gap-2">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="p-1.5 rounded-lg bg-sand-100 dark:bg-charcoal-800 text-charcoal-700 dark:text-sand-300">
-                        <Database className="w-5 h-5" />
+                        <Database className="w-4 h-4 sm:w-5 sm:h-5" />
                       </span>
-                      <h2 className="text-xl font-bold tracking-tight text-charcoal-900 dark:text-sand-50">
+                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-charcoal-900 dark:text-sand-50">
                         Pusat Manajemen Cadangan & Privasi
                       </h2>
                     </div>
@@ -287,15 +304,15 @@ export default function HomePage() {
                     </p>
                   </div>
 
-                  <Badge variant="sage" size="md" className="hidden sm:inline-flex">
+                  <Badge variant="sage" size="md" className="self-start sm:self-auto">
                     <ShieldCheck className="w-3.5 h-3.5 mr-1" />
                     Lokal & Privat
                   </Badge>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-xl bg-sand-50/70 dark:bg-charcoal-800/50 border border-sand-200 dark:border-charcoal-700 space-y-3">
-                    <h3 className="text-sm font-semibold text-charcoal-800 dark:text-sand-100 flex items-center gap-1.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-sand-50/70 dark:bg-charcoal-800/50 border border-sand-200 dark:border-charcoal-700 space-y-2.5 sm:space-y-3">
+                    <h3 className="text-xs sm:text-sm font-semibold text-charcoal-800 dark:text-sand-100 flex items-center gap-1.5">
                       <Download className="w-4 h-4 text-sage-600" />
                       Ekspor Data Cadangan
                     </h3>
@@ -314,8 +331,8 @@ export default function HomePage() {
                     </Button>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-sand-50/70 dark:bg-charcoal-800/50 border border-sand-200 dark:border-charcoal-700 space-y-3">
-                    <h3 className="text-sm font-semibold text-charcoal-800 dark:text-sand-100 flex items-center gap-1.5">
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-sand-50/70 dark:bg-charcoal-800/50 border border-sand-200 dark:border-charcoal-700 space-y-2.5 sm:space-y-3">
+                    <h3 className="text-xs sm:text-sm font-semibold text-charcoal-800 dark:text-sand-100 flex items-center gap-1.5">
                       <Upload className="w-4 h-4 text-amber-600" />
                       Buka Panel Pemulihan
                     </h3>
@@ -339,11 +356,18 @@ export default function HomePage() {
         </AnimatePresence>
       </main>
 
-      {/* 4. Minimalist Zen Footer */}
-      <Footer />
+      {/* 4. Minimalist Zen Footer (with extra bottom margin on mobile to clear bottom bar) */}
+      <Footer className="mb-14 sm:mb-0" />
 
       {/* 5. Modals Shell */}
-      {/* 5.1 Hansei Reflection Modal */}
+      {/* 5.1 Kaizen Guide Modal */}
+      <KaizenGuideModal
+        isOpen={isGuideModalOpen}
+        onClose={() => setIsGuideModalOpen(false)}
+        onOpenForge={handleOpenForge}
+      />
+
+      {/* 5.2 Hansei Reflection Modal */}
       <HanseiModal
         isOpen={reflectionController.isHanseiModalOpen}
         onClose={reflectionController.closeHanseiModal}
@@ -353,14 +377,14 @@ export default function HomePage() {
         isSubmitting={reflectionController.isSubmitting}
       />
 
-      {/* 5.2 Data Backup & Restore Modal */}
+      {/* 5.3 Data Backup & Restore Modal */}
       <DataBackupModal
         isOpen={isBackupModalOpen}
         onClose={() => setIsBackupModalOpen(false)}
         controller={backupController}
       />
 
-      {/* 5.3 Goal Forge Wizard Modal (Active when opened outside goals tab) */}
+      {/* 5.4 Goal Forge Wizard Modal (Active when opened outside goals tab) */}
       {activeTab !== "goals" && (
         <GoalForgeWizard
           isOpen={goalsController.isForgeOpen}

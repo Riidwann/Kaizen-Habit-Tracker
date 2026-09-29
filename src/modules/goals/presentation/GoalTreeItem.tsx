@@ -36,6 +36,12 @@ const statusBadgeVariants: Record<GoalStatus, BadgeVariant> = {
   achieved: "charcoal",
 };
 
+const statusLabels: Record<GoalStatus, string> = {
+  active: "AKTIF",
+  paused: "DIJEDA",
+  achieved: "TERCAPAI",
+};
+
 export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
   goal,
   onToggleMilestone,
@@ -77,7 +83,7 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
             className="mt-0.5 p-1 rounded-lg hover:bg-sand-100 dark:hover:bg-charcoal-800 text-charcoal-500 dark:text-sand-400 transition-colors"
-            aria-label={isExpanded ? "Collapse goal details" : "Expand goal details"}
+            aria-label={isExpanded ? "Tutup rincian sasaran" : "Buka rincian sasaran"}
           >
             {isExpanded ? (
               <ChevronDown className="w-4 h-4" />
@@ -92,10 +98,10 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
                 {goal.title}
               </h3>
               <Badge variant={categoryMeta.badgeVariant} size="sm">
-                {categoryMeta.label}
+                {categoryMeta.label.split(" & ")[0]}
               </Badge>
               <Badge variant={statusBadgeVariants[goal.status]} size="sm">
-                {goal.status.toUpperCase()}
+                {statusLabels[goal.status]}
               </Badge>
             </div>
 
@@ -117,7 +123,7 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <span className="w-8 text-right">{progress}%</span>
+            <span className="w-8 text-right font-semibold">{progress}%</span>
           </div>
 
           {/* Status buttons */}
@@ -128,7 +134,7 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
                 size="sm"
                 className="p-1.5 h-auto text-charcoal-500 hover:text-amber-600"
                 onClick={() => onUpdateStatus(goal.id, "paused")}
-                title="Pause Goal"
+                title="Jeda Sasaran"
                 aria-label="Pause Goal"
               >
                 <Pause className="w-3.5 h-3.5" />
@@ -139,7 +145,7 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
                 size="sm"
                 className="p-1.5 h-auto text-charcoal-500 hover:text-sage-600"
                 onClick={() => onUpdateStatus(goal.id, "active")}
-                title="Resume Goal"
+                title="Lanjutkan Sasaran"
                 aria-label="Resume Goal"
               >
                 <Play className="w-3.5 h-3.5" />
@@ -152,7 +158,7 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
                 size="sm"
                 className="p-1.5 h-auto text-charcoal-500 hover:text-sage-600"
                 onClick={() => onUpdateStatus(goal.id, "achieved")}
-                title="Mark Achieved"
+                title="Tandai Tercapai"
                 aria-label="Mark Achieved"
               >
                 <Trophy className="w-3.5 h-3.5" />
@@ -162,9 +168,9 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
             <Button
               variant="ghost"
               size="sm"
-              className="p-1.5 h-auto text-charcoal-400 hover:text-amber-600"
+              className="p-1.5 h-auto text-charcoal-400 hover:text-red-600"
               onClick={() => onDeleteGoal(goal.id)}
-              title="Delete Goal"
+              title="Hapus Sasaran"
               aria-label="Delete Goal"
             >
               <Trash2 className="w-3.5 h-3.5" />
@@ -182,14 +188,14 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
               {goal.microAction && (
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sand-100 dark:bg-charcoal-800 text-xs text-charcoal-700 dark:text-sand-200 border border-sand-200 dark:border-charcoal-700">
                   <Zap className="w-3.5 h-3.5 text-sage-600 dark:text-sage-400 shrink-0" />
-                  <span className="font-semibold text-[11px] text-charcoal-500 dark:text-sand-400">Micro:</span>
+                  <span className="font-semibold text-[11px] text-charcoal-500 dark:text-sand-400">Aksi Mikro:</span>
                   <span>{goal.microAction}</span>
                 </div>
               )}
               {goal.scaleDownFallback && (
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50/70 dark:bg-amber-950/30 text-xs text-amber-800 dark:text-amber-200 border border-amber-200/80 dark:border-amber-800">
                   <ShieldAlert className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                  <span className="font-semibold text-[11px] text-amber-700 dark:text-amber-400">Fallback:</span>
+                  <span className="font-semibold text-[11px] text-amber-700 dark:text-amber-400">Langkah Darurat:</span>
                   <span>{goal.scaleDownFallback}</span>
                 </div>
               )}
@@ -200,7 +206,7 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
           <div className="relative pl-6 ml-3 border-l-2 border-dashed border-sand-300 dark:border-charcoal-700 flex flex-col gap-2">
             {milestones.length === 0 ? (
               <p className="text-xs text-charcoal-400 dark:text-sand-500 py-1">
-                No checkpoints defined yet. Break down this goal into tangible milestones.
+                Belum ada tonggak pencapaian. Pecah sasaran ini menjadi tonggak-tonggak bertahap.
               </p>
             ) : (
               milestones.map((m, idx) => (
@@ -243,7 +249,7 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
                     <button
                       type="button"
                       onClick={() => onDeleteMilestone(goal.id, m.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 text-charcoal-400 hover:text-amber-600 transition-opacity"
+                      className="opacity-0 group-hover:opacity-100 p-1 text-charcoal-400 hover:text-red-600 transition-opacity"
                       aria-label={`Delete milestone ${m.title}`}
                     >
                       <Trash2 className="w-3 h-3" />
@@ -258,14 +264,14 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
               <form onSubmit={handleCreateMilestone} className="flex items-center gap-2 mt-1">
                 <input
                   type="text"
-                  placeholder="New milestone title..."
+                  placeholder="Judul tonggak pencapaian baru..."
                   value={newMilestoneTitle}
                   onChange={(e) => setNewMilestoneTitle(e.target.value)}
                   className="px-2.5 py-1 text-xs rounded-lg border border-sand-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-900 focus:outline-none focus:border-sage-500 w-full max-w-sm"
                   autoFocus
                 />
                 <Button type="submit" variant="primary" size="sm" className="px-2.5 py-1 text-xs">
-                  Add
+                  Tambah
                 </Button>
                 <Button
                   type="button"
@@ -274,7 +280,7 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
                   className="px-2 py-1 text-xs"
                   onClick={() => setIsAddingMilestone(false)}
                 >
-                  Cancel
+                  Batal
                 </Button>
               </form>
             ) : (
@@ -284,7 +290,7 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
                 className="inline-flex items-center gap-1.5 text-xs text-sage-700 dark:text-sage-400 hover:underline pt-1 w-fit"
               >
                 <Plus className="w-3 h-3" />
-                Add Milestone Checkpoint
+                Tambah Tonggak Pencapaian (Add Milestone)
               </button>
             )}
           </div>

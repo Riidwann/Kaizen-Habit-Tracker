@@ -1,4 +1,5 @@
 import React from "react";
+import { Compass, Target, TrendingUp, Database, LucideIcon } from "lucide-react";
 import { cn } from "@/shared/presentation/utils";
 
 export type TabId = "sanctuary" | "goals" | "reflection" | "backup";
@@ -7,7 +8,8 @@ export interface TabItem {
   id: TabId;
   label: string;
   shortLabel: string;
-  icon: string;
+  mobileLabel: string;
+  icon: LucideIcon;
   description: string;
 }
 
@@ -15,29 +17,33 @@ export const TABS: TabItem[] = [
   {
     id: "sanctuary",
     label: "Sanctuary (Fokus Harian)",
-    shortLabel: "Sanctuary",
-    icon: "🌿",
+    shortLabel: "Fokus Harian",
+    mobileLabel: "Fokus",
+    icon: Compass,
     description: "Fokus 1-3 tindakan mikro hari ini",
   },
   {
     id: "goals",
-    label: "Goal Forge (Pohon Tujuan)",
-    shortLabel: "Goal Forge",
-    icon: "🔨",
-    description: "Dekomposisi visi makro ke aksi atomik",
+    label: "Goal Forge (Pohon Sasaran)",
+    shortLabel: "Pohon Sasaran",
+    mobileLabel: "Sasaran",
+    icon: Target,
+    description: "Dekomposisi visi makro ke aksi mikro",
   },
   {
     id: "reflection",
     label: "1% Compound (Pertumbuhan)",
-    shortLabel: "1% Compound",
-    icon: "📈",
+    shortLabel: "Pertumbuhan 1%",
+    mobileLabel: "1% Tumbuh",
+    icon: TrendingUp,
     description: "Kurva pertumbuhan majemuk & Hansei",
   },
   {
     id: "backup",
     label: "Cadangan Data",
-    shortLabel: "Cadangan",
-    icon: "⚙️",
+    shortLabel: "Cadangan Data",
+    mobileLabel: "Cadangan",
+    icon: Database,
     description: "Ekspor, impor, dan snapshot privat",
   },
 ];
@@ -56,15 +62,27 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({
   return (
     <nav
       aria-label="Navigasi Utama"
-      className={cn("w-full max-w-4xl mx-auto px-4", className)}
+      className={cn(
+        // Mobile: Fixed Bottom Bar
+        "fixed bottom-0 left-0 right-0 z-40 bg-sand-50/95 dark:bg-charcoal-950/95 backdrop-blur-md border-t border-sand-200/90 dark:border-charcoal-800 pb-[env(safe-area-inset-bottom,0px)] shadow-lg",
+        // Desktop / Tablet: Top Pill Bar
+        "sm:static sm:bg-transparent sm:backdrop-blur-none sm:border-0 sm:shadow-none sm:p-0 sm:max-w-4xl sm:mx-auto sm:px-4",
+        className
+      )}
     >
       <div
         role="tablist"
         aria-orientation="horizontal"
-        className="flex items-center justify-between p-1.5 rounded-2xl bg-sand-200/60 dark:bg-charcoal-900 border border-sand-300/60 dark:border-charcoal-800 gap-1 sm:gap-2 shadow-inner"
+        className={cn(
+          // Mobile layout
+          "flex items-center justify-around py-1.5 px-2 max-w-lg mx-auto gap-1",
+          // Desktop pill layout
+          "sm:p-1.5 sm:rounded-2xl sm:bg-sand-200/60 sm:dark:bg-charcoal-900 sm:border sm:border-sand-300/60 sm:dark:border-charcoal-800 sm:gap-2 sm:shadow-inner"
+        )}
       >
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;
+          const IconComponent = tab.icon;
           return (
             <button
               key={tab.id}
@@ -75,17 +93,33 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({
               tabIndex={isActive ? 0 : -1}
               onClick={() => onTabChange(tab.id)}
               className={cn(
-                "relative flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center gap-1.5 select-none focus:outline-none focus:ring-2 focus:ring-sage-500",
+                "relative flex-1 select-none focus:outline-none focus:ring-2 focus:ring-sage-500 transition-all duration-200",
+                // Mobile layout
+                "flex flex-col items-center justify-center py-1.5 px-1 rounded-xl text-[11px] min-h-[48px]",
+                // Desktop layout
+                "sm:flex-row sm:py-2.5 sm:px-3 sm:text-xs md:text-sm sm:min-h-0 sm:gap-2",
                 isActive
                   ? "bg-white text-charcoal-900 shadow-sm dark:bg-charcoal-800 dark:text-sand-50 font-semibold"
                   : "text-charcoal-600 hover:text-charcoal-900 hover:bg-sand-200/40 dark:text-sand-400 dark:hover:text-sand-200 dark:hover:bg-charcoal-800/50"
               )}
             >
-              <span className="text-base sm:text-lg leading-none shrink-0" aria-hidden="true">
-                {tab.icon}
+              <IconComponent
+                className={cn(
+                  "w-4 h-4 sm:w-4 sm:h-4 shrink-0 transition-colors mb-0.5 sm:mb-0",
+                  isActive
+                    ? "text-sage-600 dark:text-sage-400"
+                    : "text-charcoal-400 dark:text-sand-400"
+                )}
+                aria-hidden="true"
+              />
+              {/* Full label on desktop */}
+              <span className="hidden md:inline truncate">{tab.label}</span>
+              {/* Short label on tablet */}
+              <span className="hidden sm:inline md:hidden truncate">{tab.shortLabel}</span>
+              {/* Compact label on mobile */}
+              <span className="inline sm:hidden font-medium text-[10px] leading-tight truncate">
+                {tab.mobileLabel}
               </span>
-              <span className="hidden sm:inline truncate">{tab.label}</span>
-              <span className="inline sm:hidden truncate">{tab.shortLabel}</span>
             </button>
           );
         })}

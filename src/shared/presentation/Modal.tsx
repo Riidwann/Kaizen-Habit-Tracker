@@ -49,7 +49,7 @@ export const Modal: React.FC<ModalProps> = ({
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
         >
           {/* Backdrop */}
           <motion.div
@@ -69,38 +69,38 @@ export const Modal: React.FC<ModalProps> = ({
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: "spring", damping: 25, stiffness: 350 }}
             className={cn(
-              "relative w-full max-w-lg rounded-2xl bg-white dark:bg-charcoal-900",
+              "relative w-full max-w-lg max-h-[92vh] flex flex-col rounded-2xl bg-white dark:bg-charcoal-900",
               "border border-sand-200/80 dark:border-charcoal-800",
-              "shadow-xl z-10 overflow-hidden p-6",
+              "shadow-xl z-10 p-4 sm:p-6",
               className
             )}
           >
             {/* Header */}
-            <div className="flex items-start justify-between mb-4 pb-2">
-                <div>
-                  {title && (
-                    <h2 className="text-lg font-semibold text-charcoal-900 dark:text-sand-50">
-                      {title}
-                    </h2>
-                  )}
-                  {description && (
-                    <p className="text-xs text-charcoal-500 dark:text-sand-400 mt-0.5">
-                      {description}
-                    </p>
-                  )}
-                </div>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  aria-label="Close dialog"
-                  className="rounded-lg p-1 text-charcoal-400 hover:text-charcoal-700 dark:hover:text-sand-200 hover:bg-sand-100 dark:hover:bg-charcoal-800 transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+            <div className="flex items-start justify-between mb-3 sm:mb-4 pb-2 shrink-0">
+              <div className="pr-2">
+                {title && (
+                  <h2 className="text-base sm:text-lg font-semibold text-charcoal-900 dark:text-sand-50">
+                    {title}
+                  </h2>
+                )}
+                {description && (
+                  <p className="text-xs text-charcoal-500 dark:text-sand-400 mt-0.5">
+                    {description}
+                  </p>
+                )}
               </div>
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close dialog"
+                className="rounded-lg p-1.5 text-charcoal-400 hover:text-charcoal-700 dark:hover:text-sand-200 hover:bg-sand-100 dark:hover:bg-charcoal-800 transition-colors shrink-0"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-            {/* Body */}
-            <div>{children}</div>
+            {/* Body with vertical scroll for long forms / mobile keyboards */}
+            <div className="overflow-y-auto overflow-x-hidden pr-0.5 flex-1">{children}</div>
           </motion.div>
         </div>
       )}
