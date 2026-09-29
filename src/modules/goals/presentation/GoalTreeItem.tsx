@@ -17,7 +17,10 @@ import {
   ShieldAlert,
   Plus,
   Quote,
+  RotateCcw,
 } from "lucide-react";
+import confetti from "canvas-confetti";
+import { Modal } from "@/shared/presentation/Modal";
 import { cn } from "@/shared/presentation/utils";
 
 export interface GoalTreeItemProps {
@@ -52,6 +55,7 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
   defaultExpanded = true,
 }) => {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [newMilestoneTitle, setNewMilestoneTitle] = useState("");
   const [isAddingMilestone, setIsAddingMilestone] = useState(false);
 
@@ -72,7 +76,8 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
       className={cn(
         "transition-all duration-200 border-sand-200/90 dark:border-charcoal-800",
         goal.status === "paused" && "opacity-80 bg-sand-50/50 dark:bg-charcoal-900/40",
-        goal.status === "achieved" && "border-sage-300 dark:border-sage-800/80 bg-sage-50/20"
+        goal.status === "achieved" &&
+          "border-amber-300 dark:border-amber-700/80 bg-gradient-to-br from-amber-50/20 via-white to-sage-50/20 dark:from-amber-950/20 dark:via-charcoal-900 dark:to-charcoal-900 shadow-md"
       )}
       padding="md"
     >
@@ -100,9 +105,16 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
               <Badge variant={categoryMeta.badgeVariant} size="sm">
                 {categoryMeta.label.split(" & ")[0]}
               </Badge>
-              <Badge variant={statusBadgeVariants[goal.status]} size="sm">
-                {statusLabels[goal.status]}
-              </Badge>
+              {goal.status === "achieved" ? (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide bg-amber-100 text-amber-900 dark:bg-amber-950/90 dark:text-amber-200 border border-amber-400 dark:border-amber-600 shadow-xs">
+                  <Trophy className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <span>🏆 TERCAPAI</span>
+                </span>
+              ) : (
+                <Badge variant={statusBadgeVariants[goal.status]} size="sm">
+                  {statusLabels[goal.status]}
+                </Badge>
+              )}
             </div>
 
             {/* Emotional Anchor Quote */}
@@ -152,16 +164,27 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
               </Button>
             ) : null}
 
-            {goal.status !== "achieved" && (
+            {goal.status !== "achieved" ? (
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-1.5 h-auto text-charcoal-500 hover:text-sage-600"
-                onClick={() => onUpdateStatus(goal.id, "achieved")}
+                className="p-1.5 h-auto text-charcoal-500 hover:text-amber-600 dark:hover:text-amber-400"
+                onClick={() => setIsConfirmModalOpen(true)}
                 title="Tandai Tercapai"
                 aria-label="Mark Achieved"
               >
                 <Trophy className="w-3.5 h-3.5" />
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-1.5 h-auto text-amber-600 dark:text-amber-400 hover:text-sage-600"
+                onClick={() => onUpdateStatus(goal.id, "active")}
+                title="Kembalikan ke Status Aktif"
+                aria-label="Kembalikan ke Status Aktif"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
               </Button>
             )}
 
@@ -178,6 +201,34 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Achieved Celebration Banner with Revert Option */}
+      {goal.status === "achieved" && (
+        <div className="mt-3 p-3.5 rounded-xl bg-gradient-to-r from-amber-500/10 via-sage-500/10 to-amber-500/10 dark:from-amber-950/40 dark:via-charcoal-900 dark:to-sage-950/40 border border-amber-300 dark:border-amber-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <span className="text-xl shrink-0">🏆</span>
+            <div>
+              <p className="font-bold text-amber-900 dark:text-amber-200">
+                Target Telah Berhasil Tercapai!
+              </p>
+              <p className="text-amber-800/80 dark:text-amber-300/80 text-[11px] leading-relaxed">
+                Langkah-langkah kecil Anda telah membuahkan hasil nyata. Anda dapat mengaktifkannya kembali jika ada hal yang terlewat atau ingin dilanjutkan.
+              </p>
+            </div>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => onUpdateStatus(goal.id, "active")}
+            leftIcon={<RotateCcw className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />}
+            className="w-full sm:w-auto shrink-0 text-xs border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200 hover:bg-amber-100/60 dark:hover:bg-amber-950/50 justify-center font-medium"
+            title="Kembalikan target ke status aktif jika ada hal yang terlewat"
+          >
+            Buka Kembali Target
+          </Button>
+        </div>
+      )}
 
       {/* Expandable Tree View */}
       {isExpanded && (
@@ -296,6 +347,70 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
           </div>
         </div>
       )}
+
+      {/* Confirmation Modal for Marking Goal as Achieved */}
+      <Modal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        title="Tandai Target Tercapai?"
+        description="Rayakan setiap langkah kecil yang telah Anda selesaikan."
+        className="max-w-md text-center"
+      >
+        <div className="flex flex-col items-center justify-center pt-2 pb-4 space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-950/80 border border-amber-300 dark:border-amber-700 flex items-center justify-center text-amber-600 dark:text-amber-400 shadow-sm">
+            <Trophy className="w-7 h-7" />
+          </div>
+
+          <div className="space-y-1.5">
+            <h3 className="text-base sm:text-lg font-bold text-charcoal-900 dark:text-sand-50">
+              Tandai "{goal.title}" sebagai Tercapai?
+            </h3>
+            <p className="text-xs sm:text-sm text-charcoal-600 dark:text-sand-300 leading-relaxed max-w-sm mx-auto">
+              Selamat atas dedikasi dan konsistensi Anda! Anda tetap dapat mengembalikannya ke status aktif kapan saja jika nanti ada hal yang ingin dilanjutkan.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-2 w-full">
+            <Button
+              type="button"
+              variant="ghost"
+              size="md"
+              onClick={() => setIsConfirmModalOpen(false)}
+              className="w-full sm:flex-1 justify-center order-2 sm:order-1"
+            >
+              Belum, Nanti Dulu
+            </Button>
+            <Button
+              type="button"
+              variant="primary"
+              size="md"
+              onClick={() => {
+                setIsConfirmModalOpen(false);
+                try {
+                  if (typeof window !== "undefined" && typeof navigator !== "undefined") {
+                    const isJsdom = navigator.userAgent && navigator.userAgent.includes("jsdom");
+                    if (!isJsdom) {
+                      confetti({
+                        particleCount: 60,
+                        spread: 70,
+                        origin: { y: 0.6 },
+                        colors: ["#F59E0B", "#10B981", "#6EE7B7", "#FDE68A", "#D97706"],
+                      });
+                    }
+                  }
+                } catch {
+                  // Fallback for non-canvas environments
+                }
+                onUpdateStatus(goal.id, "achieved");
+              }}
+              className="w-full sm:flex-1 justify-center bg-gradient-to-r from-amber-600 to-sage-600 hover:from-amber-700 hover:to-sage-700 text-white font-semibold shadow-md gap-1.5 order-1 sm:order-2"
+            >
+              <Trophy className="w-4 h-4" />
+              <span>Ya, Target Tercapai!</span>
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </Card>
   );
 };
