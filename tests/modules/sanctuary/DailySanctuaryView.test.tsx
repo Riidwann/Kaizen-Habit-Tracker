@@ -60,12 +60,15 @@ describe("DailySanctuaryView", () => {
     expect(screen.getByText("Drink a glass of warm water")).toBeInTheDocument();
   });
 
-  it("triggers handleToggleScaleDown when 'Terlalu Berat?' button is clicked", () => {
+  it("triggers handleToggleScaleDown when scale down option is clicked in menu", () => {
     render(<DailySanctuaryView controller={mockController} />);
 
-    const scaleDownButtons = screen.getAllByRole("button", { name: /terlalu berat|scale down|darurat/i });
-    expect(scaleDownButtons.length).toBeGreaterThan(0);
-    fireEvent.click(scaleDownButtons[0]);
+    const optionsButtons = screen.getAllByRole("button", { name: /Opsi Kebiasaan/i });
+    expect(optionsButtons.length).toBeGreaterThan(0);
+    fireEvent.click(optionsButtons[0]);
+
+    const scaleDownItem = screen.getByRole("menuitem", { name: /Peringan Tugas|Aturan 2-Mnt/i });
+    fireEvent.click(scaleDownItem);
 
     expect(mockController.handleToggleScaleDown).toHaveBeenCalledWith("act-1");
   });
@@ -75,15 +78,18 @@ describe("DailySanctuaryView", () => {
     render(<DailySanctuaryView controller={mockController} />);
 
     expect(screen.getByText("Read 1 TypeScript type definition")).toBeInTheDocument();
-    expect(screen.getByText(/disederhanakan|mode darurat/i)).toBeInTheDocument();
+    expect(screen.getByText(/Mode 2-Menit|disederhanakan|mode darurat/i)).toBeInTheDocument();
   });
 
-  it("triggers handleOpenTimer when '⏱️ 2-Min Timer' is clicked", () => {
+  it("triggers handleOpenTimer when timer option is clicked in menu", () => {
     render(<DailySanctuaryView controller={mockController} />);
 
-    const timerButtons = screen.getAllByRole("button", { name: /timer|2-min/i });
-    expect(timerButtons.length).toBeGreaterThan(0);
-    fireEvent.click(timerButtons[0]);
+    const optionsButtons = screen.getAllByRole("button", { name: /Opsi Kebiasaan/i });
+    expect(optionsButtons.length).toBeGreaterThan(0);
+    fireEvent.click(optionsButtons[0]);
+
+    const timerMenuItem = screen.getByRole("menuitem", { name: /Mulai Timer/i });
+    fireEvent.click(timerMenuItem);
 
     expect(mockController.handleOpenTimer).toHaveBeenCalledWith(action1);
   });
