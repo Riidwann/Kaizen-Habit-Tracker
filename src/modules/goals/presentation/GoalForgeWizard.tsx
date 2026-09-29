@@ -334,9 +334,9 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
                 size="sm"
                 onClick={() => handleSubmit()}
                 isLoading={isLoading}
-                aria-label="Forge Goal"
+                aria-label="Simpan Target"
               >
-                Tempa Sasaran (Forge Goal)
+                Simpan Target
               </Button>
             )}
           </div>

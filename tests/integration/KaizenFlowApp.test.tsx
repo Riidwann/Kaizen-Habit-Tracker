@@ -10,7 +10,7 @@ describe("KaizenFlowApp Integration", () => {
     inMemoryEventBus.clear();
   });
 
-  it("1. loads and renders Header, TabNavigation, Sanctuary by default, and Footer", async () => {
+  it("1. loads and renders Header, 3-TabNavigation, Sanctuary by default, and Footer", async () => {
     render(<HomePage />);
 
     // Header checks
@@ -19,25 +19,19 @@ describe("KaizenFlowApp Integration", () => {
       screen.getByText(/Satu langkah kecil hari ini\./i)
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /Refleksi Hansei/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Cadangan Data/i })
+      screen.getByRole("button", { name: /Menu Opsi/i })
     ).toBeInTheDocument();
 
-    // TabNavigation checks
+    // TabNavigation checks: exactly 3 tabs
     expect(screen.getByRole("tablist")).toBeInTheDocument();
     expect(
-      screen.getByRole("tab", { name: /Sanctuary|Fokus Harian/i })
+      screen.getByRole("tab", { name: /Hari Ini/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("tab", { name: /Goal Forge|Pohon Tujuan/i })
+      screen.getByRole("tab", { name: /Target/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("tab", { name: /1% Compound|Pertumbuhan/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("tab", { name: /Cadangan Data/i })
+      screen.getByRole("tab", { name: /Kemajuan/i })
     ).toBeInTheDocument();
 
     // Default Sanctuary View checks
@@ -60,53 +54,57 @@ describe("KaizenFlowApp Integration", () => {
     ).toBeInTheDocument();
   });
 
-  it("2. switching to Goal Forge tab renders Goal Manager", async () => {
+  it("2. switching to Target tab renders Goal Manager", async () => {
     render(<HomePage />);
 
-    const goalForgeTab = screen.getByRole("tab", {
-      name: /Goal Forge|Pohon Tujuan/i,
+    const goalTab = screen.getByRole("tab", {
+      name: /Target/i,
     });
-    fireEvent.click(goalForgeTab);
+    fireEvent.click(goalTab);
 
     await waitFor(() => {
       expect(
-        screen.getByRole("heading", { name: /Goal Forge & Decomposition/i })
+        screen.getByRole("heading", { name: /Target & Langkah Kecil|Goal Forge/i })
       ).toBeInTheDocument();
     });
 
     expect(
-      screen.getByRole("button", { name: "Forge New Goal" })
+      screen.getByRole("button", { name: /Tambah Target|Forge New Goal/i })
     ).toBeInTheDocument();
   });
 
-  it("3. switching to 1% Compound tab renders Compound Growth visualizer", async () => {
+  it("3. switching to Kemajuan tab renders Compound Growth visualizer", async () => {
     render(<HomePage />);
 
     const compoundTab = screen.getByRole("tab", {
-      name: /1% Compound|Pertumbuhan/i,
+      name: /Kemajuan/i,
     });
     fireEvent.click(compoundTab);
 
     await waitFor(() => {
       expect(
-        screen.getByRole("heading", { name: /1% Compound Engine/i })
+        screen.getByRole("heading", { name: /Grafik Kemajuan 1%|1% Compound/i })
       ).toBeInTheDocument();
     });
 
     expect(screen.getByTestId("compound-curve-svg")).toBeInTheDocument();
   });
 
-  it("4. clicking Hansei opens Hansei modal and saves reflection", async () => {
+  it("4. clicking reflection button in Kemajuan tab opens Hansei modal and saves reflection", async () => {
     render(<HomePage />);
 
-    // Click Hansei quick action in header
-    const hanseiBtn = screen.getByRole("button", { name: /Refleksi Hansei/i });
-    fireEvent.click(hanseiBtn);
+    // Switch to Kemajuan tab
+    const compoundTab = screen.getByRole("tab", { name: /Kemajuan/i });
+    fireEvent.click(compoundTab);
+
+    // Click Tulis Refleksi Malam button
+    const reflectBtn = await screen.findByRole("button", { name: /Tulis Refleksi Malam/i });
+    fireEvent.click(reflectBtn);
 
     // Modal opens
     await waitFor(() => {
       expect(
-        screen.getByRole("heading", { name: /Hansei: Refleksi Malam 30 Detik/i })
+        screen.getByRole("heading", { name: /Refleksi Malam/i })
       ).toBeInTheDocument();
     });
 
@@ -129,17 +127,21 @@ describe("KaizenFlowApp Integration", () => {
     // Modal closes after submission
     await waitFor(() => {
       expect(
-        screen.queryByRole("heading", { name: /Hansei: Refleksi Malam 30 Detik/i })
+        screen.queryByRole("heading", { name: /Refleksi Malam/i })
       ).not.toBeInTheDocument();
     });
   });
 
-  it("5. clicking Backup in Header opens Data Backup modal", async () => {
+  it("5. clicking Backup in Header Menu opens Data Backup modal", async () => {
     render(<HomePage />);
 
-    // Click Backup button in header
-    const backupBtn = screen.getByRole("button", { name: /Cadangan Data/i });
-    fireEvent.click(backupBtn);
+    // Open Header Menu (⋮)
+    const menuBtn = screen.getByRole("button", { name: /Menu Opsi/i });
+    fireEvent.click(menuBtn);
+
+    // Click Backup menuitem
+    const backupItem = await screen.findByRole("menuitem", { name: /Cadangan Data/i });
+    fireEvent.click(backupItem);
 
     // Modal opens
     const modal = await screen.findByRole("dialog");
@@ -164,7 +166,7 @@ describe("KaizenFlowApp Integration", () => {
     });
     fireEvent.click(loadSampleBtn);
 
-    // After loading sample data, sanctuary actions should appear
+    // After loading sample data, actions should appear
     await waitFor(() => {
       expect(
         screen.getByText(/Lakukan 2 kali push-up saat bangun tidur/i)
@@ -175,26 +177,26 @@ describe("KaizenFlowApp Integration", () => {
   it("7. wires up EventBus so goal creation automatically adds micro-actions to daily sanctuary", async () => {
     render(<HomePage />);
 
-    // Open forge modal via header or goal tab
+    // Open forge modal via Target tab
     const goalTab = screen.getByRole("tab", {
-      name: /Goal Forge|Pohon Tujuan/i,
+      name: /Target/i,
     });
     fireEvent.click(goalTab);
 
     const forgeBtn = await screen.findByRole("button", {
-      name: "Forge New Goal",
+      name: /Tambah Target/i,
     });
     fireEvent.click(forgeBtn);
 
     // Step 1: Vision
-    const titleInput = await screen.findByLabelText(/vision title/i);
+    const titleInput = await screen.findByLabelText(/nama target/i);
     fireEvent.change(titleInput, { target: { value: "Belajar Next.js Architecture" } });
 
     const nextBtn1 = screen.getByRole("button", { name: /next/i });
     fireEvent.click(nextBtn1);
 
     // Step 2: Emotional Anchor
-    const whyInput = await screen.findByLabelText(/the why/i);
+    const whyInput = await screen.findByLabelText(/motivasi utama/i);
     fireEvent.change(whyInput, {
       target: { value: "Membangun aplikasi berkualitas tinggi tanpa stres" },
     });
@@ -203,7 +205,7 @@ describe("KaizenFlowApp Integration", () => {
     fireEvent.click(nextBtn2);
 
     // Step 3: Milestone
-    const milestoneInput = await screen.findByLabelText(/milestone title/i);
+    const milestoneInput = await screen.findByLabelText(/tonggak pencapaian/i);
     fireEvent.change(milestoneInput, {
       target: { value: "Pahami Event-Driven Architecture" },
     });
@@ -212,26 +214,26 @@ describe("KaizenFlowApp Integration", () => {
     fireEvent.click(nextBtn3);
 
     // Step 4: Micro-Action
-    const microActionInput = await screen.findByLabelText(/starter micro-action/i);
+    const microActionInput = await screen.findByLabelText(/langkah kecil awal/i);
     fireEvent.change(microActionInput, {
       target: { value: "Baca 1 file interface TypeScript" },
     });
 
-    const finishBtn = screen.getByRole("button", { name: /forge goal/i });
+    const finishBtn = screen.getByRole("button", { name: /simpan target/i });
     fireEvent.click(finishBtn);
 
     // Wizard should close
     await waitFor(() => {
-      expect(screen.queryByLabelText(/starter micro-action/i)).not.toBeInTheDocument();
+      expect(screen.queryByLabelText(/langkah kecil awal/i)).not.toBeInTheDocument();
     });
 
-    // Switch back to Sanctuary tab
+    // Switch back to Hari Ini tab
     const sanctuaryTab = screen.getByRole("tab", {
-      name: /Sanctuary|Fokus Harian/i,
+      name: /Hari Ini/i,
     });
     fireEvent.click(sanctuaryTab);
 
-    // Verify micro-action was automatically added to daily sanctuary
+    // Verify micro-action was automatically added to daily list
     await waitFor(() => {
       expect(
         screen.getByText("Baca 1 file interface TypeScript")
