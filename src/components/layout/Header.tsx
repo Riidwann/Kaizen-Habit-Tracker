@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { StreakBadge } from "@/modules/reflection/presentation/StreakBadge";
-import { Button } from "@/shared/presentation/Button";
-import { Moon, Sun, Database, BookOpen } from "lucide-react";
+import { HeaderMenu } from "./HeaderMenu";
+import { Moon, Sun } from "lucide-react";
 import { cn } from "@/shared/presentation/utils";
 
 export interface HeaderProps {
@@ -10,6 +10,9 @@ export interface HeaderProps {
   onOpenHansei?: () => void;
   onOpenBackup?: () => void;
   onOpenGuide?: () => void;
+  onLoadSample?: () => void;
+  onInstallPwa?: () => void;
+  canInstallPwa?: boolean;
   isDarkMode?: boolean;
   onToggleTheme?: () => void;
   className?: string;
@@ -43,6 +46,9 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenHansei,
   onOpenBackup,
   onOpenGuide,
+  onLoadSample,
+  onInstallPwa,
+  canInstallPwa = false,
   isDarkMode: controlledDarkMode,
   onToggleTheme: controlledToggleTheme,
   className,
@@ -106,62 +112,14 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Live Streak & Actions */}
+        {/* Clean, Streamlined Action Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* Live Streak Badge (compact on mobile, full on desktop) */}
+          {/* Live Streak Badge */}
           <StreakBadge
             currentStreak={currentStreak}
             isGracePeriod={isGracePeriod}
             onClick={onOpenHansei}
           />
-
-          {/* Quick Action: Panduan Kaizen */}
-          {onOpenGuide && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              aria-label="Panduan Kaizen"
-              onClick={onOpenGuide}
-              className="p-1.5 sm:px-2.5 text-xs font-medium gap-1 text-sage-800 hover:text-sage-900 hover:bg-sage-100/60 dark:text-sage-300 dark:hover:text-sage-100 dark:hover:bg-sage-950/50 border border-sage-200/70 dark:border-sage-800"
-              title="Panduan Kaizen"
-            >
-              <BookOpen className="w-3.5 h-3.5 text-sage-600 dark:text-sage-400" />
-              <span className="hidden md:inline">Panduan</span>
-            </Button>
-          )}
-
-          {/* Quick Action: Hansei Reflection */}
-          {onOpenHansei && (
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              aria-label="Refleksi Hansei"
-              onClick={onOpenHansei}
-              className="p-1.5 sm:px-2.5 text-xs font-medium gap-1 shadow-sm bg-sand-200/80 text-charcoal-800 hover:bg-sand-300 dark:bg-charcoal-800 dark:text-sand-100 dark:hover:bg-charcoal-700"
-              title="Refleksi Hansei"
-            >
-              <Moon className="w-3.5 h-3.5 text-amber-500" />
-              <span className="hidden md:inline">Hansei</span>
-            </Button>
-          )}
-
-          {/* Quick Action: Cadangan Data */}
-          {onOpenBackup && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              aria-label="Cadangan Data"
-              onClick={onOpenBackup}
-              className="p-1.5 sm:px-2 text-xs font-medium gap-1 text-charcoal-700 hover:text-charcoal-900 dark:text-sand-300 dark:hover:text-sand-100"
-              title="Cadangan Data"
-            >
-              <Database className="w-3.5 h-3.5 text-charcoal-500 dark:text-sand-400" />
-              <span className="hidden lg:inline">Cadangan</span>
-            </Button>
-          )}
 
           {/* Theme Toggle Button */}
           <button
@@ -177,8 +135,18 @@ export const Header: React.FC<HeaderProps> = ({
               <Moon className="w-4 h-4 text-charcoal-700" />
             )}
           </button>
+
+          {/* Dropdown Options Menu (⋮) */}
+          <HeaderMenu
+            onOpenGuide={onOpenGuide}
+            onOpenBackup={onOpenBackup}
+            onLoadSample={onLoadSample}
+            onInstallPwa={onInstallPwa}
+            canInstallPwa={canInstallPwa}
+          />
         </div>
       </div>
     </header>
   );
 };
+
