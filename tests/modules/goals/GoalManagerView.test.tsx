@@ -44,7 +44,7 @@ describe("GoalManagerView", () => {
   it("renders header and master goals with tree items", () => {
     render(<GoalManagerView controller={mockController} />);
 
-    expect(screen.getByText(/goal forge & decomposition/i)).toBeInTheDocument();
+    expect(screen.getByText(/goal forge & decomposition|target & langkah kecil/i)).toBeInTheDocument();
     expect(screen.getByText("Meditate 100 Days")).toBeInTheDocument();
     expect(screen.getByText(/build mental clarity/i)).toBeInTheDocument();
     expect(screen.getByText(/sit for 1 breath/i)).toBeInTheDocument();
@@ -55,7 +55,7 @@ describe("GoalManagerView", () => {
   it("handles openForgeModal when clicking Forge New Goal", () => {
     render(<GoalManagerView controller={mockController} />);
 
-    const forgeBtn = screen.getByRole("button", { name: /forge new goal/i });
+    const forgeBtn = screen.getByRole("button", { name: /forge new goal|tambah target/i });
     fireEvent.click(forgeBtn);
 
     expect(mockController.openForgeModal).toHaveBeenCalled();

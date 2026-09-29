@@ -34,7 +34,7 @@ describe("CompoundVisualizerView", () => {
     );
 
     // Header & Titles
-    expect(screen.getByRole("heading", { name: /1% Compound Engine/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Kemajuan 1%|1% Compound/i })).toBeInTheDocument();
 
     // Streak badge
     expect(screen.getByText(/5 Hari Bertumbuh/i)).toBeInTheDocument();

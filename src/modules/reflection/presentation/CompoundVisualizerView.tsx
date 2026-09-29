@@ -93,7 +93,7 @@ export const CompoundVisualizerView: React.FC<CompoundVisualizerViewProps> = ({
               <TrendingUp className="w-5 h-5" />
             </span>
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-charcoal-900 dark:text-sand-50">
-              1% Compound Engine
+              Grafik Kemajuan 1%
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-charcoal-500 dark:text-sand-400">
@@ -111,7 +111,7 @@ export const CompoundVisualizerView: React.FC<CompoundVisualizerViewProps> = ({
               className="gap-1.5 bg-charcoal-900 text-sand-50 hover:bg-charcoal-800 dark:bg-sand-100 dark:text-charcoal-900 dark:hover:bg-sand-200 text-xs py-1.5 px-3 rounded-xl"
             >
               <Moon className="w-3.5 h-3.5 text-amber-300" />
-              <span>Refleksi Hansei</span>
+              <span>Tulis Refleksi Malam</span>
             </Button>
           )}
         </div>

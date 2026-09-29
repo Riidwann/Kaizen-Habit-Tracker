@@ -53,11 +53,11 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
               <Compass className="w-5 h-5" />
             </span>
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-charcoal-900 dark:text-sand-50">
-              Goal Forge & Decomposition (Pohon Sasaran)
+              Target & Langkah Kecil (Goals)
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-charcoal-500 dark:text-sand-400">
-            Dekomposisi visi makro menjadi tindakan mikro yang mudah dijalankan tanpa rasa malas.
+            Dekomposisi tujuan besar menjadi langkah-langkah kecil yang mudah dijalankan tanpa rasa malas.
           </p>
         </div>
 
@@ -65,11 +65,11 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
           type="button"
           variant="primary"
           onClick={openForgeModal}
-          aria-label="Forge New Goal"
+          aria-label="Tambah Target Baru"
           leftIcon={<Plus className="w-4 h-4" />}
           className="shadow-sm font-semibold"
         >
-          Tempa Sasaran (Forge New Goal)
+          Tambah Target Baru
         </Button>
       </div>
 
@@ -77,7 +77,7 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
       <div className="p-3.5 rounded-xl bg-sand-100/70 dark:bg-charcoal-800/50 border border-sand-200/70 dark:border-charcoal-700/70 flex items-start gap-2.5 text-xs text-charcoal-600 dark:text-sand-300">
         <Info className="w-4 h-4 text-sage-600 shrink-0 mt-0.5" />
         <p className="leading-relaxed">
-          <strong>Bagaimana ini bekerja?</strong> Setiap sasaran di sini dipecah menjadi tonggak pencapaian dan aksi mikro ≤ 2 menit. Aksi mikro yang Anda buat otomatis muncul di tab <strong>Fokus Harian (Sanctuary)</strong> untuk dikerjakan setiap hari.
+          <strong>Bagaimana ini bekerja?</strong> Setiap target dipecah menjadi langkah-langkah kecil (kebiasaan mikro ≤ 2 menit). Kebiasaan ini otomatis muncul di tab <strong>Hari Ini</strong> untuk dikerjakan setiap hari.
         </p>
       </div>
 
@@ -95,7 +95,7 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
                 : "bg-sand-100 dark:bg-charcoal-800/80 text-charcoal-600 dark:text-sand-300 hover:bg-sand-200"
             )}
           >
-            Semua Ranah (All Realms)
+            Semua Kategori
           </button>
           {GOAL_CATEGORY_LIST.map((cat) => (
             <button

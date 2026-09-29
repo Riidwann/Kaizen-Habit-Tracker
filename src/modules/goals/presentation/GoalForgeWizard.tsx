@@ -117,8 +117,8 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Goal Forge • Tempa Sasaran Baru"
-      description="Pecah impian besar menjadi kebiasaan mikro ≤ 2 menit yang mustahil memicu rasa malas."
+      title="Buat Target Baru"
+      description="Pecah target besar menjadi kebiasaan mikro ≤ 2 menit yang mustahil gagal."
       className="max-w-xl"
     >
       <div className="flex flex-col gap-6">
@@ -127,10 +127,10 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
           <div className="flex items-center justify-between text-xs text-charcoal-500 dark:text-sand-400 font-medium mb-1.5">
             <span>
               Langkah {step} dari 4:{" "}
-              {step === 1 && "Visi & Ranah Hidup (Vision & Realm)"}
-              {step === 2 && "Jangkar Batin (The Emotional Anchor)"}
-              {step === 3 && "Tonggak Pertama (First Milestone)"}
-              {step === 4 && "Aksi Mikro & Cadangan (Micro-Action & Fallback)"}
+              {step === 1 && "Target & Kategori"}
+              {step === 2 && "Motivasi Utama (Alasan Anda)"}
+              {step === 3 && "Tonggak Pencapaian Pertama"}
+              {step === 4 && "Kebiasaan Mikro 2-Menit"}
             </span>
             <span className="font-semibold">{step * 25}%</span>
           </div>
@@ -146,8 +146,8 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
         {step === 1 && (
           <div className="flex flex-col gap-4">
             <Input
-              label="Judul Visi Sasaran (Vision Title)"
-              placeholder="Contoh: Menjadi pelari jarak jauh yang bugar dan konsisten"
+              label="Nama Target"
+              placeholder="Contoh: Rutin berolahraga dan menjaga kebugaran"
               value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
@@ -160,7 +160,7 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
 
             <div className="flex flex-col gap-2">
               <label className="text-xs sm:text-sm font-medium text-charcoal-700 dark:text-sand-200">
-                Pilih Ranah Kategori (Choose Realm)
+                Pilih Kategori
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                 {GOAL_CATEGORY_LIST.map((cat) => {
@@ -203,22 +203,22 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
           </div>
         )}
 
-        {/* Step 2: The Emotional Anchor (Why) */}
+        {/* Step 2: Motivasi Utama (Alasan Anda) */}
         {step === 2 && (
           <div className="flex flex-col gap-4">
             <div className="p-3.5 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
               <p className="text-xs font-semibold text-amber-900 dark:text-amber-200 mb-1 flex items-center gap-1.5">
                 <Flame className="w-3.5 h-3.5 text-amber-600" />
-                Mengapa ini sangat penting bagi Anda? (Why is this deeply important for you?)
+                Mengapa target ini sangat penting bagi Anda?
               </p>
               <p className="text-xs text-amber-800/80 dark:text-amber-300/80 leading-relaxed">
-                <strong>Psikologi Kaizen:</strong> Sasaran tanpa resonansi emosional mudah ditinggalkan saat lelah. Sambungkan sasaran ini ke jati diri, nilai hidup, atau masa depan yang Anda dambakan.
+                <strong>Prinsip Kaizen:</strong> Target tanpa alasan pribadi yang mendalam mudah ditinggalkan saat lelah. Sambungkan target ini ke jati diri dan masa depan yang Anda inginkan.
               </p>
             </div>
 
             <Textarea
-              label="Jangkar Batin / Alasan Kuat (The Why)"
-              placeholder="Contoh: Agar memiliki stamina prima setiap hari, bebas stres, dan memberi teladan hidup sehat untuk keluarga."
+              label="Motivasi Utama / Alasan Pribadi"
+              placeholder="Contoh: Agar memiliki stamina prima setiap hari, bebas stres, dan tubuh terasa segar."
               value={whyText}
               onChange={(e) => {
                 setWhyText(e.target.value);
@@ -226,7 +226,7 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
               }}
               error={whyError}
               rows={4}
-              helperText="Saat Anda merasa malas, kalimat inilah yang akan mengingatkan komitmen batin Anda."
+              helperText="Saat Anda merasa malas, kalimat inilah yang akan mengingatkan komitmen Anda."
               autoFocus
             />
           </div>
@@ -237,19 +237,19 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
           <div className="flex flex-col gap-4">
             <div className="p-3.5 rounded-xl bg-sage-50/80 dark:bg-sage-950/30 border border-sage-200 dark:border-sage-800">
               <p className="text-xs font-semibold text-sage-900 dark:text-sage-200 mb-1">
-                Tonggak Pencapaian Pertama (First Milestone Checkpoint)
+                Tonggak Pencapaian Pertama (Opsional)
               </p>
               <p className="text-xs text-sage-800/80 dark:text-sage-300/80 leading-relaxed">
-                Visi yang terlalu jauh memicu ketakutan otak. Tentukan 1 titik perantara yang mudah dicapai agar Anda segera merasakan kemenangan pertama.
+                Target yang terlalu jauh membuat otak terbebani. Tentukan 1 titik capaian perantara yang mudah dicapai agar Anda segera merasakan kemenangan kecil pertama.
               </p>
             </div>
 
             <Input
-              label="Judul Tonggak Pencapaian (Milestone Title)"
-              placeholder="Contoh: Selesaikan 7 hari berturut-turut lari santai 10 menit"
+              label="Judul Tonggak Pencapaian"
+              placeholder="Contoh: Selesaikan 7 hari berturut-turut jalan santai 10 menit"
               value={firstMilestoneTitle}
               onChange={(e) => setFirstMilestoneTitle(e.target.value)}
-              helperText="Tonggak awal opsional. Anda dapat menambah tonggak lainnya kapan saja."
+              helperText="Tonggak awal ini opsional. Anda dapat menambah tonggak lainnya kapan saja."
               autoFocus
             />
           </div>
@@ -261,28 +261,28 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
             <div className="p-3.5 rounded-xl bg-sand-100 dark:bg-charcoal-800/70 border border-sand-200 dark:border-charcoal-700">
               <p className="text-xs font-semibold text-charcoal-900 dark:text-sand-100 mb-1 flex items-center gap-1.5">
                 <Info className="w-3.5 h-3.5 text-sage-600" />
-                Dekomposisi: Aksi Mikro ≤ 2 Menit & Langkah Darurat
+                Langkah Kecil ≤ 2 Menit & Versi Ringan Saat Malas
               </p>
               <p className="text-xs text-charcoal-600 dark:text-sand-400 leading-relaxed">
-                Kebiasaan atomik membutuhkan aksi pemicu yang sangat kecil sehingga tidak memicu rasa malas (Aturan 2 Menit), serta langkah darurat untuk hari-hari saat Anda lelah atau sibuk.
+                Buat tindakan awal yang sangat kecil sehingga mustahil memicu rasa malas (Aturan 2 Menit), serta langkah darurat untuk hari-hari saat Anda lelah atau sibuk.
               </p>
             </div>
 
             <Input
-              label="Aksi Mikro Awal ≤ 2 Menit (Starter Micro-Action)"
-              placeholder="Contoh: Pakai sepatu lari dan melangkah ke luar pintu rumah"
+              label="Langkah Kecil Awal (≤ 2 Menit)"
+              placeholder="Contoh: Pakai sepatu olahraga dan melangkah ke luar pintu"
               value={microAction}
               onChange={(e) => setMicroAction(e.target.value)}
-              helperText="Aksi pemicu yang memerlukan hampir nol kemauan keras untuk memulainya."
+              helperText="Aksi pemicu ini otomatis masuk ke tab Hari Ini untuk dikerjakan setiap hari."
               autoFocus
             />
 
             <Input
-              label="Langkah Darurat Saat Lelah (Emergency Fallback)"
-              placeholder="Contoh: Lakukan 5 kali peregangan kaki di samping tempat tidur"
+              label="Versi Ringan Saat Lelah / Sibuk"
+              placeholder="Contoh: Lakukan 5 kali peregangan badan di samping tempat tidur"
               value={scaleDownFallback}
               onChange={(e) => setScaleDownFallback(e.target.value)}
-              helperText="Menjaga konsistensi identitas Anda tanpa putus dan tanpa rasa bersalah."
+              helperText="Menjaga konsistensi streak tanpa putus dan tanpa rasa bersalah."
               leftIcon={<ShieldAlert className="w-4 h-4 text-amber-500" />}
             />
           </div>
