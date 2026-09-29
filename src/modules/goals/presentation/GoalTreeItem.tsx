@@ -290,7 +290,7 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
                 className="inline-flex items-center gap-1.5 text-xs text-sage-700 dark:text-sage-400 hover:underline pt-1 w-fit"
               >
                 <Plus className="w-3 h-3" />
-                Tambah Tonggak Pencapaian (Add Milestone)
+                Tambah Tonggak Pencapaian
               </button>
             )}
           </div>

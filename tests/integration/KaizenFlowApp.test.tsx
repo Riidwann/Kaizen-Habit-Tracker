@@ -36,7 +36,7 @@ describe("KaizenFlowApp Integration", () => {
 
     // Default Sanctuary View checks
     expect(
-      screen.getByText(/Daily Sanctuary & Fokus Hari Ini/i)
+      screen.getByRole("heading", { name: /^Fokus Hari Ini$/i, level: 1 })
     ).toBeInTheDocument();
 
     // Empty state / Welcoming starter banner checks after loading settles

@@ -107,7 +107,7 @@ export const DataBackupModal: React.FC<DataBackupModalProps> = ({
 
         {/* Section 1: Export Data */}
         <div className="rounded-xl border border-sand-200 dark:border-charcoal-700 bg-sand-50/60 dark:bg-charcoal-800/40 p-4 transition-all">
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Download className="w-4 h-4 text-sage-600 dark:text-sage-400" />
@@ -130,7 +130,7 @@ export const DataBackupModal: React.FC<DataBackupModalProps> = ({
               size="sm"
               onClick={controller.handleExport}
               disabled={controller.isExporting}
-              className="shrink-0 font-medium"
+              className="w-full sm:w-auto shrink-0 font-medium justify-center"
             >
               <Download className="w-3.5 h-3.5 mr-1.5" />
               {controller.isExporting ? "Menyiapkan..." : "Unduh Cadangan JSON"}
@@ -189,7 +189,7 @@ export const DataBackupModal: React.FC<DataBackupModalProps> = ({
 
         {/* Section 3: Sample Data */}
         <div className="rounded-xl border border-sand-200 dark:border-charcoal-700 bg-sand-50/60 dark:bg-charcoal-800/40 p-4 transition-all">
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-sage-600 dark:text-sage-400" />
@@ -207,7 +207,7 @@ export const DataBackupModal: React.FC<DataBackupModalProps> = ({
               size="sm"
               onClick={controller.handleLoadSampleData}
               disabled={controller.isLoadingSample}
-              className="shrink-0 font-medium"
+              className="w-full sm:w-auto shrink-0 font-medium justify-center"
             >
               <Sparkles className="w-3.5 h-3.5 mr-1.5 text-sage-600" />
               {controller.isLoadingSample ? "Memuat..." : "Muat Contoh Data"}
@@ -218,7 +218,7 @@ export const DataBackupModal: React.FC<DataBackupModalProps> = ({
         {/* Section 4: Safe Reset All Data */}
         <div className="rounded-xl border border-red-200/80 dark:border-red-900/40 bg-red-50/30 dark:bg-red-950/20 p-4 transition-all">
           <div className="space-y-3">
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
@@ -236,7 +236,7 @@ export const DataBackupModal: React.FC<DataBackupModalProps> = ({
                   variant="outline"
                   size="sm"
                   onClick={() => setShowResetConfirm(true)}
-                  className="shrink-0 border-red-300 text-red-700 hover:bg-red-50 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-950/50"
+                  className="w-full sm:w-auto shrink-0 border-red-300 text-red-700 hover:bg-red-50 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-950/50 justify-center"
                 >
                   <Trash2 className="w-3.5 h-3.5 mr-1.5" />
                   Reset Semua Data

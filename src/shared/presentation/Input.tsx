@@ -50,7 +50,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             disabled={disabled}
             className={cn(
               "w-full rounded-xl border bg-white dark:bg-charcoal-900 px-3.5 py-2 text-sm",
-              "text-charcoal-900 dark:text-sand-100 placeholder:text-charcoal-400 dark:placeholder:text-sand-500",
+              "text-charcoal-900 dark:text-sand-100 placeholder:text-charcoal-400 dark:placeholder:text-charcoal-400",
               "transition-colors duration-150",
               "border-sand-300 dark:border-charcoal-700",
               "focus:outline-none focus:border-sage-500 focus:ring-2 focus:ring-sage-500/20",
@@ -74,7 +74,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           </p>
         )}
         {!error && helperText && (
-          <p className="text-xs text-charcoal-400 dark:text-sand-500">
+          <p className="text-xs text-charcoal-500 dark:text-sand-400">
             {helperText}
           </p>
         )}
@@ -114,7 +114,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           disabled={disabled}
           className={cn(
             "w-full rounded-xl border bg-white dark:bg-charcoal-900 px-3.5 py-2 text-sm",
-            "text-charcoal-900 dark:text-sand-100 placeholder:text-charcoal-400 dark:placeholder:text-sand-500",
+            "text-charcoal-900 dark:text-sand-100 placeholder:text-charcoal-400 dark:placeholder:text-charcoal-400",
             "transition-colors duration-150 resize-y",
             "border-sand-300 dark:border-charcoal-700",
             "focus:outline-none focus:border-sage-500 focus:ring-2 focus:ring-sage-500/20",
@@ -130,7 +130,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           </p>
         )}
         {!error && helperText && (
-          <p className="text-xs text-charcoal-400 dark:text-sand-500">
+          <p className="text-xs text-charcoal-500 dark:text-sand-400">
             {helperText}
           </p>
         )}

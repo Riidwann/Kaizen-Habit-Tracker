@@ -40,7 +40,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
-      <body className="min-h-screen flex flex-col bg-sand-50 text-charcoal-900 dark:bg-charcoal-950 dark:text-charcoal-100 antialiased selection:bg-sage-200 selection:text-sage-900 transition-colors duration-200">
+      <body className="min-h-screen flex flex-col bg-sand-50 text-charcoal-900 dark:bg-charcoal-950 dark:text-charcoal-100 antialiased selection:bg-sage-200 selection:text-sage-900 transition-colors duration-200 overflow-x-hidden">
         {children}
         <script
           dangerouslySetInnerHTML={{

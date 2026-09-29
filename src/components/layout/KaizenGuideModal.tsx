@@ -40,48 +40,48 @@ export const KaizenGuideModal: React.FC<KaizenGuideModalProps> = ({
       className={cn("max-w-2xl", className)}
     >
       <div className="space-y-5 pt-1">
-        {/* Navigation Tabs (Horizontal scroll on narrow mobile screens) */}
-        <div className="flex border-b border-sand-200 dark:border-charcoal-800 gap-1.5 sm:gap-2 pb-1 overflow-x-auto no-scrollbar">
+        {/* Navigation Tabs (Responsive grid with zero horizontal scroll) */}
+        <div className="grid grid-cols-3 gap-1 sm:gap-2 pb-2 border-b border-sand-200 dark:border-charcoal-800">
           <button
             type="button"
             onClick={() => setActiveSection("philosophy")}
             className={cn(
-              "flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs font-semibold rounded-lg transition-colors shrink-0",
+              "flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold rounded-lg transition-colors text-center",
               activeSection === "philosophy"
-                ? "bg-sage-100 text-sage-900 dark:bg-sage-950/60 dark:text-sage-300"
+                ? "bg-sage-100 text-sage-900 dark:bg-sage-950/80 dark:text-sage-300 font-bold"
                 : "text-charcoal-600 dark:text-sand-400 hover:bg-sand-100 dark:hover:bg-charcoal-800"
             )}
           >
-            <Lightbulb className="w-3.5 h-3.5 text-sage-600 dark:text-sage-400" />
-            <span>1. Apa Itu Kaizen?</span>
+            <Lightbulb className="w-3.5 h-3.5 text-sage-600 dark:text-sage-400 shrink-0" />
+            <span className="truncate sm:whitespace-normal">1. Apa Itu Kaizen?</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveSection("workflow")}
             className={cn(
-              "flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs font-semibold rounded-lg transition-colors shrink-0",
+              "flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold rounded-lg transition-colors text-center",
               activeSection === "workflow"
-                ? "bg-sage-100 text-sage-900 dark:bg-sage-950/60 dark:text-sage-300"
+                ? "bg-sage-100 text-sage-900 dark:bg-sage-950/80 dark:text-sage-300 font-bold"
                 : "text-charcoal-600 dark:text-sand-400 hover:bg-sand-100 dark:hover:bg-charcoal-800"
             )}
           >
-            <Compass className="w-3.5 h-3.5 text-sage-600 dark:text-sage-400" />
-            <span>2. Alur 3 Langkah</span>
+            <Compass className="w-3.5 h-3.5 text-sage-600 dark:text-sage-400 shrink-0" />
+            <span className="truncate sm:whitespace-normal">2. Alur 3 Langkah</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveSection("rules")}
             className={cn(
-              "flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs font-semibold rounded-lg transition-colors shrink-0",
+              "flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold rounded-lg transition-colors text-center",
               activeSection === "rules"
-                ? "bg-sage-100 text-sage-900 dark:bg-sage-950/60 dark:text-sage-300"
+                ? "bg-sage-100 text-sage-900 dark:bg-sage-950/80 dark:text-sage-300 font-bold"
                 : "text-charcoal-600 dark:text-sand-400 hover:bg-sand-100 dark:hover:bg-charcoal-800"
             )}
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-sage-600 dark:text-sage-400" />
-            <span>3. Fitur Utama & Aturan</span>
+            <ShieldCheck className="w-3.5 h-3.5 text-sage-600 dark:text-sage-400 shrink-0" />
+            <span className="truncate sm:whitespace-normal">3. Fitur Utama & Aturan</span>
           </button>
         </div>
 

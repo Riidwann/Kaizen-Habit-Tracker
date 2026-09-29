@@ -135,7 +135,7 @@ export default function HomePage() {
     sanctuaryController.actions.length === 0;
 
   return (
-    <div className="min-h-screen flex flex-col bg-sand-50 dark:bg-charcoal-950 text-charcoal-900 dark:text-sand-100 transition-colors">
+    <div className="min-h-screen flex flex-col bg-sand-50 dark:bg-charcoal-950 text-charcoal-900 dark:text-sand-100 transition-colors overflow-x-hidden">
       {/* 1. Zen Japandi Header */}
       <Header
         currentStreak={reflectionController.stats.currentStreak}
@@ -154,7 +154,7 @@ export default function HomePage() {
       </div>
 
       {/* 3. Main Content Area with safe bottom padding on mobile */}
-      <main className="flex-1 w-full max-w-5xl mx-auto px-3 sm:px-6 py-3 sm:py-6 space-y-5 sm:space-y-6 pb-24 sm:pb-8">
+      <main className="flex-1 w-full max-w-5xl mx-auto px-3 sm:px-6 py-3 sm:py-6 space-y-5 sm:space-y-6 pb-24 sm:pb-8 overflow-x-hidden">
         {/* Welcoming Starter Banner (Rendered when storage is empty) */}
         {isStorageEmpty && (
           <motion.div

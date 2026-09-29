@@ -105,7 +105,7 @@ export const HanseiModal: React.FC<HanseiModalProps> = ({
               if (error) setError(null);
             }}
             placeholder="1 hal kecil yang berhasil saya lakukan hari ini... (contoh: berjalan 2 menit atau minum air)"
-            className="w-full rounded-xl bg-charcoal-950/70 border border-charcoal-700/80 p-3 text-sm text-sand-100 placeholder:text-charcoal-500 focus:outline-none focus:ring-2 focus:ring-sage-400 focus:border-transparent transition-all resize-none"
+            className="w-full rounded-xl bg-charcoal-950/70 border border-charcoal-700/80 p-3 text-sm text-sand-100 placeholder:text-sand-400/80 focus:outline-none focus:ring-2 focus:ring-sage-400 focus:border-transparent transition-all resize-none"
           />
         </div>
 
@@ -123,7 +123,7 @@ export const HanseiModal: React.FC<HanseiModalProps> = ({
               if (error) setError(null);
             }}
             placeholder="1 penyesuaian 1% untuk esok hari... (contoh: siapkan sepatu di depan pintu malam ini)"
-            className="w-full rounded-xl bg-charcoal-950/70 border border-charcoal-700/80 p-3 text-sm text-sand-100 placeholder:text-charcoal-500 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all resize-none"
+            className="w-full rounded-xl bg-charcoal-950/70 border border-charcoal-700/80 p-3 text-sm text-sand-100 placeholder:text-sand-400/80 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all resize-none"
           />
         </div>
 

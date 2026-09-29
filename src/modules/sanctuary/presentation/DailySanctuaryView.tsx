@@ -63,14 +63,14 @@ export const DailySanctuaryView: React.FC<DailySanctuaryViewProps> = ({
             <div className="flex items-center gap-2 mb-1">
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-sage-700 dark:text-sage-400">
                 <Compass className="w-3.5 h-3.5" />
-                Tunnel Vision Focus
+                Fokus Utama Hari Ini
               </span>
               <Badge variant="sage" size="sm">
                 1-3 Tindakan
               </Badge>
             </div>
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-charcoal-900 dark:text-sand-50">
-              Daily Sanctuary & Fokus Hari Ini
+              Fokus Hari Ini
             </h1>
           </div>
 
@@ -165,8 +165,8 @@ export const DailySanctuaryView: React.FC<DailySanctuaryViewProps> = ({
             Belum ada fokus hari ini
           </h3>
           <p className="text-xs text-charcoal-500 dark:text-sand-400 max-w-sm mx-auto leading-relaxed">
-            Sanctuary Anda sedang tenang. Tindakan harian akan muncul otomatis saat Anda membuat target di tab
-            <strong> Pohon Sasaran (Goal Forge)</strong> atau memuat contoh data.
+            Daftar kebiasaan Anda masih kosong. Tindakan harian akan muncul otomatis saat Anda membuat target di tab
+            <strong> Target</strong> atau memuat contoh data.
           </p>
         </Card>
       ) : (

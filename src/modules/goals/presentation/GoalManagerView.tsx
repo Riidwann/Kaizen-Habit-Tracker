@@ -83,16 +83,16 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
 
       {/* Filter Controls */}
       <div className="flex flex-col gap-3">
-        {/* Category Filters */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar">
+        {/* Category Filters (Flex-wrap with zero horizontal scroll) */}
+        <div className="flex flex-wrap items-center gap-1.5 text-xs">
           <button
             type="button"
             onClick={() => setFilterCategory("all")}
             className={cn(
-              "px-3 py-1.5 rounded-full font-medium transition-colors shrink-0",
+              "px-3 py-1.5 rounded-full font-medium transition-colors",
               filterCategory === "all"
-                ? "bg-charcoal-900 text-sand-50 dark:bg-sand-100 dark:text-charcoal-900"
-                : "bg-sand-100 dark:bg-charcoal-800/80 text-charcoal-600 dark:text-sand-300 hover:bg-sand-200"
+                ? "bg-charcoal-900 text-sand-50 dark:bg-sand-100 dark:text-charcoal-900 font-semibold"
+                : "bg-sand-100 text-charcoal-700 hover:bg-sand-200 dark:bg-charcoal-800 dark:text-sand-200 dark:hover:bg-charcoal-700 border border-sand-200/60 dark:border-charcoal-700"
             )}
           >
             Semua Kategori
@@ -103,10 +103,10 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
               type="button"
               onClick={() => setFilterCategory(cat.id)}
               className={cn(
-                "px-3 py-1.5 rounded-full font-medium transition-colors shrink-0 flex items-center gap-1.5",
+                "px-3 py-1.5 rounded-full font-medium transition-colors flex items-center gap-1.5",
                 filterCategory === cat.id
-                  ? "bg-sage-600 text-white shadow-sm"
-                  : "bg-sand-100 dark:bg-charcoal-800/80 text-charcoal-600 dark:text-sand-300 hover:bg-sand-200"
+                  ? "bg-sage-600 text-white shadow-sm font-semibold"
+                  : "bg-sand-100 text-charcoal-700 hover:bg-sand-200 dark:bg-charcoal-800 dark:text-sand-200 dark:hover:bg-charcoal-700 border border-sand-200/60 dark:border-charcoal-700"
               )}
             >
               <span>{cat.label.split(" & ")[0]}</span>
@@ -115,7 +115,7 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
         </div>
 
         {/* Status Filters */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {statusFilters.map((st) => (
             <button
               key={st.id}
@@ -124,8 +124,8 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
               className={cn(
                 "px-2.5 py-1 text-xs rounded-lg font-medium transition-colors",
                 filterStatus === st.id
-                  ? "bg-sand-300/80 dark:bg-charcoal-700 text-charcoal-900 dark:text-sand-50"
-                  : "text-charcoal-500 dark:text-sand-400 hover:bg-sand-100 dark:hover:bg-charcoal-800"
+                  ? "bg-sand-300/80 dark:bg-charcoal-700 text-charcoal-900 dark:text-sand-50 font-semibold"
+                  : "text-charcoal-600 dark:text-sand-300 hover:bg-sand-100 dark:hover:bg-charcoal-800"
               )}
             >
               {st.label}
@@ -137,8 +137,8 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
       {/* Goals Tree List */}
       <div className="flex flex-col gap-4">
         {isLoading && filteredGoals.length === 0 ? (
-          <div className="py-16 text-center text-charcoal-400 dark:text-sand-500 text-sm">
-            Menyelaraskan sasaran Anda...
+          <div className="py-16 text-center text-charcoal-400 dark:text-sand-400 text-sm">
+            Menyelaraskan target Anda...
           </div>
         ) : filteredGoals.length === 0 ? (
           <div className="py-16 px-6 text-center flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-sand-300 dark:border-charcoal-800 bg-sand-50/50 dark:bg-charcoal-900/30">
@@ -146,10 +146,10 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
               <Target className="w-6 h-6" />
             </div>
             <h3 className="text-base font-semibold text-charcoal-800 dark:text-sand-100 mb-1">
-              Belum ada sasaran ditempa (No goals forged yet)
+              Belum Ada Target (No goals forged yet)
             </h3>
             <p className="text-xs sm:text-sm text-charcoal-500 dark:text-sand-400 max-w-sm mb-5">
-              Mulai perjalanan Anda dengan menempa visi pertama. Kaizen memecah impian besar menjadi momentum harian tanpa rasa malas.
+              Mulai perjalanan Anda dengan menentukan target pertama. Kaizen memecah impian besar menjadi momentum harian tanpa rasa malas.
             </p>
             <Button
               type="button"
@@ -158,7 +158,7 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
               onClick={openForgeModal}
               leftIcon={<Sparkles className="w-4 h-4" />}
             >
-              Tempa Sasaran Pertama
+              Mulai Buat Target
             </Button>
           </div>
         ) : (
