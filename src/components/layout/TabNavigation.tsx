@@ -2,7 +2,7 @@ import React from "react";
 import { Compass, Target, TrendingUp, Database, LucideIcon } from "lucide-react";
 import { cn } from "@/shared/presentation/utils";
 
-export type TabId = "sanctuary" | "goals" | "reflection" | "backup";
+export type TabId = "sanctuary" | "goals" | "reflection";
 
 export interface TabItem {
   id: TabId;
@@ -16,37 +16,30 @@ export interface TabItem {
 export const TABS: TabItem[] = [
   {
     id: "sanctuary",
-    label: "Sanctuary (Fokus Harian)",
-    shortLabel: "Fokus Harian",
-    mobileLabel: "Fokus",
+    label: "Hari Ini",
+    shortLabel: "Hari Ini",
+    mobileLabel: "Hari Ini",
     icon: Compass,
-    description: "Fokus 1-3 tindakan mikro hari ini",
+    description: "Kebiasaan harian 2-menit",
   },
   {
     id: "goals",
-    label: "Goal Forge (Pohon Sasaran)",
-    shortLabel: "Pohon Sasaran",
-    mobileLabel: "Sasaran",
+    label: "Target",
+    shortLabel: "Target",
+    mobileLabel: "Target",
     icon: Target,
-    description: "Dekomposisi visi makro ke aksi mikro",
+    description: "Pohon tujuan & langkah kecil",
   },
   {
     id: "reflection",
-    label: "1% Compound (Pertumbuhan)",
-    shortLabel: "Pertumbuhan 1%",
-    mobileLabel: "1% Tumbuh",
+    label: "Kemajuan",
+    shortLabel: "Kemajuan",
+    mobileLabel: "Kemajuan",
     icon: TrendingUp,
-    description: "Kurva pertumbuhan majemuk & Hansei",
-  },
-  {
-    id: "backup",
-    label: "Cadangan Data",
-    shortLabel: "Cadangan Data",
-    mobileLabel: "Cadangan",
-    icon: Database,
-    description: "Ekspor, impor, dan snapshot privat",
+    description: "Grafik konsistensi & refleksi malam",
   },
 ];
+
 
 export interface TabNavigationProps {
   activeTab: TabId;

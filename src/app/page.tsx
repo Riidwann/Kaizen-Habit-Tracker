@@ -141,6 +141,7 @@ export default function HomePage() {
         onOpenHansei={reflectionController.openHanseiModal}
         onOpenBackup={() => setIsBackupModalOpen(true)}
         onOpenGuide={() => setIsGuideModalOpen(true)}
+        onLoadSample={handleLoadSample}
       />
 
       {/* 2. Responsive Tab Navigation (Top on desktop, fixed bottom on mobile) */}
@@ -273,84 +274,6 @@ export default function HomePage() {
                 reflections={reflectionController.reflections}
                 onOpenHanseiModal={reflectionController.openHanseiModal}
               />
-            </motion.div>
-          )}
-
-          {activeTab === "backup" && (
-            <motion.div
-              key="backup"
-              role="tabpanel"
-              id="tabpanel-backup"
-              aria-labelledby="tab-backup"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
-              className="max-w-3xl mx-auto space-y-5 sm:space-y-6"
-            >
-              <Card className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-charcoal-900 border border-sand-200/90 dark:border-charcoal-800 space-y-5 sm:space-y-6 shadow-sm">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-sand-200/80 dark:border-charcoal-800 pb-3 sm:pb-4 gap-2">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="p-1.5 rounded-lg bg-sand-100 dark:bg-charcoal-800 text-charcoal-700 dark:text-sand-300">
-                        <Database className="w-4 h-4 sm:w-5 sm:h-5" />
-                      </span>
-                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-charcoal-900 dark:text-sand-50">
-                        Pusat Manajemen Cadangan & Privasi
-                      </h2>
-                    </div>
-                    <p className="text-xs sm:text-sm text-charcoal-500 dark:text-sand-400">
-                      Seluruh kemajuan dan catatan Anda disimpan 100% secara lokal. Kelola cadangan atau pulihkan kapan saja.
-                    </p>
-                  </div>
-
-                  <Badge variant="sage" size="md" className="self-start sm:self-auto">
-                    <ShieldCheck className="w-3.5 h-3.5 mr-1" />
-                    Lokal & Privat
-                  </Badge>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <div className="p-3.5 sm:p-4 rounded-xl bg-sand-50/70 dark:bg-charcoal-800/50 border border-sand-200 dark:border-charcoal-700 space-y-2.5 sm:space-y-3">
-                    <h3 className="text-xs sm:text-sm font-semibold text-charcoal-800 dark:text-sand-100 flex items-center gap-1.5">
-                      <Download className="w-4 h-4 text-sage-600" />
-                      Ekspor Data Cadangan
-                    </h3>
-                    <p className="text-xs text-charcoal-500 dark:text-sand-400">
-                      Unduh berkas JSON berisi seluruh tujuan, aksi harian, dan riwayat Hansei.
-                    </p>
-                    <Button
-                      type="button"
-                      variant="primary"
-                      size="sm"
-                      onClick={backupController.handleExport}
-                      disabled={backupController.isExporting}
-                      className="w-full text-xs"
-                    >
-                      {backupController.isExporting ? "Menyiapkan..." : "Unduh Cadangan JSON"}
-                    </Button>
-                  </div>
-
-                  <div className="p-3.5 sm:p-4 rounded-xl bg-sand-50/70 dark:bg-charcoal-800/50 border border-sand-200 dark:border-charcoal-700 space-y-2.5 sm:space-y-3">
-                    <h3 className="text-xs sm:text-sm font-semibold text-charcoal-800 dark:text-sand-100 flex items-center gap-1.5">
-                      <Upload className="w-4 h-4 text-amber-600" />
-                      Buka Panel Pemulihan
-                    </h3>
-                    <p className="text-xs text-charcoal-500 dark:text-sand-400">
-                      Unggah berkas JSON cadangan, muat data contoh, atau reset data.
-                    </p>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => setIsBackupModalOpen(true)}
-                      className="w-full text-xs"
-                    >
-                      Buka Dialog Cadangan Lengkap
-                    </Button>
-                  </div>
-                </div>
-              </Card>
             </motion.div>
           )}
         </AnimatePresence>
