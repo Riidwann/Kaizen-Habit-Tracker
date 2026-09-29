@@ -54,6 +54,12 @@ export class LocalStorageSanctuaryRepository implements SanctuaryRepositoryPort 
 
   private mapToDomain(serialized: MicroActionSerialized): MicroAction | null {
     try {
+      const completedAtDate = serialized.completedAt ? new Date(serialized.completedAt) : undefined;
+      const isSameDay = completedAtDate
+        ? completedAtDate.toDateString() === new Date().toDateString()
+        : false;
+      const isCompletedToday = Boolean(serialized.isCompletedToday && isSameDay);
+
       return new MicroAction({
         id: serialized.id,
         goalId: serialized.goalId,
@@ -63,8 +69,8 @@ export class LocalStorageSanctuaryRepository implements SanctuaryRepositoryPort 
         estimatedMinutes: serialized.estimatedMinutes,
         isScaledDown: serialized.isScaledDown,
         isActiveToday: serialized.isActiveToday,
-        isCompletedToday: serialized.isCompletedToday,
-        completedAt: serialized.completedAt ? new Date(serialized.completedAt) : undefined,
+        isCompletedToday,
+        completedAt: completedAtDate,
         category: serialized.category,
         createdAt: new Date(serialized.createdAt),
         updatedAt: new Date(serialized.updatedAt),

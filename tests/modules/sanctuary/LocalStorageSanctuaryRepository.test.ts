@@ -79,4 +79,31 @@ describe("LocalStorageSanctuaryRepository", () => {
     await repo.delete("act-to-delete");
     expect((await repo.findById("act-to-delete")).unwrap()).toBeNull();
   });
+
+  it("should reset isCompletedToday to false on midnight rollover if completed yesterday", async () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const action = MicroAction.create({
+      id: "act-yesterday",
+      goalId: "goal-1",
+      title: "Daily habit",
+      scaleDownTitle: "Easy habit",
+      estimatedMinutes: 2,
+      isActiveToday: true,
+      isCompletedToday: true,
+      completedAt: yesterday,
+    }).unwrap();
+
+    await repo.save(action);
+
+    const focusRes = await repo.findDailyFocusActions();
+    expect(focusRes.isOk()).toBe(true);
+    const list = focusRes.unwrap();
+    expect(list).toHaveLength(1);
+    expect(list[0].id).toBe("act-yesterday");
+    // Should be automatically reset to false for the new day
+    expect(list[0].isCompletedToday).toBe(false);
+  });
 });
+
