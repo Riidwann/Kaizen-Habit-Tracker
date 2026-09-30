@@ -18,6 +18,7 @@ import {
   Plus,
   Quote,
   RotateCcw,
+  Pencil,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { Modal } from "@/shared/presentation/Modal";
@@ -30,6 +31,7 @@ export interface GoalTreeItemProps {
   onDeleteMilestone?: (goalId: string, milestoneId: string) => void;
   onUpdateStatus: (goalId: string, status: GoalStatus) => void;
   onDeleteGoal: (goalId: string) => void;
+  onEditGoal?: (goal: Goal) => void;
   defaultExpanded?: boolean;
 }
 
@@ -52,6 +54,7 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
   onDeleteMilestone,
   onUpdateStatus,
   onDeleteGoal,
+  onEditGoal,
   defaultExpanded = true,
 }) => {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
@@ -140,6 +143,19 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
 
           {/* Status buttons */}
           <div className="flex items-center gap-1">
+            {onEditGoal && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-1.5 h-auto text-charcoal-500 hover:text-sage-600 dark:hover:text-sage-400"
+                onClick={() => onEditGoal(goal)}
+                title="Edit Sasaran"
+                aria-label="Edit Goal"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+              </Button>
+            )}
+
             {goal.status === "active" ? (
               <Button
                 variant="ghost"

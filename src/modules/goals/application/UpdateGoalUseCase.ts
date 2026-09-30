@@ -2,6 +2,7 @@ import { GoalRepositoryPort } from "../domain/GoalRepositoryPort";
 import { Goal, GoalStatus } from "../domain/Goal";
 import { GoalCategory } from "../domain/GoalCategory";
 import { EmotionalAnchor } from "../domain/EmotionalAnchor";
+import { Milestone } from "../domain/Milestone";
 import { GoalUpdatedEvent } from "../domain/events/GoalUpdatedEvent";
 import { Result } from "@/shared/domain/Result";
 import { InMemoryEventBus } from "@/shared/infrastructure/InMemoryEventBus";
@@ -14,6 +15,7 @@ export interface UpdateGoalDTO {
   status?: GoalStatus;
   microAction?: string;
   scaleDownFallback?: string;
+  milestones?: string[];
 }
 
 export class UpdateGoalUseCase {
@@ -65,6 +67,25 @@ export class UpdateGoalUseCase {
       );
     }
 
+    if (dto.milestones !== undefined) {
+      const newMilestones: Milestone[] = [];
+      dto.milestones.forEach((mTitle, idx) => {
+        const trimmed = mTitle.trim();
+        if (!trimmed) return;
+        const existing = goal.milestones.find((m) => m.title === trimmed);
+        if (existing) {
+          existing.updateOrder(idx + 1);
+          newMilestones.push(existing);
+        } else {
+          const created = Milestone.create(goal.id, trimmed, idx + 1);
+          if (created.isOk()) {
+            newMilestones.push(created.unwrap());
+          }
+        }
+      });
+      goal.replaceMilestones(newMilestones);
+    }
+
     const saveResult = await this.goalRepo.save(goal);
     if (saveResult.isErr()) {
       return Result.err(
@@ -78,6 +99,9 @@ export class UpdateGoalUseCase {
           goalId: goal.id,
           title: goal.title,
           status: goal.status,
+          category: goal.category,
+          microAction: goal.microAction,
+          scaleDownFallback: goal.scaleDownFallback,
         })
       );
     }

@@ -17,6 +17,7 @@ import {
   DailySanctuaryView,
   useSanctuaryController,
 } from "@/modules/sanctuary";
+import { LocalStorageSanctuaryRepository } from "@/modules/sanctuary/infrastructure/LocalStorageSanctuaryRepository";
 import {
   CompoundVisualizerView,
   HanseiModal,
@@ -70,6 +71,43 @@ export default function HomePage() {
       }
     );
 
+    const unsubscribeGoalUpdated = inMemoryEventBus.subscribe(
+      "GoalUpdated",
+      async (event: any) => {
+        if (event?.payload?.goalId && (event.payload.microAction || event.payload.title)) {
+          const sanctuaryRepo = new LocalStorageSanctuaryRepository();
+          const allActionsRes = await sanctuaryRepo.findAll();
+          if (allActionsRes.isOk()) {
+            const linkedAction = allActionsRes
+              .unwrap()
+              .find((a) => a.goalId === event.payload.goalId);
+            if (linkedAction) {
+              if (event.payload.microAction) {
+                linkedAction.updateTitle(event.payload.microAction);
+              }
+              if (event.payload.scaleDownFallback) {
+                linkedAction.updateScaleDownTitle(event.payload.scaleDownFallback);
+              }
+              if (event.payload.category) {
+                linkedAction.category = event.payload.category;
+              }
+              await sanctuaryRepo.save(linkedAction);
+            } else if (event.payload.microAction) {
+              await sanctuaryRef.current.createMicroAction({
+                goalId: event.payload.goalId,
+                title: event.payload.microAction,
+                scaleDownTitle:
+                  event.payload.scaleDownFallback || "Lakukan versi minimal 10 detik",
+                category: event.payload.category || "health",
+                estimatedMinutes: 2,
+              });
+            }
+          }
+        }
+        await sanctuaryRef.current.refreshActions();
+      }
+    );
+
     const unsubscribeBackupRestored = inMemoryEventBus.subscribe(
       "BackupRestored",
       async () => {
@@ -84,6 +122,7 @@ export default function HomePage() {
 
     return () => {
       unsubscribeGoalCreated();
+      unsubscribeGoalUpdated();
       unsubscribeBackupRestored();
     };
   }, []);
@@ -222,10 +261,21 @@ export default function HomePage() {
       {/* 5.4 Goal Forge Wizard Modal (Active when opened outside goals tab) */}
       {activeTab !== "goals" && (
         <GoalForgeWizard
-          isOpen={goalsController.isForgeOpen}
-          onClose={goalsController.closeForgeModal}
+          isOpen={goalsController.isForgeOpen || !!goalsController.editingGoal}
+          onClose={() => {
+            goalsController.closeForgeModal();
+            goalsController.closeEditModal();
+          }}
+          initialGoal={goalsController.editingGoal}
           onSubmit={async (data) => {
-            await goalsController.createGoal(data);
+            if (goalsController.editingGoal) {
+              await goalsController.updateGoal({
+                id: goalsController.editingGoal.id,
+                ...data,
+              });
+            } else {
+              await goalsController.createGoal(data as any);
+            }
           }}
           isLoading={goalsController.isLoading}
         />

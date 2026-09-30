@@ -150,5 +150,33 @@ describe("GoalTreeItem Milestone Delete Button", () => {
     expect(deleteBtn).toBeInTheDocument();
     expect(deleteBtn.className).not.toContain("opacity-0");
   });
+
+  it("renders edit button and calls onEditGoal when clicked", () => {
+    const goal = Goal.create({
+      title: "Test Goal for Editing",
+      category: "career",
+      whyStatement: EmotionalAnchor.create("Career progression").unwrap(),
+    }).unwrap();
+
+    const onEditGoal = vi.fn();
+
+    render(
+      <GoalTreeItem
+        goal={goal}
+        onToggleMilestone={vi.fn()}
+        onAddMilestone={vi.fn()}
+        onUpdateStatus={vi.fn()}
+        onDeleteGoal={vi.fn()}
+        onEditGoal={onEditGoal}
+      />
+    );
+
+    const editBtn = screen.getByRole("button", { name: /Edit Goal|Edit Sasaran/i });
+    expect(editBtn).toBeInTheDocument();
+    fireEvent.click(editBtn);
+
+    expect(onEditGoal).toHaveBeenCalledTimes(1);
+    expect(onEditGoal).toHaveBeenCalledWith(goal);
+  });
 });
 

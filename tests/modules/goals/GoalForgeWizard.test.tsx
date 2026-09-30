@@ -2,6 +2,9 @@ import React from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { GoalForgeWizard } from "@/modules/goals/presentation/GoalForgeWizard";
+import { Goal } from "@/modules/goals/domain/Goal";
+import { EmotionalAnchor } from "@/modules/goals/domain/EmotionalAnchor";
+import { Milestone } from "@/modules/goals/domain/Milestone";
 
 describe("GoalForgeWizard", () => {
   it("renders when isOpen is true and shows Step 1 inputs", () => {
@@ -170,6 +173,74 @@ describe("GoalForgeWizard", () => {
 
     await waitFor(() => {
       expect(handleDeleteCategory).toHaveBeenCalledWith("finance");
+    });
+  });
+
+  it("pre-fills fields and updates header and submit button in edit mode", async () => {
+    const goal = Goal.create({
+      title: "Master Japanese N3",
+      category: "learning",
+      whyStatement: EmotionalAnchor.create("To study in Kyoto").unwrap(),
+      microAction: "Review 5 kanji cards",
+      scaleDownFallback: "Review 1 kanji card",
+      milestones: [Milestone.create("goal-1", "Pass N4", 1).unwrap()],
+    }).unwrap();
+
+    const handleSubmit = vi.fn();
+
+    render(
+      <GoalForgeWizard
+        isOpen={true}
+        onClose={vi.fn()}
+        onSubmit={handleSubmit}
+        initialGoal={goal}
+      />
+    );
+
+    // Header says "Edit Target: {title}"
+    expect(screen.getByText("Edit Target: Master Japanese N3")).toBeInTheDocument();
+
+    // Input prefilled with title
+    const titleInput = screen.getByDisplayValue("Master Japanese N3");
+    expect(titleInput).toBeInTheDocument();
+
+    // Step 1 -> Step 2
+    fireEvent.click(screen.getByRole("button", { name: /next/i }));
+
+    // Step 2: whyText prefilled
+    expect(screen.getByDisplayValue("To study in Kyoto")).toBeInTheDocument();
+
+    // Step 2 -> Step 3
+    fireEvent.click(screen.getByRole("button", { name: /next/i }));
+
+    // Step 3: milestones list visible
+    expect(screen.getByText(/Kelola Tonggak Pencapaian/i)).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Pass N4")).toBeInTheDocument();
+
+    // Step 3 -> Step 4
+    fireEvent.click(screen.getByRole("button", { name: /next/i }));
+
+    // Step 4: micro action & fallback prefilled
+    expect(screen.getByDisplayValue("Review 5 kanji cards")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Review 1 kanji card")).toBeInTheDocument();
+
+    // Submit button says "Simpan Perubahan"
+    const submitBtn = screen.getByRole("button", { name: /Simpan Perubahan/i });
+    expect(submitBtn).toBeInTheDocument();
+
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: "Master Japanese N3",
+          category: "learning",
+          whyText: "To study in Kyoto",
+          microAction: "Review 5 kanji cards",
+          scaleDownFallback: "Review 1 kanji card",
+          milestones: ["Pass N4"],
+        })
+      );
     });
   });
 });

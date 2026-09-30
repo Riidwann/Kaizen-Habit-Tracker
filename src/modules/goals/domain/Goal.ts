@@ -22,7 +22,7 @@ export interface GoalProps {
 export interface CreateGoalProps {
   id?: string;
   title: string;
-  whyStatement: EmotionalAnchor;
+  whyStatement: EmotionalAnchor | string;
   category: GoalCategory;
   milestones?: Milestone[];
   microAction?: string;
@@ -54,6 +54,17 @@ export class Goal extends BaseEntity<string> {
       return Result.err("Goal title cannot be empty");
     }
 
+    let whyStatement: EmotionalAnchor;
+    if (typeof props.whyStatement === "string") {
+      const whyRes = EmotionalAnchor.create(props.whyStatement);
+      if (whyRes.isErr()) {
+        return Result.err(whyRes.getError() || "Invalid emotional anchor");
+      }
+      whyStatement = whyRes.unwrap();
+    } else {
+      whyStatement = props.whyStatement;
+    }
+
     const id =
       props.id ||
       (typeof crypto !== "undefined" && crypto.randomUUID
@@ -63,7 +74,7 @@ export class Goal extends BaseEntity<string> {
     const goal = new Goal({
       id,
       title: props.title.trim(),
-      whyStatement: props.whyStatement,
+      whyStatement,
       category: props.category,
       status: "active",
       milestones: props.milestones ?? [],
@@ -152,6 +163,10 @@ export class Goal extends BaseEntity<string> {
     }
     milestone.toggleComplete();
     return Result.ok(milestone.isCompleted);
+  }
+
+  public replaceMilestones(milestones: Milestone[]): void {
+    this._milestones = [...milestones];
   }
 
   public getProgress(): number {

@@ -3,7 +3,7 @@ import { Goal, GoalStatus } from "../domain/Goal";
 import { GoalCategory, GoalCategoryMeta, GOAL_CATEGORY_LIST } from "../domain/GoalCategory";
 import { Milestone } from "../domain/Milestone";
 import { CreateGoalUseCase, CreateGoalDTO } from "../application/CreateGoalUseCase";
-import { UpdateGoalUseCase } from "../application/UpdateGoalUseCase";
+import { UpdateGoalUseCase, UpdateGoalDTO } from "../application/UpdateGoalUseCase";
 import { DeleteGoalUseCase } from "../application/DeleteGoalUseCase";
 import { GetGoalsUseCase } from "../application/GetGoalsUseCase";
 import { LocalStorageGoalRepository } from "../infrastructure/LocalStorageGoalRepository";
@@ -32,7 +32,7 @@ export function useGoalsController(props?: UseGoalsControllerProps) {
 
   const getGoalsUseCase = useMemo(() => new GetGoalsUseCase(repository), [repository]);
   const createGoalUseCase = useMemo(() => new CreateGoalUseCase(repository, eventBus), [repository, eventBus]);
-  const updateGoalUseCase = useMemo(() => new UpdateGoalUseCase(repository), [repository]);
+  const updateGoalUseCase = useMemo(() => new UpdateGoalUseCase(repository, eventBus), [repository, eventBus]);
   const deleteGoalUseCase = useMemo(() => new DeleteGoalUseCase(repository), [repository]);
 
   const [goals, setGoals] = useState<Goal[]>([]);
@@ -40,6 +40,7 @@ export function useGoalsController(props?: UseGoalsControllerProps) {
   const [isLoading, setIsLoading] = useState(props?.enabled !== false);
   const [error, setError] = useState<string | null>(null);
   const [isForgeOpen, setIsForgeOpen] = useState(false);
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
   const [filterCategory, setFilterCategory] = useState<GoalCategory | "all">("all");
   const [filterStatus, setFilterStatus] = useState<GoalStatus | "all">("all");
@@ -215,6 +216,32 @@ export function useGoalsController(props?: UseGoalsControllerProps) {
   const openForgeModal = useCallback(() => setIsForgeOpen(true), []);
   const closeForgeModal = useCallback(() => setIsForgeOpen(false), []);
 
+  const openEditModal = useCallback((goal: Goal) => {
+    setEditingGoal(goal);
+  }, []);
+
+  const closeEditModal = useCallback(() => {
+    setEditingGoal(null);
+  }, []);
+
+  const updateGoal = useCallback(
+    async (dto: UpdateGoalDTO & { milestones?: string[] }): Promise<boolean> => {
+      setIsLoading(true);
+      setError(null);
+      const result = await updateGoalUseCase.execute(dto);
+      setIsLoading(false);
+      if (result.isOk()) {
+        await refreshGoals();
+        setEditingGoal(null);
+        return true;
+      } else {
+        setError(result.getError() || "Failed to update goal");
+        return false;
+      }
+    },
+    [updateGoalUseCase, refreshGoals]
+  );
+
   return {
     goals,
     filteredGoals,
@@ -222,9 +249,13 @@ export function useGoalsController(props?: UseGoalsControllerProps) {
     isLoading,
     error,
     isForgeOpen,
+    editingGoal,
     openForgeModal,
     closeForgeModal,
+    openEditModal,
+    closeEditModal,
     createGoal,
+    updateGoal,
     deleteGoal,
     updateGoalStatus,
     toggleMilestone,

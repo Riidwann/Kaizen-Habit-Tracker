@@ -7,6 +7,7 @@ import {
   GoalCategoryMeta,
   GOAL_CATEGORY_LIST,
 } from "../domain/GoalCategory";
+import { Goal } from "../domain/Goal";
 import {
   HeartPulse,
   Briefcase,
@@ -37,11 +38,13 @@ export interface GoalForgeWizardProps {
     firstMilestoneTitle?: string;
     microAction?: string;
     scaleDownFallback?: string;
+    milestones?: string[];
   }) => Promise<void> | void;
   isLoading?: boolean;
   categories?: GoalCategoryMeta[];
   onAddCategory?: (category: GoalCategoryMeta) => Promise<boolean> | boolean;
   onDeleteCategory?: (id: string) => Promise<boolean> | boolean;
+  initialGoal?: Goal | null;
 }
 
 const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -103,12 +106,14 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
   categories,
   onAddCategory,
   onDeleteCategory,
+  initialGoal,
 }) => {
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<GoalCategory>("health");
   const [whyText, setWhyText] = useState("");
   const [firstMilestoneTitle, setFirstMilestoneTitle] = useState("");
+  const [milestonesList, setMilestonesList] = useState<string[]>([]);
   const [microAction, setMicroAction] = useState("");
   const [scaleDownFallback, setScaleDownFallback] = useState("");
 
@@ -126,12 +131,24 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
   useEffect(() => {
     if (isOpen) {
       setStep(1);
-      setTitle("");
-      setCategory("health");
-      setWhyText("");
-      setFirstMilestoneTitle("");
-      setMicroAction("");
-      setScaleDownFallback("");
+      if (initialGoal) {
+        setTitle(initialGoal.title);
+        setCategory(initialGoal.category);
+        setWhyText(initialGoal.whyStatement?.whyText || "");
+        const ms = initialGoal.milestones.map((m) => m.title);
+        setMilestonesList(ms);
+        setFirstMilestoneTitle("");
+        setMicroAction(initialGoal.microAction || "");
+        setScaleDownFallback(initialGoal.scaleDownFallback || "");
+      } else {
+        setTitle("");
+        setCategory("health");
+        setWhyText("");
+        setMilestonesList([]);
+        setFirstMilestoneTitle("");
+        setMicroAction("");
+        setScaleDownFallback("");
+      }
       setTitleError("");
       setWhyError("");
       setIsAddingCategory(false);
@@ -139,7 +156,7 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
       setSelectedColorIdx(0);
       setCategoryError("");
     }
-  }, [isOpen]);
+  }, [isOpen, initialGoal]);
 
   const handleNext = () => {
     if (step === 1) {
@@ -206,6 +223,11 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    const finalMilestones =
+      initialGoal || milestonesList.length > 0
+        ? milestonesList.filter((m) => m.trim().length > 0)
+        : undefined;
+
     await onSubmit({
       title: title.trim(),
       category,
@@ -213,6 +235,7 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
       firstMilestoneTitle: firstMilestoneTitle.trim() || undefined,
       microAction: microAction.trim() || undefined,
       scaleDownFallback: scaleDownFallback.trim() || undefined,
+      ...(finalMilestones !== undefined ? { milestones: finalMilestones } : {}),
     });
   };
 
@@ -220,8 +243,12 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Buat Target Baru"
-      description="Pecah target besar menjadi kebiasaan mikro ≤ 2 menit yang mustahil gagal."
+      title={initialGoal ? `Edit Target: ${initialGoal.title}` : "Buat Target Baru"}
+      description={
+        initialGoal
+          ? "Perbarui visi, motivasi, tonggak pencapaian, dan kebiasaan mikro Anda."
+          : "Pecah target besar menjadi kebiasaan mikro ≤ 2 menit yang mustahil gagal."
+      }
       className="max-w-xl"
     >
       <div className="flex flex-col gap-6">
@@ -232,7 +259,7 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
               Langkah {step} dari 4:{" "}
               {step === 1 && "Target & Kategori"}
               {step === 2 && "Motivasi Utama (Alasan Anda)"}
-              {step === 3 && "Tonggak Pencapaian Pertama"}
+              {step === 3 && (initialGoal ? "Tonggak Pencapaian" : "Tonggak Pencapaian Pertama")}
               {step === 4 && "Kebiasaan Mikro 2-Menit"}
             </span>
             <span className="font-semibold">{step * 25}%</span>
@@ -452,26 +479,99 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
           </div>
         )}
 
-        {/* Step 3: First Milestone */}
+        {/* Step 3: Milestones */}
         {step === 3 && (
           <div className="flex flex-col gap-4">
             <div className="p-3.5 rounded-xl bg-sage-50/80 dark:bg-sage-950/30 border border-sage-200 dark:border-sage-800">
               <p className="text-xs font-semibold text-sage-900 dark:text-sage-200 mb-1">
-                Tonggak Pencapaian Pertama (Opsional)
+                {initialGoal ? "Kelola Tonggak Pencapaian (Milestones)" : "Tonggak Pencapaian Pertama (Opsional)"}
               </p>
               <p className="text-xs text-sage-800/80 dark:text-sage-300/80 leading-relaxed">
-                Target yang terlalu jauh membuat otak terbebani. Tentukan 1 titik capaian perantara yang mudah dicapai agar Anda segera merasakan kemenangan kecil pertama.
+                {initialGoal
+                  ? "Pecah sasaran ini menjadi beberapa tonggak capaian bertahap agar progres dapat terukur dengan jelas."
+                  : "Target yang terlalu jauh membuat otak terbebani. Tentukan 1 titik capaian perantara yang mudah dicapai agar Anda segera merasakan kemenangan kecil pertama."}
               </p>
             </div>
 
-            <Input
-              label="Judul Tonggak Pencapaian"
-              placeholder="Contoh: Selesaikan 7 hari berturut-turut jalan santai 10 menit"
-              value={firstMilestoneTitle}
-              onChange={(e) => setFirstMilestoneTitle(e.target.value)}
-              helperText="Tonggak awal ini opsional. Anda dapat menambah tonggak lainnya kapan saja."
-              autoFocus
-            />
+            {initialGoal || milestonesList.length > 0 ? (
+              <div className="flex flex-col gap-2.5">
+                <label className="text-xs font-medium text-charcoal-700 dark:text-sand-300">
+                  Daftar Tonggak Capaian ({milestonesList.length}):
+                </label>
+                {milestonesList.length === 0 ? (
+                  <p className="text-xs text-charcoal-400 italic">Belum ada tonggak pencapaian.</p>
+                ) : (
+                  <div className="flex flex-col gap-2 max-h-48 overflow-y-auto pr-1">
+                    {milestonesList.map((m, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <span className="text-xs font-mono text-charcoal-400 dark:text-sand-500 w-6">M{idx + 1}</span>
+                        <input
+                          type="text"
+                          value={m}
+                          onChange={(e) => {
+                            const updated = [...milestonesList];
+                            updated[idx] = e.target.value;
+                            setMilestonesList(updated);
+                          }}
+                          className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-sand-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-900 text-charcoal-800 dark:text-sand-100 focus:outline-none focus:border-sage-500"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMilestonesList(milestonesList.filter((_, i) => i !== idx));
+                          }}
+                          className="p-1.5 text-charcoal-400 hover:text-rose-600 rounded-md transition-colors"
+                          aria-label={`Hapus tonggak M${idx + 1}`}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex items-center gap-2 pt-1">
+                  <input
+                    type="text"
+                    placeholder="Tambah tonggak capaian baru..."
+                    value={firstMilestoneTitle}
+                    onChange={(e) => setFirstMilestoneTitle(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (firstMilestoneTitle.trim()) {
+                          setMilestonesList([...milestonesList, firstMilestoneTitle.trim()]);
+                          setFirstMilestoneTitle("");
+                        }
+                      }
+                    }}
+                    className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-sand-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-900 text-charcoal-800 dark:text-sand-100 focus:outline-none focus:border-sage-500"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      if (firstMilestoneTitle.trim()) {
+                        setMilestonesList([...milestonesList, firstMilestoneTitle.trim()]);
+                        setFirstMilestoneTitle("");
+                      }
+                    }}
+                  >
+                    Tambah
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <Input
+                label="Judul Tonggak Pencapaian"
+                placeholder="Contoh: Selesaikan 7 hari berturut-turut jalan santai 10 menit"
+                value={firstMilestoneTitle}
+                onChange={(e) => setFirstMilestoneTitle(e.target.value)}
+                helperText="Tonggak awal ini opsional. Anda dapat menambah tonggak lainnya kapan saja."
+                autoFocus
+              />
+            )}
           </div>
         )}
 
@@ -554,9 +654,9 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
                 size="sm"
                 onClick={() => handleSubmit()}
                 isLoading={isLoading}
-                aria-label="Simpan Target"
+                aria-label={initialGoal ? "Simpan Perubahan" : "Simpan Target"}
               >
-                Simpan Target
+                {initialGoal ? "Simpan Perubahan" : "Simpan Target"}
               </Button>
             )}
           </div>

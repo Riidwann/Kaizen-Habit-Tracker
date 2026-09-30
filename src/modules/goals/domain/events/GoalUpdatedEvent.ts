@@ -1,10 +1,14 @@
 import { DomainEvent } from "@/shared/domain/DomainEvent";
 import { GoalStatus } from "../Goal";
+import { GoalCategory } from "../GoalCategory";
 
 export interface GoalUpdatedPayload {
   goalId: string;
   title: string;
   status: GoalStatus;
+  category?: GoalCategory;
+  microAction?: string;
+  scaleDownFallback?: string;
 }
 
 export class GoalUpdatedEvent implements DomainEvent {
