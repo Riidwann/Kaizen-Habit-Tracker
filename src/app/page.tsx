@@ -356,6 +356,9 @@ export default function HomePage() {
             }
           }}
           isLoading={goalsController.isLoading}
+          categories={goalsController.categories}
+          onAddCategory={goalsController.addCategory}
+          onDeleteCategory={goalsController.deleteCategory}
         />
       )}
 
