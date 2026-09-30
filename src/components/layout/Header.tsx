@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { StreakBadge } from "@/modules/reflection/presentation/StreakBadge";
 import { HeaderMenu } from "./HeaderMenu";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, ListTodo, CalendarClock } from "lucide-react";
 import { cn } from "@/shared/presentation/utils";
 
 export interface HeaderProps {
@@ -15,6 +15,10 @@ export interface HeaderProps {
   canInstallPwa?: boolean;
   isDarkMode?: boolean;
   onToggleTheme?: () => void;
+  onOpenTodo?: () => void;
+  onOpenRoutine?: () => void;
+  activeTodosCount?: number;
+  remainingRoutinesCount?: number;
   className?: string;
 }
 
@@ -51,6 +55,10 @@ export const Header: React.FC<HeaderProps> = ({
   canInstallPwa = false,
   isDarkMode: controlledDarkMode,
   onToggleTheme: controlledToggleTheme,
+  onOpenTodo,
+  onOpenRoutine,
+  activeTodosCount,
+  remainingRoutinesCount,
   className,
 }) => {
   const [internalDark, setInternalDark] = useState<boolean>(false);
@@ -120,6 +128,44 @@ export const Header: React.FC<HeaderProps> = ({
             isGracePeriod={isGracePeriod}
             onClick={onOpenHansei}
           />
+
+          {/* Quick-Access To-Do Button */}
+          {onOpenTodo && (
+            <button
+              type="button"
+              onClick={onOpenTodo}
+              aria-label={`Buka daftar To-Do${activeTodosCount !== undefined && activeTodosCount > 0 ? ` (${activeTodosCount} aktif)` : ""}`}
+              title="Daftar Tugas (To-Do)"
+              className="relative min-h-[40px] px-2 sm:px-2.5 rounded-xl text-charcoal-700 dark:text-sand-200 hover:bg-sand-200/60 dark:hover:bg-charcoal-800 transition-colors focus:outline-none focus:ring-2 focus:ring-sage-500 flex items-center gap-1.5 shrink-0"
+            >
+              <ListTodo className="w-4 h-4 text-sage-600 dark:text-sage-400" />
+              <span className="hidden md:inline text-xs font-semibold">To-Do</span>
+              {activeTodosCount !== undefined && activeTodosCount > 0 && (
+                <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold rounded-full bg-sage-600 text-white leading-none">
+                  {activeTodosCount}
+                </span>
+              )}
+            </button>
+          )}
+
+          {/* Quick-Access Routine Schedule Button */}
+          {onOpenRoutine && (
+            <button
+              type="button"
+              onClick={onOpenRoutine}
+              aria-label={`Buka Jadwal Rutin${remainingRoutinesCount !== undefined && remainingRoutinesCount > 0 ? ` (${remainingRoutinesCount} tersisa)` : ""}`}
+              title="Jadwal Rutin Harian"
+              className="relative min-h-[40px] px-2 sm:px-2.5 rounded-xl text-charcoal-700 dark:text-sand-200 hover:bg-sand-200/60 dark:hover:bg-charcoal-800 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 flex items-center gap-1.5 shrink-0"
+            >
+              <CalendarClock className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              <span className="hidden md:inline text-xs font-semibold">Jadwal</span>
+              {remainingRoutinesCount !== undefined && remainingRoutinesCount > 0 && (
+                <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold rounded-full bg-amber-500 text-white leading-none">
+                  {remainingRoutinesCount}
+                </span>
+              )}
+            </button>
+          )}
 
           {/* Theme Toggle Button */}
           <button

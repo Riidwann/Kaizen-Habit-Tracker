@@ -8,3 +8,4 @@ export * from "./infrastructure/LocalStorageTodoRepository";
 
 // Presentation
 export * from "./presentation/useTodoController";
+export * from "./presentation/TodoListPanel";

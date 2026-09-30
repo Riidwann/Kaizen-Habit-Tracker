@@ -7,3 +7,4 @@ export * from "./infrastructure/LocalStorageRoutineRepository";
 
 // Presentation
 export * from "./presentation/useRoutineController";
+export * from "./presentation/RoutineSchedulePanel";

@@ -27,6 +27,20 @@ import {
   DataBackupModal,
   useBackupController,
 } from "@/modules/backup";
+import {
+  SlideOverDrawer,
+  DrawerTab,
+} from "@/components/layout/SlideOverDrawer";
+import {
+  useTodoController,
+  TodoListPanel,
+} from "@/modules/todo";
+import {
+  useRoutineController,
+  RoutineSchedulePanel,
+} from "@/modules/routines";
+import { LocalStorageReflectionRepository } from "@/modules/reflection/infrastructure/LocalStorageReflectionRepository";
+import { ListTodo } from "lucide-react";
 
 // UI Kit
 import { inMemoryEventBus } from "@/shared/infrastructure/InMemoryEventBus";
@@ -35,12 +49,16 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<TabId>("sanctuary");
   const [isBackupModalOpen, setIsBackupModalOpen] = useState<boolean>(false);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState<boolean>(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [drawerTab, setDrawerTab] = useState<DrawerTab>("todo");
 
   // Initialize Controllers
   const goalsController = useGoalsController();
   const sanctuaryController = useSanctuaryController();
   const reflectionController = useReflectionController();
   const backupController = useBackupController();
+  const todoController = useTodoController();
+  const routineController = useRoutineController();
   const { isInstallable, promptInstall } = usePwaInstall();
 
   const sanctuaryRef = useRef(sanctuaryController);
@@ -51,6 +69,12 @@ export default function HomePage() {
 
   const reflectionRef = useRef(reflectionController);
   reflectionRef.current = reflectionController;
+
+  const todoRef = useRef(todoController);
+  todoRef.current = todoController;
+
+  const routineRef = useRef(routineController);
+  routineRef.current = routineController;
 
   // Wire up EventBus
   useEffect(() => {
@@ -116,7 +140,26 @@ export default function HomePage() {
           sanctuaryRef.current.refreshActions(),
           reflectionRef.current.refreshStats(),
           reflectionRef.current.refreshReflections(),
+          todoRef.current.refreshTodos(),
+          routineRef.current.refreshRoutines(),
         ]);
+      }
+    );
+
+    const unsubscribeTodoCompleted = inMemoryEventBus.subscribe(
+      "TodoCompleted",
+      async (event: any) => {
+        try {
+          const completedAt = event?.payload?.completedAt
+            ? new Date(event.payload.completedAt)
+            : new Date();
+          const dateStr = completedAt.toISOString().split("T")[0];
+          const reflectionRepo = new LocalStorageReflectionRepository();
+          await reflectionRepo.recordActiveDate(dateStr);
+          await reflectionRef.current.refreshStats();
+        } catch (err) {
+          console.warn("[HomePage] Error handling TodoCompleted:", err);
+        }
       }
     );
 
@@ -124,6 +167,7 @@ export default function HomePage() {
       unsubscribeGoalCreated();
       unsubscribeGoalUpdated();
       unsubscribeBackupRestored();
+      unsubscribeTodoCompleted();
     };
   }, []);
 
@@ -136,6 +180,8 @@ export default function HomePage() {
         sanctuaryController.refreshActions(),
         reflectionController.refreshStats(),
         reflectionController.refreshReflections(),
+        todoController.refreshTodos(),
+        routineController.refreshRoutines(),
       ]);
     }
   }, [
@@ -143,6 +189,8 @@ export default function HomePage() {
     goalsController,
     sanctuaryController,
     reflectionController,
+    todoController,
+    routineController,
   ]);
 
   // Open Forge Wizard from anywhere (switches to Goals tab)
@@ -163,6 +211,16 @@ export default function HomePage() {
         onLoadSample={handleLoadSample}
         onInstallPwa={promptInstall}
         canInstallPwa={isInstallable}
+        onOpenTodo={() => {
+          setDrawerTab("todo");
+          setIsDrawerOpen(true);
+        }}
+        onOpenRoutine={() => {
+          setDrawerTab("routine");
+          setIsDrawerOpen(true);
+        }}
+        activeTodosCount={todoController.activeTodosCount}
+        remainingRoutinesCount={routineController.remainingCountToday}
       />
 
       {/* 2. Responsive Tab Navigation (Top on desktop, fixed bottom on mobile) */}
@@ -280,6 +338,41 @@ export default function HomePage() {
           isLoading={goalsController.isLoading}
         />
       )}
+
+      {/* 4. Mobile Floating Quick-Access Pill (Single-Hand Ergonomics) */}
+      <button
+        type="button"
+        onClick={() => {
+          setDrawerTab("todo");
+          setIsDrawerOpen(true);
+        }}
+        aria-label="Buka Akses Cepat To-Do & Jadwal"
+        className="sm:hidden fixed bottom-20 right-4 z-30 flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-charcoal-900 text-sand-50 dark:bg-sand-100 dark:text-charcoal-900 shadow-lg shadow-charcoal-900/20 active:scale-95 transition-all border border-sand-200/20"
+      >
+        <ListTodo className="w-4 h-4 text-sage-400 dark:text-sage-600" />
+        <span className="text-xs font-bold">Akses Cepat</span>
+        {(todoController.activeTodosCount > 0 || routineController.remainingCountToday > 0) && (
+          <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold rounded-full bg-sage-500 text-white">
+            {todoController.activeTodosCount + routineController.remainingCountToday}
+          </span>
+        )}
+      </button>
+
+      {/* 5.5 Quick-Access Slide-Over Drawer / Bottom Sheet */}
+      <SlideOverDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        activeTab={drawerTab}
+        onTabChange={setDrawerTab}
+        activeTodosCount={todoController.activeTodosCount}
+        remainingRoutinesCount={routineController.remainingCountToday}
+      >
+        {drawerTab === "todo" ? (
+          <TodoListPanel controller={todoController} />
+        ) : (
+          <RoutineSchedulePanel controller={routineController} />
+        )}
+      </SlideOverDrawer>
     </div>
   );
 }

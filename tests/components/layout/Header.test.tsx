@@ -46,4 +46,33 @@ describe("Header with HeaderMenu", () => {
     expect(handleOpenGuide).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole("menuitem", { name: /Panduan Kaizen/i })).not.toBeInTheDocument();
   });
+
+  it("renders To-Do and Routine quick-access buttons with counters", () => {
+    const handleOpenTodo = vi.fn();
+    const handleOpenRoutine = vi.fn();
+
+    render(
+      <Header
+        currentStreak={3}
+        onOpenTodo={handleOpenTodo}
+        onOpenRoutine={handleOpenRoutine}
+        activeTodosCount={4}
+        remainingRoutinesCount={2}
+      />
+    );
+
+    const todoBtn = screen.getByRole("button", { name: /Buka daftar To-Do/i });
+    expect(todoBtn).toBeInTheDocument();
+    expect(screen.getByText("4")).toBeInTheDocument();
+
+    fireEvent.click(todoBtn);
+    expect(handleOpenTodo).toHaveBeenCalledTimes(1);
+
+    const routineBtn = screen.getByRole("button", { name: /Buka Jadwal Rutin/i });
+    expect(routineBtn).toBeInTheDocument();
+    expect(screen.getByText("2")).toBeInTheDocument();
+
+    fireEvent.click(routineBtn);
+    expect(handleOpenRoutine).toHaveBeenCalledTimes(1);
+  });
 });
