@@ -39,6 +39,10 @@ import {
   useRoutineController,
   RoutineSchedulePanel,
 } from "@/modules/routines";
+import {
+  useRewardController,
+  SelfRewardBanner,
+} from "@/modules/rewards";
 import { LocalStorageReflectionRepository } from "@/modules/reflection/infrastructure/LocalStorageReflectionRepository";
 import { ListTodo } from "lucide-react";
 
@@ -59,6 +63,9 @@ export default function HomePage() {
   const backupController = useBackupController();
   const todoController = useTodoController();
   const routineController = useRoutineController();
+  const rewardController = useRewardController({
+    currentStreak: reflectionController.stats.currentStreak,
+  });
   const { isInstallable, promptInstall } = usePwaInstall();
 
   const sanctuaryRef = useRef(sanctuaryController);
@@ -75,6 +82,9 @@ export default function HomePage() {
 
   const routineRef = useRef(routineController);
   routineRef.current = routineController;
+
+  const rewardRef = useRef(rewardController);
+  rewardRef.current = rewardController;
 
   // Wire up EventBus
   useEffect(() => {
@@ -142,6 +152,7 @@ export default function HomePage() {
           reflectionRef.current.refreshReflections(),
           todoRef.current.refreshTodos(),
           routineRef.current.refreshRoutines(),
+          rewardRef.current.refreshRewards(),
         ]);
       }
     );
@@ -182,6 +193,7 @@ export default function HomePage() {
         reflectionController.refreshReflections(),
         todoController.refreshTodos(),
         routineController.refreshRoutines(),
+        rewardController.refreshRewards(),
       ]);
     }
   }, [
@@ -191,6 +203,7 @@ export default function HomePage() {
     reflectionController,
     todoController,
     routineController,
+    rewardController,
   ]);
 
   // Open Forge Wizard from anywhere (switches to Goals tab)
@@ -242,7 +255,14 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
+              className="space-y-6"
             >
+              <SelfRewardBanner
+                reward={rewardController.activeReward}
+                isEarned={rewardController.isEarned}
+                onClaim={rewardController.claimReward}
+                onUpdateTitle={rewardController.updateRewardTitle}
+              />
               <DailySanctuaryView
                 controller={sanctuaryController}
                 onOpenGuide={() => setIsGuideModalOpen(true)}
