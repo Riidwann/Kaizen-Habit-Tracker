@@ -131,7 +131,7 @@ describe("GoalTreeItem Milestone Delete Button", () => {
     const goal = Goal.create({
       title: "Test Goal",
       category: "health",
-      whyStatement: "Health is wealth",
+      whyStatement: EmotionalAnchor.create("Health is wealth").unwrap(),
       milestones: [Milestone.create("goal-1", "Milestone 1", 1).unwrap()],
     }).unwrap();
 
