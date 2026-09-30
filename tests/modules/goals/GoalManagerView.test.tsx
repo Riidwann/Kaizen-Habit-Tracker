@@ -38,6 +38,10 @@ describe("GoalManagerView", () => {
     setFilterCategory: vi.fn(),
     filterStatus: "all" as const,
     setFilterStatus: vi.fn(),
+    categories: [],
+    addCategory: vi.fn().mockResolvedValue(true),
+    deleteCategory: vi.fn().mockResolvedValue(true),
+    refreshCategories: vi.fn().mockResolvedValue(undefined),
     refreshGoals: vi.fn().mockResolvedValue(undefined),
   };
 
