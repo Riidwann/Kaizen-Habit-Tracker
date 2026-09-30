@@ -14,6 +14,7 @@ describe("RoutineSchedulePanel Component", () => {
 
   const createMockController = (overrides = {}) => ({
     routines: [sampleRoutine],
+    allRoutines: [sampleRoutine],
     todayRoutines: [sampleRoutine],
     remainingCountToday: 1,
     completedCountToday: 0,
