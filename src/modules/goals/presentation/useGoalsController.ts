@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Goal, GoalStatus } from "../domain/Goal";
-import { GoalCategory } from "../domain/GoalCategory";
+import { GoalCategory, GoalCategoryMeta, GOAL_CATEGORY_LIST } from "../domain/GoalCategory";
 import { Milestone } from "../domain/Milestone";
 import { CreateGoalUseCase, CreateGoalDTO } from "../application/CreateGoalUseCase";
 import { UpdateGoalUseCase } from "../application/UpdateGoalUseCase";
@@ -8,10 +8,13 @@ import { DeleteGoalUseCase } from "../application/DeleteGoalUseCase";
 import { GetGoalsUseCase } from "../application/GetGoalsUseCase";
 import { LocalStorageGoalRepository } from "../infrastructure/LocalStorageGoalRepository";
 import { GoalRepositoryPort } from "../domain/GoalRepositoryPort";
+import { CategoryRepositoryPort } from "../domain/CategoryRepositoryPort";
+import { LocalStorageCategoryRepository } from "../infrastructure/LocalStorageCategoryRepository";
 import { InMemoryEventBus, inMemoryEventBus as defaultEventBus } from "@/shared/infrastructure/InMemoryEventBus";
 
 export interface UseGoalsControllerProps {
   repository?: GoalRepositoryPort;
+  categoryRepository?: CategoryRepositoryPort;
   eventBus?: InMemoryEventBus;
   enabled?: boolean;
 }
@@ -21,6 +24,10 @@ export function useGoalsController(props?: UseGoalsControllerProps) {
     () => props?.repository || new LocalStorageGoalRepository(),
     [props?.repository]
   );
+  const categoryRepo = useMemo(
+    () => props?.categoryRepository || new LocalStorageCategoryRepository(),
+    [props?.categoryRepository]
+  );
   const eventBus = props?.eventBus || defaultEventBus;
 
   const getGoalsUseCase = useMemo(() => new GetGoalsUseCase(repository), [repository]);
@@ -29,12 +36,18 @@ export function useGoalsController(props?: UseGoalsControllerProps) {
   const deleteGoalUseCase = useMemo(() => new DeleteGoalUseCase(repository), [repository]);
 
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [categories, setCategories] = useState<GoalCategoryMeta[]>(GOAL_CATEGORY_LIST);
   const [isLoading, setIsLoading] = useState(props?.enabled !== false);
   const [error, setError] = useState<string | null>(null);
   const [isForgeOpen, setIsForgeOpen] = useState(false);
 
   const [filterCategory, setFilterCategory] = useState<GoalCategory | "all">("all");
   const [filterStatus, setFilterStatus] = useState<GoalStatus | "all">("all");
+
+  const refreshCategories = useCallback(async () => {
+    const list = await categoryRepo.getCategories();
+    setCategories(list);
+  }, [categoryRepo]);
 
   const refreshGoals = useCallback(async () => {
     setIsLoading(true);
@@ -51,8 +64,34 @@ export function useGoalsController(props?: UseGoalsControllerProps) {
   useEffect(() => {
     if (props?.enabled !== false) {
       refreshGoals();
+      refreshCategories();
     }
-  }, [refreshGoals, props?.enabled]);
+  }, [refreshGoals, refreshCategories, props?.enabled]);
+
+  const addCategory = useCallback(
+    async (category: GoalCategoryMeta): Promise<boolean> => {
+      const ok = await categoryRepo.addCategory(category);
+      if (ok) {
+        await refreshCategories();
+      }
+      return ok;
+    },
+    [categoryRepo, refreshCategories]
+  );
+
+  const deleteCategory = useCallback(
+    async (id: string): Promise<boolean> => {
+      const ok = await categoryRepo.deleteCategory(id);
+      if (ok) {
+        await refreshCategories();
+        if (filterCategory === id) {
+          setFilterCategory("all");
+        }
+      }
+      return ok;
+    },
+    [categoryRepo, refreshCategories, filterCategory]
+  );
 
   const createGoal = useCallback(
     async (dto: CreateGoalDTO): Promise<boolean> => {
@@ -179,6 +218,7 @@ export function useGoalsController(props?: UseGoalsControllerProps) {
   return {
     goals,
     filteredGoals,
+    categories,
     isLoading,
     error,
     isForgeOpen,
@@ -190,6 +230,9 @@ export function useGoalsController(props?: UseGoalsControllerProps) {
     toggleMilestone,
     addMilestone,
     deleteMilestone,
+    addCategory,
+    deleteCategory,
+    refreshCategories,
     filterCategory,
     setFilterCategory,
     filterStatus,

@@ -20,6 +20,7 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
 
   const {
     filteredGoals,
+    categories,
     isLoading,
     isForgeOpen,
     openForgeModal,
@@ -30,6 +31,8 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
     toggleMilestone,
     addMilestone,
     deleteMilestone,
+    addCategory,
+    deleteCategory,
     filterCategory,
     setFilterCategory,
     filterStatus,
@@ -42,6 +45,8 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
     { id: "paused", label: "Dijeda" },
     { id: "achieved", label: "Tercapai" },
   ];
+
+  const categoryList = categories && categories.length > 0 ? categories : GOAL_CATEGORY_LIST;
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-8 flex flex-col gap-6">
@@ -81,56 +86,84 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
         </p>
       </div>
 
-      {/* Filter Controls */}
-      <div className="flex flex-col gap-3">
-        {/* Category Filters (Flex-wrap with zero horizontal scroll) */}
-        <div className="flex flex-wrap items-center gap-1.5 text-xs">
-          <button
-            type="button"
-            onClick={() => setFilterCategory("all")}
-            className={cn(
-              "px-3 py-1.5 rounded-full font-medium transition-colors",
-              filterCategory === "all"
-                ? "bg-charcoal-900 text-sand-50 dark:bg-sand-100 dark:text-charcoal-900 font-semibold"
-                : "bg-sand-100 text-charcoal-700 hover:bg-sand-200 dark:bg-charcoal-800 dark:text-sand-200 dark:hover:bg-charcoal-700 border border-sand-200/60 dark:border-charcoal-700"
-            )}
-          >
-            Semua Kategori
-          </button>
-          {GOAL_CATEGORY_LIST.map((cat) => (
+      {/* Filter Controls: Distinct Categories & Status Rows */}
+      <div className="flex flex-col gap-4 p-4 rounded-2xl bg-sand-100/50 dark:bg-charcoal-900/40 border border-sand-200/70 dark:border-charcoal-800/80">
+        {/* Row 1: Category Filter with Round Pill Chips */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          <span className="text-xs font-semibold text-charcoal-700 dark:text-sand-300 min-w-[110px] shrink-0">
+            Kategori Target:
+          </span>
+          <div className="flex flex-wrap items-center gap-1.5 text-xs">
             <button
-              key={cat.id}
               type="button"
-              onClick={() => setFilterCategory(cat.id)}
+              onClick={() => setFilterCategory("all")}
               className={cn(
-                "px-3 py-1.5 rounded-full font-medium transition-colors flex items-center gap-1.5",
-                filterCategory === cat.id
-                  ? "bg-sage-600 text-white shadow-sm font-semibold"
-                  : "bg-sand-100 text-charcoal-700 hover:bg-sand-200 dark:bg-charcoal-800 dark:text-sand-200 dark:hover:bg-charcoal-700 border border-sand-200/60 dark:border-charcoal-700"
+                "px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150",
+                filterCategory === "all"
+                  ? "bg-charcoal-900 text-sand-50 dark:bg-sand-100 dark:text-charcoal-900 font-semibold shadow-sm"
+                  : "bg-white/80 dark:bg-charcoal-800 text-charcoal-700 dark:text-sand-200 hover:bg-white dark:hover:bg-charcoal-700 border border-sand-200 dark:border-charcoal-700"
               )}
             >
-              <span>{cat.label.split(" & ")[0]}</span>
+              Semua Kategori
             </button>
-          ))}
+            {categoryList.map((cat) => {
+              const isSelected = filterCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setFilterCategory(cat.id)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150 flex items-center gap-1.5 border",
+                    isSelected
+                      ? "bg-sage-600 border-sage-600 text-white shadow-sm font-semibold"
+                      : "bg-white/80 dark:bg-charcoal-800 text-charcoal-700 dark:text-sand-200 hover:bg-white dark:hover:bg-charcoal-700 border-sand-200 dark:border-charcoal-700"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "w-2 h-2 rounded-full shrink-0",
+                      cat.badgeVariant === "sage"
+                        ? "bg-sage-500"
+                        : cat.badgeVariant === "amber"
+                        ? "bg-amber-500"
+                        : cat.badgeVariant === "charcoal"
+                        ? "bg-charcoal-500 dark:bg-sand-300"
+                        : "bg-sand-400"
+                    )}
+                  />
+                  <span>{cat.label.split(" & ")[0]}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Status Filters */}
-        <div className="flex flex-wrap items-center gap-2">
-          {statusFilters.map((st) => (
-            <button
-              key={st.id}
-              type="button"
-              onClick={() => setFilterStatus(st.id)}
-              className={cn(
-                "px-2.5 py-1 text-xs rounded-lg font-medium transition-colors",
-                filterStatus === st.id
-                  ? "bg-sand-300/80 dark:bg-charcoal-700 text-charcoal-900 dark:text-sand-50 font-semibold"
-                  : "text-charcoal-600 dark:text-sand-300 hover:bg-sand-100 dark:hover:bg-charcoal-800"
-              )}
-            >
-              {st.label}
-            </button>
-          ))}
+        {/* Row 2: Status Filter with Segmented Control Buttons */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          <span className="text-xs font-semibold text-charcoal-700 dark:text-sand-300 min-w-[110px] shrink-0">
+            Status Target:
+          </span>
+          <div className="inline-flex p-1 rounded-xl bg-sand-200/70 dark:bg-charcoal-800 border border-sand-300/60 dark:border-charcoal-700/60 text-xs w-fit">
+            {statusFilters.map((st) => {
+              const isSelected = filterStatus === st.id;
+              return (
+                <button
+                  key={st.id}
+                  type="button"
+                  onClick={() => setFilterStatus(st.id)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150",
+                    isSelected
+                      ? "bg-white dark:bg-charcoal-900 text-charcoal-900 dark:text-sand-50 font-semibold shadow-sm"
+                      : "text-charcoal-600 dark:text-sand-300 hover:text-charcoal-900 dark:hover:text-sand-100"
+                  )}
+                >
+                  {st.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -184,6 +217,9 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
           await createGoal(data);
         }}
         isLoading={isLoading}
+        categories={categoryList}
+        onAddCategory={addCategory}
+        onDeleteCategory={deleteCategory}
       />
     </div>
   );

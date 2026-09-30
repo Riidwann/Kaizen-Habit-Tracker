@@ -107,4 +107,69 @@ describe("GoalForgeWizard", () => {
       scaleDownFallback: "Take 3 deep breaths in bed",
     });
   });
+
+  it("supports inline custom category creation", async () => {
+    const handleAddCategory = vi.fn().mockResolvedValue(true);
+
+    render(
+      <GoalForgeWizard
+        isOpen={true}
+        onClose={vi.fn()}
+        onSubmit={vi.fn()}
+        onAddCategory={handleAddCategory}
+      />
+    );
+
+    const addCatBtn = screen.getByRole("button", { name: /\+ kategori baru/i });
+    fireEvent.click(addCatBtn);
+
+    const nameInput = screen.getByLabelText(/nama kategori/i);
+    fireEvent.change(nameInput, { target: { value: "Finance" } });
+
+    const saveBtn = screen.getByRole("button", { name: /simpan kategori/i });
+    fireEvent.click(saveBtn);
+
+    await waitFor(() => {
+      expect(handleAddCategory).toHaveBeenCalledWith(
+        expect.objectContaining({
+          label: "Finance",
+          isCustom: true,
+        })
+      );
+    });
+  });
+
+  it("supports deleting custom categories", async () => {
+    const handleDeleteCategory = vi.fn().mockResolvedValue(true);
+    const customCats = [
+      {
+        id: "finance",
+        label: "Finance",
+        badgeVariant: "amber" as const,
+        colorClass: "text-amber-800",
+        pastelBg: "bg-amber-50",
+        borderColor: "border-amber-200",
+        iconName: "Tag",
+        description: "Finance",
+        isCustom: true,
+      },
+    ];
+
+    render(
+      <GoalForgeWizard
+        isOpen={true}
+        onClose={vi.fn()}
+        onSubmit={vi.fn()}
+        categories={customCats}
+        onDeleteCategory={handleDeleteCategory}
+      />
+    );
+
+    const deleteBtn = screen.getByLabelText(/hapus kategori finance/i);
+    fireEvent.click(deleteBtn);
+
+    await waitFor(() => {
+      expect(handleDeleteCategory).toHaveBeenCalledWith("finance");
+    });
+  });
 });

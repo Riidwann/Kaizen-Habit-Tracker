@@ -6,7 +6,8 @@ export type GoalCategory =
   | "learning"
   | "mindset"
   | "creativity"
-  | "custom";
+  | "custom"
+  | (string & {});
 
 export interface GoalCategoryMeta {
   id: GoalCategory;
@@ -17,9 +18,10 @@ export interface GoalCategoryMeta {
   borderColor: string;
   iconName: string;
   description: string;
+  isCustom?: boolean;
 }
 
-export const GOAL_CATEGORIES: Record<GoalCategory, GoalCategoryMeta> = {
+export const GOAL_CATEGORIES: Record<string, GoalCategoryMeta> = {
   health: {
     id: "health",
     label: "Health & Vitality",
@@ -85,5 +87,17 @@ export const GOAL_CATEGORIES: Record<GoalCategory, GoalCategoryMeta> = {
 export const GOAL_CATEGORY_LIST: GoalCategoryMeta[] = Object.values(GOAL_CATEGORIES);
 
 export function getGoalCategoryMeta(category: GoalCategory): GoalCategoryMeta {
-  return GOAL_CATEGORIES[category] || GOAL_CATEGORIES.custom;
+  return (
+    GOAL_CATEGORIES[category] || {
+      id: category,
+      label: category,
+      badgeVariant: "default",
+      colorClass: "text-charcoal-700 dark:text-sand-300",
+      pastelBg: "bg-sand-50 dark:bg-charcoal-900/60",
+      borderColor: "border-sand-200 dark:border-charcoal-700",
+      iconName: "Sparkles",
+      description: "Custom category",
+      isCustom: true,
+    }
+  );
 }

@@ -4,6 +4,7 @@ import { Button } from "@/shared/presentation/Button";
 import { Input, Textarea } from "@/shared/presentation/Input";
 import {
   GoalCategory,
+  GoalCategoryMeta,
   GOAL_CATEGORY_LIST,
 } from "../domain/GoalCategory";
 import {
@@ -18,6 +19,11 @@ import {
   Flame,
   ShieldAlert,
   Info,
+  Plus,
+  Trash2,
+  Tag,
+  X,
+  Check,
 } from "lucide-react";
 import { cn } from "@/shared/presentation/utils";
 
@@ -33,9 +39,12 @@ export interface GoalForgeWizardProps {
     scaleDownFallback?: string;
   }) => Promise<void> | void;
   isLoading?: boolean;
+  categories?: GoalCategoryMeta[];
+  onAddCategory?: (category: GoalCategoryMeta) => Promise<boolean> | boolean;
+  onDeleteCategory?: (id: string) => Promise<boolean> | boolean;
 }
 
-const CATEGORY_ICONS: Record<GoalCategory, React.ComponentType<{ className?: string }>> = {
+const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   health: HeartPulse,
   career: Briefcase,
   learning: BookOpen,
@@ -44,11 +53,56 @@ const CATEGORY_ICONS: Record<GoalCategory, React.ComponentType<{ className?: str
   custom: Sparkles,
 };
 
+const COLOR_OPTIONS: Array<{
+  badgeVariant: "sage" | "amber" | "charcoal" | "default";
+  label: string;
+  colorClass: string;
+  pastelBg: string;
+  borderColor: string;
+  previewBg: string;
+}> = [
+  {
+    badgeVariant: "sage",
+    label: "Sage",
+    colorClass: "text-sage-800 dark:text-sage-300",
+    pastelBg: "bg-sage-50 dark:bg-sage-950/40",
+    borderColor: "border-sage-200 dark:border-sage-800",
+    previewBg: "bg-sage-500",
+  },
+  {
+    badgeVariant: "amber",
+    label: "Amber",
+    colorClass: "text-amber-800 dark:text-amber-300",
+    pastelBg: "bg-amber-50 dark:bg-amber-950/40",
+    borderColor: "border-amber-200 dark:border-amber-800",
+    previewBg: "bg-amber-500",
+  },
+  {
+    badgeVariant: "charcoal",
+    label: "Charcoal",
+    colorClass: "text-charcoal-800 dark:text-sand-200",
+    pastelBg: "bg-sand-100 dark:bg-charcoal-800/60",
+    borderColor: "border-sand-300 dark:border-charcoal-700",
+    previewBg: "bg-charcoal-700",
+  },
+  {
+    badgeVariant: "default",
+    label: "Sand",
+    colorClass: "text-charcoal-700 dark:text-sand-300",
+    pastelBg: "bg-sand-50 dark:bg-charcoal-900/60",
+    borderColor: "border-sand-200 dark:border-charcoal-700",
+    previewBg: "bg-sand-400",
+  },
+];
+
 export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
   isOpen,
   onClose,
   onSubmit,
   isLoading = false,
+  categories,
+  onAddCategory,
+  onDeleteCategory,
 }) => {
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [title, setTitle] = useState("");
@@ -61,6 +115,14 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
   const [titleError, setTitleError] = useState("");
   const [whyError, setWhyError] = useState("");
 
+  // Custom Category inline creation state
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [selectedColorIdx, setSelectedColorIdx] = useState(0);
+  const [categoryError, setCategoryError] = useState("");
+
+  const categoryList = categories && categories.length > 0 ? categories : GOAL_CATEGORY_LIST;
+
   useEffect(() => {
     if (isOpen) {
       setStep(1);
@@ -72,6 +134,10 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
       setScaleDownFallback("");
       setTitleError("");
       setWhyError("");
+      setIsAddingCategory(false);
+      setNewCategoryName("");
+      setSelectedColorIdx(0);
+      setCategoryError("");
     }
   }, [isOpen]);
 
@@ -99,6 +165,43 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
     if (step > 1) {
       setStep((prev) => (prev - 1) as 1 | 2 | 3 | 4);
     }
+  };
+
+  const handleSaveCategory = async () => {
+    if (!newCategoryName.trim()) {
+      setCategoryError("Nama kategori tidak boleh kosong");
+      return;
+    }
+
+    const rawId = newCategoryName.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const id = rawId || `custom-${Date.now()}`;
+
+    if (categoryList.some((c) => c.id === id)) {
+      setCategoryError("Kategori dengan nama serupa sudah ada");
+      return;
+    }
+
+    const color = COLOR_OPTIONS[selectedColorIdx];
+    const newCatMeta: GoalCategoryMeta = {
+      id,
+      label: newCategoryName.trim(),
+      badgeVariant: color.badgeVariant,
+      colorClass: color.colorClass,
+      pastelBg: color.pastelBg,
+      borderColor: color.borderColor,
+      iconName: "Tag",
+      description: newCategoryName.trim(),
+      isCustom: true,
+    };
+
+    if (onAddCategory) {
+      await onAddCategory(newCatMeta);
+    }
+
+    setCategory(id);
+    setIsAddingCategory(false);
+    setNewCategoryName("");
+    setCategoryError("");
   };
 
   const handleSubmit = async (e?: React.FormEvent) => {
@@ -158,44 +261,161 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
               autoFocus
             />
 
-            <div className="flex flex-col gap-2">
-              <label className="text-xs sm:text-sm font-medium text-charcoal-700 dark:text-sand-200">
-                Pilih Kategori
-              </label>
+            <div className="flex flex-col gap-2.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs sm:text-sm font-medium text-charcoal-700 dark:text-sand-200">
+                  Pilih Kategori
+                </label>
+                {!isAddingCategory && onAddCategory && (
+                  <button
+                    type="button"
+                    onClick={() => setIsAddingCategory(true)}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-sage-700 dark:text-sage-300 hover:text-sage-800 dark:hover:text-sage-200 transition-colors"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>+ Kategori Baru</span>
+                  </button>
+                )}
+              </div>
+
+              {/* Inline Form to Add Category */}
+              {isAddingCategory && (
+                <div className="p-3.5 rounded-xl border border-sand-300 dark:border-charcoal-700 bg-sand-50/90 dark:bg-charcoal-800/80 flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-charcoal-800 dark:text-sand-100">
+                      Tambah Kategori Kustom
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsAddingCategory(false);
+                        setCategoryError("");
+                      }}
+                      className="p-1 text-charcoal-400 hover:text-charcoal-600 dark:hover:text-sand-200 rounded-md"
+                      aria-label="Tutup form kategori baru"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <Input
+                    label="Nama Kategori"
+                    placeholder="Contoh: Keuangan, Hobi, Relasi..."
+                    value={newCategoryName}
+                    onChange={(e) => {
+                      setNewCategoryName(e.target.value);
+                      if (categoryError) setCategoryError("");
+                    }}
+                    error={categoryError}
+                    autoFocus
+                  />
+
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-xs font-medium text-charcoal-700 dark:text-sand-300">
+                      Warna Label:
+                    </span>
+                    <div className="flex items-center gap-2">
+                      {COLOR_OPTIONS.map((col, idx) => (
+                        <button
+                          key={col.label}
+                          type="button"
+                          onClick={() => setSelectedColorIdx(idx)}
+                          className={cn(
+                            "w-7 h-7 rounded-full flex items-center justify-center transition-all",
+                            col.previewBg,
+                            selectedColorIdx === idx
+                              ? "ring-2 ring-offset-2 ring-charcoal-800 dark:ring-sand-200 dark:ring-offset-charcoal-900 scale-110"
+                              : "opacity-75 hover:opacity-100"
+                          )}
+                          title={col.label}
+                          aria-label={`Pilih warna ${col.label}`}
+                        >
+                          {selectedColorIdx === idx && (
+                            <Check className="w-3.5 h-3.5 text-white" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 pt-1 border-t border-sand-200/80 dark:border-charcoal-700">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setIsAddingCategory(false);
+                        setCategoryError("");
+                      }}
+                    >
+                      Batal
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="primary"
+                      size="sm"
+                      onClick={handleSaveCategory}
+                    >
+                      Simpan Kategori
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Categories Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                {GOAL_CATEGORY_LIST.map((cat) => {
-                  const Icon = CATEGORY_ICONS[cat.id];
+                {categoryList.map((cat) => {
+                  const Icon = CATEGORY_ICONS[cat.id] || Tag;
                   const isSelected = category === cat.id;
                   return (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => setCategory(cat.id)}
-                      className={cn(
-                        "flex flex-col items-start p-3 rounded-xl border text-left transition-all",
-                        "hover:border-sage-400 dark:hover:border-sage-600",
-                        isSelected
-                          ? "border-sage-600 bg-sage-50/60 dark:bg-sage-950/40 ring-2 ring-sage-500/20"
-                          : "border-sand-200 dark:border-charcoal-800 bg-white dark:bg-charcoal-900"
-                      )}
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        <Icon
-                          className={cn(
-                            "w-4 h-4",
-                            isSelected
-                              ? "text-sage-600 dark:text-sage-400"
-                              : "text-charcoal-400 dark:text-sand-400"
-                          )}
-                        />
-                        <span className="text-xs font-semibold text-charcoal-900 dark:text-sand-100">
-                          {cat.label.split(" & ")[0]}
+                    <div key={cat.id} className="relative group">
+                      <button
+                        type="button"
+                        onClick={() => setCategory(cat.id)}
+                        className={cn(
+                          "w-full flex flex-col justify-between p-3 rounded-xl border text-left transition-all min-h-[76px]",
+                          "hover:border-sage-400 dark:hover:border-sage-600",
+                          isSelected
+                            ? "border-sage-600 bg-sage-50/60 dark:bg-sage-950/40 ring-2 ring-sage-500/20"
+                            : "border-sand-200 dark:border-charcoal-800 bg-white dark:bg-charcoal-900"
+                        )}
+                      >
+                        <div className="flex items-center gap-1.5 min-w-0 pr-6">
+                          <Icon
+                            className={cn(
+                              "w-4 h-4 shrink-0",
+                              isSelected
+                                ? "text-sage-600 dark:text-sage-400"
+                                : "text-charcoal-400 dark:text-sand-400"
+                            )}
+                          />
+                          <span className="text-xs font-semibold text-charcoal-900 dark:text-sand-100 truncate">
+                            {cat.label.split(" & ")[0]}
+                          </span>
+                        </div>
+                        <span className="text-[11px] text-charcoal-500 dark:text-sand-400 line-clamp-1">
+                          {cat.description}
                         </span>
-                      </div>
-                      <span className="text-[11px] text-charcoal-500 dark:text-sand-400 line-clamp-1">
-                        {cat.description}
-                      </span>
-                    </button>
+                      </button>
+
+                      {cat.isCustom && onDeleteCategory && (
+                        <button
+                          type="button"
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            await onDeleteCategory(cat.id);
+                            if (category === cat.id) {
+                              setCategory("health");
+                            }
+                          }}
+                          className="absolute top-2 right-2 p-1.5 rounded-lg text-charcoal-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors focus:outline-none focus:ring-1 focus:ring-rose-500 z-10"
+                          title="Hapus Kategori"
+                          aria-label={`Hapus kategori ${cat.label}`}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
                   );
                 })}
               </div>

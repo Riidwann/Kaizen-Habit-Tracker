@@ -82,6 +82,36 @@ describe("GoalManagerView", () => {
     expect(mockController.setFilterCategory).toHaveBeenCalledWith("mindset");
   });
 
+  it("renders distinct category and status filter sections", () => {
+    render(<GoalManagerView controller={mockController} />);
+
+    expect(screen.getByText("Kategori Target:")).toBeInTheDocument();
+    expect(screen.getByText("Status Target:")).toBeInTheDocument();
+  });
+
+  it("renders dynamic custom categories from controller", () => {
+    const customController = {
+      ...mockController,
+      categories: [
+        {
+          id: "finance",
+          label: "Finance & Wealth",
+          badgeVariant: "amber" as const,
+          colorClass: "text-amber-800",
+          pastelBg: "bg-amber-50",
+          borderColor: "border-amber-200",
+          iconName: "Coins",
+          description: "Wealth habits",
+          isCustom: true,
+        },
+      ],
+    };
+
+    render(<GoalManagerView controller={customController as any} />);
+
+    expect(screen.getByRole("button", { name: /finance/i })).toBeInTheDocument();
+  });
+
   it("triggers toggleMilestone when milestone checkbox is clicked", () => {
     render(<GoalManagerView controller={mockController} />);
 
