@@ -51,7 +51,26 @@ describe("LoadSampleDataUseCase", () => {
     const a3 = sample.data.microActions.find((a) => a.goalId === g3?.id);
     expect(a3?.title).toBe("Tarik napas dalam 3 kali sebelum tidur");
     expect(a3?.scaleDownTitle).toBe("Tarik napas dalam 1 kali");
+
+    // Todos
+    expect(sample.data.todos).toBeDefined();
+    expect(sample.data.todos!.length).toBeGreaterThanOrEqual(3);
+    expect(sample.data.todos?.some((t) => t.title === "Membaca buku 1 bab")).toBe(true);
+
+    // Routines
+    expect(sample.data.routines).toBeDefined();
+    expect(sample.data.routines!.length).toBeGreaterThanOrEqual(2);
+    expect(sample.data.routines?.some((r) => r.title === "Olahraga Ringan")).toBe(true);
+
+    // Rewards
+    expect(sample.data.rewards).toBeDefined();
+    expect(sample.data.rewards!.length).toBeGreaterThanOrEqual(1);
+
+    // Custom categories
+    expect(sample.data.customCategories).toBeDefined();
+    expect(sample.data.customCategories?.some((c) => c.id === "finance")).toBe(true);
   });
+
 
   it("restores starter sample data to repository and publishes BackupRestoredEvent", async () => {
     let publishedEvent: BackupRestoredEvent | null = null;

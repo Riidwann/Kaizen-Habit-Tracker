@@ -6,6 +6,7 @@ import {
   HanseiEntryProps,
   DailySanctuaryLogProps,
 } from "../domain/SystemSnapshot";
+import { GOAL_CATEGORIES } from "@/modules/goals/domain/GoalCategory";
 import { Result } from "@/shared/domain/Result";
 import {
   LocalStorageDriver,
@@ -18,6 +19,10 @@ export interface BackupStorageKeys {
   reflectionsKey?: string;
   dailyLogsKey?: string;
   activeDatesKey?: string;
+  todosKey?: string;
+  routinesKey?: string;
+  rewardsKey?: string;
+  customCategoriesKey?: string;
 }
 
 export class LocalStorageBackupRepository implements BackupRepositoryPort {
@@ -27,6 +32,10 @@ export class LocalStorageBackupRepository implements BackupRepositoryPort {
   private readonly reflectionsKey: string;
   private readonly dailyLogsKey: string;
   private readonly activeDatesKey: string;
+  private readonly todosKey: string;
+  private readonly routinesKey: string;
+  private readonly rewardsKey: string;
+  private readonly customCategoriesKey: string;
 
   constructor(
     driver: LocalStorageDriver = defaultStorageDriver,
@@ -38,6 +47,10 @@ export class LocalStorageBackupRepository implements BackupRepositoryPort {
     this.reflectionsKey = keys.reflectionsKey || "kaizen_reflections";
     this.dailyLogsKey = keys.dailyLogsKey || "kaizen_daily_logs";
     this.activeDatesKey = keys.activeDatesKey || "kaizen_active_dates";
+    this.todosKey = keys.todosKey || "kaizen_todos";
+    this.routinesKey = keys.routinesKey || "kaizen_routines";
+    this.rewardsKey = keys.rewardsKey || "kaizen_self_rewards";
+    this.customCategoriesKey = keys.customCategoriesKey || "kaizen_goal_categories";
   }
 
   public async getSnapshot(): Promise<Result<SystemSnapshot, Error>> {
@@ -49,6 +62,10 @@ export class LocalStorageBackupRepository implements BackupRepositoryPort {
         this.driver.getItem<HanseiEntryProps[]>(this.reflectionsKey, []) || [];
       const dailyLogs =
         this.driver.getItem<DailySanctuaryLogProps[]>(this.dailyLogsKey, []) || [];
+      const todos = this.driver.getItem<any[]>(this.todosKey, []) || [];
+      const routines = this.driver.getItem<any[]>(this.routinesKey, []) || [];
+      const rewards = this.driver.getItem<any[]>(this.rewardsKey, []) || [];
+      const customCategories = this.driver.getItem<any[]>(this.customCategoriesKey, []) || [];
 
       const snapshot: SystemSnapshot = {
         version: "1.0.0",
@@ -59,7 +76,15 @@ export class LocalStorageBackupRepository implements BackupRepositoryPort {
           microActions,
           hanseiEntries,
           dailyLogs,
+          todos,
+          routines,
+          rewards,
+          customCategories,
         },
+        todos,
+        routines,
+        rewards,
+        customCategories,
       };
 
       return Result.ok(snapshot);
@@ -72,10 +97,14 @@ export class LocalStorageBackupRepository implements BackupRepositoryPort {
     }
   }
 
+  public async exportSnapshot(): Promise<Result<SystemSnapshot, Error>> {
+    return this.getSnapshot();
+  }
+
   public async restoreSnapshot(snapshot: SystemSnapshot): Promise<Result<void, Error>> {
     try {
       // Normalize goals to ensure whyText is present for LocalStorageGoalRepository
-      const normalizedGoals = (snapshot.data.goals || []).map((goal) => {
+      const normalizedGoals = (snapshot.data?.goals || []).map((goal) => {
         let whyText = goal.whyText;
         if (!whyText && goal.whyStatement) {
           if (typeof goal.whyStatement === "string") {
@@ -93,31 +122,52 @@ export class LocalStorageBackupRepository implements BackupRepositoryPort {
         };
       });
 
+      const restoredTodos = snapshot.data?.todos ?? snapshot.todos ?? [];
+      const restoredRoutines = snapshot.data?.routines ?? snapshot.routines ?? [];
+      const restoredRewards = snapshot.data?.rewards ?? snapshot.rewards ?? [];
+      const restoredCustomCategories =
+        snapshot.data?.customCategories ??
+        snapshot.customCategories ??
+        Object.values(GOAL_CATEGORIES);
+
       const goalsSuccess = this.driver.setItem(this.goalsKey, normalizedGoals);
       const sanctuarySuccess = this.driver.setItem(
         this.sanctuaryKey,
-        snapshot.data.microActions || []
+        snapshot.data?.microActions || []
       );
       const reflectionsSuccess = this.driver.setItem(
         this.reflectionsKey,
-        snapshot.data.hanseiEntries || []
+        snapshot.data?.hanseiEntries || []
       );
       const logsSuccess = this.driver.setItem(
         this.dailyLogsKey,
-        snapshot.data.dailyLogs || []
+        snapshot.data?.dailyLogs || []
       );
+      const todosSuccess = this.driver.setItem(this.todosKey, restoredTodos);
+      const routinesSuccess = this.driver.setItem(this.routinesKey, restoredRoutines);
+      const rewardsSuccess = this.driver.setItem(this.rewardsKey, restoredRewards);
+      const categoriesSuccess = this.driver.setItem(this.customCategoriesKey, restoredCustomCategories);
 
-      if (!goalsSuccess || !sanctuarySuccess || !reflectionsSuccess || !logsSuccess) {
+      if (
+        !goalsSuccess ||
+        !sanctuarySuccess ||
+        !reflectionsSuccess ||
+        !logsSuccess ||
+        !todosSuccess ||
+        !routinesSuccess ||
+        !rewardsSuccess ||
+        !categoriesSuccess
+      ) {
         return Result.err(
           new Error("Failed to write restored data to local storage driver")
         );
       }
 
       // Rebuild active dates from restored reflections and daily logs
-      const reflectionDates = (snapshot.data.hanseiEntries || [])
+      const reflectionDates = (snapshot.data?.hanseiEntries || [])
         .map((h) => h.date)
         .filter(Boolean);
-      const logDates = (snapshot.data.dailyLogs || [])
+      const logDates = (snapshot.data?.dailyLogs || [])
         .map((l) => l.date)
         .filter(Boolean);
       const activeDates = Array.from(new Set([...reflectionDates, ...logDates])).sort();
@@ -143,6 +193,10 @@ export class LocalStorageBackupRepository implements BackupRepositoryPort {
       this.driver.removeItem(this.reflectionsKey);
       this.driver.removeItem(this.dailyLogsKey);
       this.driver.removeItem(this.activeDatesKey);
+      this.driver.removeItem(this.todosKey);
+      this.driver.removeItem(this.routinesKey);
+      this.driver.removeItem(this.rewardsKey);
+      this.driver.removeItem(this.customCategoriesKey);
       return Result.ok(undefined);
     } catch (err) {
       return Result.err(
@@ -155,3 +209,4 @@ export class LocalStorageBackupRepository implements BackupRepositoryPort {
 }
 
 export const localStorageBackupRepository = new LocalStorageBackupRepository();
+

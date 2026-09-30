@@ -170,4 +170,35 @@ describe("BackupValidator", () => {
     expect(result.isErr()).toBe(true);
     expect(result.getError()?.message).toMatch(/hansei/i);
   });
+
+  it("validates snapshots containing todos, routines, rewards, and customCategories", () => {
+    const richSnapshot = {
+      ...validSnapshot,
+      data: {
+        ...validSnapshot.data,
+        todos: [{ id: "t1", title: "Read" }],
+        routines: [{ id: "r1", title: "Jog", time: "07:00" }],
+        rewards: [{ id: "rw1", title: "Coffee" }],
+        customCategories: [{ id: "custom_1", label: "Custom" }],
+      },
+    };
+    const result = BackupValidator.validate(richSnapshot);
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrap().data.todos).toHaveLength(1);
+    expect(result.unwrap().data.routines).toHaveLength(1);
+  });
+
+  it("fails when optional array fields are not arrays if provided", () => {
+    const invalidTodos = {
+      ...validSnapshot,
+      data: {
+        ...validSnapshot.data,
+        todos: "not-an-array",
+      },
+    };
+    const result = BackupValidator.validate(invalidTodos);
+    expect(result.isErr()).toBe(true);
+    expect(result.getError()?.message).toMatch(/todos.*array/i);
+  });
 });
+

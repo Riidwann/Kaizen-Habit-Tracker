@@ -4,6 +4,8 @@ import { BackupRepositoryPort } from "../domain/BackupRepositoryPort";
 import { SystemSnapshot } from "../domain/SystemSnapshot";
 import { BackupRestoredEvent } from "../domain/events/BackupRestoredEvent";
 
+import { GOAL_CATEGORIES } from "@/modules/goals/domain/GoalCategory";
+
 export class LoadSampleDataUseCase {
   constructor(
     private readonly backupRepo: BackupRepositoryPort,
@@ -15,6 +17,83 @@ export class LoadSampleDataUseCase {
     const nowIso = now.toISOString();
     const yesterday = new Date(Date.now() - 86400000);
     const yesterdayDateStr = yesterday.toISOString().split("T")[0];
+
+    const sampleTodos = [
+      {
+        id: "todo_sample_1",
+        title: "Membaca buku 1 bab",
+        isCompleted: false,
+        priority: "medium",
+        createdAt: nowIso,
+        updatedAt: nowIso,
+      },
+      {
+        id: "todo_sample_2",
+        title: "Refleksi mingguan",
+        isCompleted: false,
+        priority: "high",
+        createdAt: nowIso,
+        updatedAt: nowIso,
+      },
+      {
+        id: "todo_sample_3",
+        title: "Membeli perlengkapan kerja",
+        isCompleted: true,
+        priority: "low",
+        createdAt: nowIso,
+        updatedAt: nowIso,
+      },
+    ];
+
+    const sampleRoutines = [
+      {
+        id: "routine_sample_1",
+        title: "Olahraga Ringan",
+        time: "06:30",
+        isCompletedToday: true,
+        streakCount: 3,
+        lastCompletedDate: yesterdayDateStr,
+        createdAt: nowIso,
+        updatedAt: nowIso,
+      },
+      {
+        id: "routine_sample_2",
+        title: "Journaling Malam",
+        time: "20:00",
+        isCompletedToday: false,
+        streakCount: 5,
+        lastCompletedDate: yesterdayDateStr,
+        createdAt: nowIso,
+        updatedAt: nowIso,
+      },
+    ];
+
+    const sampleRewards = [
+      {
+        id: "reward_sample_1",
+        title: "Kopi Spesial & Buku Baru",
+        costPoints: 50,
+        status: "pending",
+        description: "Secangkir kopi hangat di tempat tenang setelah target tercapai",
+        createdAt: nowIso,
+        updatedAt: nowIso,
+      },
+    ];
+
+    const sampleCustomCategories = [
+      ...Object.values(GOAL_CATEGORIES),
+      {
+        id: "finance",
+        label: "Keuangan & Investasi",
+        badgeVariant: "amber",
+        colorClass: "text-amber-800 dark:text-amber-300",
+        pastelBg: "bg-amber-50 dark:bg-amber-950/40",
+        borderColor: "border-amber-200 dark:border-amber-800",
+        iconName: "Coins",
+        description: "Manajemen finansial dan investasi jangka panjang",
+        isCustom: true,
+      },
+    ];
 
     return {
       version: "1.0.0",
@@ -154,7 +233,15 @@ export class LoadSampleDataUseCase {
             loggedAt: nowIso,
           },
         ],
+        todos: sampleTodos,
+        routines: sampleRoutines,
+        rewards: sampleRewards,
+        customCategories: sampleCustomCategories,
       },
+      todos: sampleTodos,
+      routines: sampleRoutines,
+      rewards: sampleRewards,
+      customCategories: sampleCustomCategories,
     };
   }
 

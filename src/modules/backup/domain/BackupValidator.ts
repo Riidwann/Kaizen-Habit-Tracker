@@ -144,6 +144,34 @@ export class BackupValidator {
       }
     }
 
+    // Validate optional arrays: todos, routines, rewards, customCategories
+    const optionalArrayFields = [
+      "todos",
+      "routines",
+      "rewards",
+      "customCategories",
+    ] as const;
+
+    for (const field of optionalArrayFields) {
+      if (obj[field] !== undefined && !Array.isArray(obj[field])) {
+        return Result.err(
+          new Error(`Invalid backup format: '${field}' must be an array if provided`)
+        );
+      }
+      if (dataObj[field] !== undefined && !Array.isArray(dataObj[field])) {
+        return Result.err(
+          new Error(`Invalid backup format: 'data.${field}' must be an array if provided`)
+        );
+      }
+      // Keep root and dataObj synchronized
+      if (obj[field] && !dataObj[field]) {
+        dataObj[field] = obj[field];
+      }
+      if (dataObj[field] && !obj[field]) {
+        obj[field] = dataObj[field];
+      }
+    }
+
     return Result.ok(parsed as SystemSnapshot);
   }
 }

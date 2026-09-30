@@ -67,6 +67,10 @@ export interface SystemSnapshotData {
   microActions: MicroActionProps[];
   hanseiEntries: HanseiEntryProps[];
   dailyLogs: DailySanctuaryLogProps[];
+  todos?: any[];
+  routines?: any[];
+  rewards?: any[];
+  customCategories?: any[];
 }
 
 export interface SystemSnapshot {
@@ -74,4 +78,8 @@ export interface SystemSnapshot {
   exportedAt: string;
   appName: "KaizenFlow";
   data: SystemSnapshotData;
+  todos?: any[];
+  routines?: any[];
+  rewards?: any[];
+  customCategories?: any[];
 }
