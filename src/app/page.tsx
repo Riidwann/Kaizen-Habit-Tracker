@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { TabNavigation, TabId } from "@/components/layout/TabNavigation";
-import { Footer } from "@/components/layout/Footer";
 import { KaizenGuideModal } from "@/components/layout/KaizenGuideModal";
 import { usePwaInstall } from "@/hooks/usePwaInstall";
 
@@ -29,21 +28,7 @@ import {
 } from "@/modules/backup";
 
 // UI Kit
-import { Button } from "@/shared/presentation/Button";
-import { Card } from "@/shared/presentation/Card";
-import { Badge } from "@/shared/presentation/Badge";
 import { inMemoryEventBus } from "@/shared/infrastructure/InMemoryEventBus";
-
-// Icons
-import {
-  Sparkles,
-  Download,
-  Upload,
-  Database,
-  ShieldCheck,
-  Plus,
-  BookOpen,
-} from "lucide-react";
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<TabId>("sanctuary");
@@ -127,13 +112,6 @@ export default function HomePage() {
     goalsController.openForgeModal();
   }, [goalsController]);
 
-  // Check if user is visiting for the first time with empty local storage
-  const isStorageEmpty =
-    !goalsController.isLoading &&
-    !sanctuaryController.isLoading &&
-    goalsController.goals.length === 0 &&
-    sanctuaryController.actions.length === 0;
-
   return (
     <div className="min-h-screen flex flex-col bg-sand-50 dark:bg-charcoal-950 text-charcoal-900 dark:text-sand-100 transition-colors overflow-x-hidden">
       {/* 1. Zen Japandi Header */}
@@ -155,73 +133,6 @@ export default function HomePage() {
 
       {/* 3. Main Content Area with safe bottom padding on mobile */}
       <main className="flex-1 w-full max-w-5xl mx-auto px-3 sm:px-6 py-3 sm:py-6 space-y-5 sm:space-y-6 pb-24 sm:pb-8 overflow-x-hidden">
-        {/* Welcoming Starter Banner (Rendered when storage is empty) */}
-        {isStorageEmpty && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-sage-50/80 to-sand-100/90 dark:from-charcoal-900 dark:to-charcoal-800/90 border border-sage-200/90 dark:border-charcoal-700 shadow-sm">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="space-y-1.5 max-w-2xl">
-                  <div className="flex items-center gap-2">
-                    <Badge variant="sage" size="sm" className="gap-1">
-                      <Sparkles className="w-3 h-3 text-sage-600" />
-                      <span>Filosofi Kaizen</span>
-                    </Badge>
-                    <span className="text-xs font-semibold text-sage-700 dark:text-sage-400">
-                      Too Small to Fail (Mustahil Gagal)
-                    </span>
-                  </div>
-                  <h2 className="text-base sm:text-xl font-bold tracking-tight text-charcoal-900 dark:text-sand-50">
-                    Selamat Datang di KaizenFlow
-                  </h2>
-                  <p className="text-xs sm:text-sm text-charcoal-600 dark:text-sand-300 leading-relaxed">
-                    Perubahan besar dimulai dari tindakan mikro 2-menit yang terlalu kecil untuk
-                    memicu rasa malas. Muat data percontohan untuk melihat ekosistem bekerja,
-                    atau buka panduan singkat untuk memahami cara kerjanya.
-                  </p>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto shrink-0">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setIsGuideModalOpen(true)}
-                    leftIcon={<BookOpen className="w-3.5 h-3.5 text-sage-600" />}
-                    className="flex-1 sm:flex-initial text-xs font-medium justify-center"
-                  >
-                    Pelajari Kaizen
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={handleLoadSample}
-                    disabled={backupController.isLoadingSample}
-                    leftIcon={<Sparkles className="w-3.5 h-3.5 text-sage-600" />}
-                    className="flex-1 sm:flex-initial text-xs font-medium justify-center"
-                  >
-                    {backupController.isLoadingSample ? "Memuat..." : "Muat Contoh Data"}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="primary"
-                    size="sm"
-                    onClick={handleOpenForge}
-                    leftIcon={<Plus className="w-3.5 h-3.5" />}
-                    className="flex-1 sm:flex-initial text-xs font-medium justify-center"
-                  >
-                    Tempa Sasaran Pertama
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
-        )}
-
         {/* Tab Views with Smooth Transition */}
         <AnimatePresence mode="wait">
           {activeTab === "sanctuary" && (
@@ -283,10 +194,7 @@ export default function HomePage() {
         </AnimatePresence>
       </main>
 
-      {/* 4. Minimalist Zen Footer (with extra bottom margin on mobile to clear bottom bar) */}
-      <Footer className="mb-14 sm:mb-0" />
-
-      {/* 5. Modals Shell */}
+      {/* Modals Shell */}
       {/* 5.1 Kaizen Guide Modal */}
       <KaizenGuideModal
         isOpen={isGuideModalOpen}

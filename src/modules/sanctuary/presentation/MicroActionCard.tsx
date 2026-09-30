@@ -177,7 +177,7 @@ export const MicroActionCard = React.forwardRef<HTMLDivElement, MicroActionCardP
             <div
               role="menu"
               aria-label="Menu Opsi Kebiasaan"
-              className="absolute right-0 mt-1.5 w-52 rounded-2xl bg-white dark:bg-charcoal-900 border border-sand-200/90 dark:border-charcoal-700 shadow-xl z-50 py-1.5 animate-in fade-in zoom-in-95 duration-150"
+              className="absolute right-0 mt-1.5 w-60 rounded-2xl bg-white dark:bg-charcoal-900 border border-sand-200/90 dark:border-charcoal-700 shadow-xl z-50 py-1.5 animate-in fade-in zoom-in-95 duration-150"
             >
               {!action.isCompletedToday && (
                 <button
@@ -187,7 +187,7 @@ export const MicroActionCard = React.forwardRef<HTMLDivElement, MicroActionCardP
                   className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-charcoal-700 dark:text-sand-200 hover:bg-sand-100 dark:hover:bg-charcoal-800/80 transition-colors text-left"
                 >
                   <Timer className="w-3.5 h-3.5 text-sage-600 dark:text-sage-400 shrink-0" />
-                  <span>Mulai Timer ({action.estimatedMinutes} Menit)</span>
+                  <span>Mulai Timer (Opsional - {action.estimatedMinutes} Menit)</span>
                 </button>
               )}
 

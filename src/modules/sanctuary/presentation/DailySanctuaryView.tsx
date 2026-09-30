@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Calendar, Compass, ShieldCheck, Sun, HelpCircle, Info } from "lucide-react";
+import { Sparkles, Calendar, Compass, ShieldCheck, Sun, HelpCircle } from "lucide-react";
 import { MicroActionCard } from "./MicroActionCard";
 import { ActionTimerModal } from "./ActionTimerModal";
 import { DailyCompletionState } from "./DailyCompletionState";
@@ -98,14 +98,6 @@ export const DailySanctuaryView: React.FC<DailySanctuaryViewProps> = ({
           Fokus pada 1–3 langkah mikro sederhana hari ini. Tidak ada daftar panjang yang membingungkan.
           Hanya kemajuan 1% yang terjangkau dan menenangkan.
         </p>
-
-        {/* Micro-guide callout */}
-        <div className="p-3 rounded-xl bg-sand-100/70 dark:bg-charcoal-800/50 border border-sand-200/70 dark:border-charcoal-700/70 flex items-start gap-2.5 text-xs text-charcoal-600 dark:text-sand-300">
-          <Info className="w-4 h-4 text-sage-600 shrink-0 mt-0.5" />
-          <p className="leading-relaxed">
-            <strong>Mengapa hanya 1–3 aksi?</strong> Kaizen membatasi tindakan harian agar otak terhindar dari kepanikan daftar tugas. Tiap aksi dirancang ≤ 2 menit agar Anda bisa mulai tanpa rasa malas.
-          </p>
-        </div>
       </header>
 
       {/* 1% Daily Progress Bar */}

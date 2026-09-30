@@ -39,19 +39,12 @@ describe("KaizenFlowApp Integration", () => {
       screen.getByRole("heading", { name: /^Fokus Hari Ini$/i, level: 1 })
     ).toBeInTheDocument();
 
-    // Empty state / Welcoming starter banner checks after loading settles
+    // Empty state checks after loading settles
     await waitFor(() => {
       expect(
-        screen.getByText(/Selamat Datang di KaizenFlow/i)
+        screen.getByText(/Belum ada fokus hari ini/i)
       ).toBeInTheDocument();
     });
-
-    // Footer checks
-    expect(
-      screen.getByText(
-        /Perjalanan seribu mil dimulai dengan satu langkah mikro yang terlalu kecil untuk memicu rasa malas\./i
-      )
-    ).toBeInTheDocument();
   });
 
   it("2. switching to Target tab renders Goal Manager", async () => {
@@ -157,14 +150,18 @@ describe("KaizenFlowApp Integration", () => {
     ).toBeInTheDocument();
   });
 
-  it("6. welcome banner can load sample data into the application", async () => {
+  it("6. header menu can load sample data into the application", async () => {
     render(<HomePage />);
 
-    // Welcome banner should have a button to load sample data
-    const loadSampleBtn = await screen.findByRole("button", {
+    // Open Header Menu (⋮)
+    const menuBtn = screen.getByRole("button", { name: /Menu Opsi/i });
+    fireEvent.click(menuBtn);
+
+    // Header menu should have an option to load sample data
+    const loadSampleItem = await screen.findByRole("menuitem", {
       name: /Muat Contoh Data/i,
     });
-    fireEvent.click(loadSampleBtn);
+    fireEvent.click(loadSampleItem);
 
     // After loading sample data, actions should appear
     await waitFor(() => {

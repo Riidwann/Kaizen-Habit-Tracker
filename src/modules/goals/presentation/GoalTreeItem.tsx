@@ -300,7 +300,7 @@ export const GoalTreeItem: React.FC<GoalTreeItemProps> = ({
                     <button
                       type="button"
                       onClick={() => onDeleteMilestone(goal.id, m.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 text-charcoal-400 hover:text-red-600 transition-opacity"
+                      className="p-1 text-charcoal-400 dark:text-sand-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500"
                       aria-label={`Delete milestone ${m.title}`}
                     >
                       <Trash2 className="w-3 h-3" />

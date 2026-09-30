@@ -125,3 +125,30 @@ describe("GoalTreeItem - Achieved Status & Confirmation", () => {
     expect(onUpdateStatus).toHaveBeenCalledWith("goal-test-1", "active");
   });
 });
+
+describe("GoalTreeItem Milestone Delete Button", () => {
+  it("renders milestone delete button without hidden opacity classes", () => {
+    const goal = Goal.create({
+      title: "Test Goal",
+      category: "health",
+      whyStatement: "Health is wealth",
+      milestones: [Milestone.create("goal-1", "Milestone 1", 1).unwrap()],
+    }).unwrap();
+
+    render(
+      <GoalTreeItem
+        goal={goal}
+        onToggleMilestone={vi.fn()}
+        onAddMilestone={vi.fn()}
+        onDeleteMilestone={vi.fn()}
+        onUpdateStatus={vi.fn()}
+        onDeleteGoal={vi.fn()}
+      />
+    );
+
+    const deleteBtn = screen.getByLabelText("Delete milestone Milestone 1");
+    expect(deleteBtn).toBeInTheDocument();
+    expect(deleteBtn.className).not.toContain("opacity-0");
+  });
+});
+
