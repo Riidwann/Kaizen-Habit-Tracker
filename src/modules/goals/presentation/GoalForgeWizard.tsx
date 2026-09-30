@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Modal } from "@/shared/presentation/Modal";
 import { Button } from "@/shared/presentation/Button";
 import { Input, Textarea } from "@/shared/presentation/Input";
@@ -239,13 +239,20 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
     });
   };
 
+  // Preserve last valid initialGoal during exit transition
+  const lastGoalRef = useRef(initialGoal);
+  if (initialGoal) {
+    lastGoalRef.current = initialGoal;
+  }
+  const currentGoal = initialGoal || lastGoalRef.current;
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={initialGoal ? `Edit Target: ${initialGoal.title}` : "Buat Target Baru"}
+      title={currentGoal ? `Edit Target: ${currentGoal.title}` : "Buat Target Baru"}
       description={
-        initialGoal
+        currentGoal
           ? "Perbarui visi, motivasi, tonggak pencapaian, dan kebiasaan mikro Anda."
           : "Pecah target besar menjadi kebiasaan mikro ≤ 2 menit yang mustahil gagal."
       }

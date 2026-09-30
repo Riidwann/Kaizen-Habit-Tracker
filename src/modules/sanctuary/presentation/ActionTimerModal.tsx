@@ -108,11 +108,18 @@ export const ActionTimerModal: React.FC<ActionTimerModalProps> = ({
   const strokeDashoffset =
     totalSeconds > 0 ? circumference - (timeLeft / totalSeconds) * circumference : 0;
 
-  if (!isOpen || !action) {
+  // Preserve last valid action so exit animation can complete smoothly
+  const lastActionRef = useRef(action);
+  if (action) {
+    lastActionRef.current = action;
+  }
+  const currentAction = action || lastActionRef.current;
+
+  if (!currentAction) {
     return null;
   }
 
-  const title = action.isScaledDown ? action.scaleDownTitle : action.title;
+  const title = currentAction.isScaledDown ? currentAction.scaleDownTitle : currentAction.title;
 
   return (
     <Modal

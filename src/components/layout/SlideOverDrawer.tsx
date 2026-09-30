@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ListTodo, CalendarClock } from "lucide-react";
 import { cn } from "@/shared/presentation/utils";
@@ -37,37 +37,38 @@ export const SlideOverDrawer: React.FC<SlideOverDrawerProps> = ({
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    },
-    [onClose]
-  );
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
-    if (isOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-      const originalOverflow = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      return () => {
-        window.removeEventListener("keydown", handleKeyDown);
-        document.body.style.overflow = originalOverflow || "unset";
-      };
-    }
-  }, [isOpen, handleKeyDown]);
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onCloseRef.current();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = originalOverflow || "unset";
+    };
+  }, [isOpen]);
 
   const variants = {
     hidden: isMobile
-      ? { y: "100%", opacity: 0.8 }
-      : { x: "100%", opacity: 0.8 },
+      ? { y: "100%" }
+      : { x: "100%" },
     visible: isMobile
-      ? { y: 0, opacity: 1 }
-      : { x: 0, opacity: 1 },
+      ? { y: 0 }
+      : { x: 0 },
     exit: isMobile
-      ? { y: "100%", opacity: 0 }
-      : { x: "100%", opacity: 0 },
+      ? { y: "100%" }
+      : { x: "100%" },
   };
 
   return (
@@ -81,13 +82,13 @@ export const SlideOverDrawer: React.FC<SlideOverDrawerProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
-          className="fixed inset-0 z-50 flex sm:justify-end transform-gpu"
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className="fixed inset-0 z-50 flex sm:justify-end"
         >
-          {/* Backdrop */}
+          {/* Backdrop with solid semi-transparent color - zero blur texture flicker */}
           <div
-            className="fixed inset-0 bg-charcoal-950/45 backdrop-blur-sm -z-10"
-            onClick={onClose}
+            className="fixed inset-0 bg-charcoal-950/60 dark:bg-black/75 -z-10"
+            onClick={() => onCloseRef.current()}
             data-testid="drawer-backdrop"
           />
 
@@ -98,9 +99,9 @@ export const SlideOverDrawer: React.FC<SlideOverDrawerProps> = ({
             initial="hidden"
             animate="visible"
             exit="exit"
-            transition={{ type: "spring", damping: 28, stiffness: 320 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
-              "relative z-10 flex flex-col bg-white dark:bg-charcoal-900 shadow-2xl transform-gpu",
+              "relative z-10 flex flex-col bg-white dark:bg-charcoal-900 shadow-2xl",
               "border-sand-200/80 dark:border-charcoal-800",
               // Mobile layout: Bottom sheet
               "w-full max-h-[88vh] mt-auto rounded-t-3xl border-t",

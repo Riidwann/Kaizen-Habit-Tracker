@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { cn } from "./utils";
@@ -22,26 +22,27 @@ export const Modal: React.FC<ModalProps> = ({
   className,
   closeOnClickOutside = true,
 }) => {
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    },
-    [onClose]
-  );
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
-    if (isOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-    }
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onCloseRef.current();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = originalOverflow || "unset";
     };
-  }, [isOpen, handleKeyDown]);
+  }, [isOpen]);
 
   return (
     <AnimatePresence>
@@ -53,27 +54,27 @@ export const Modal: React.FC<ModalProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto transform-gpu"
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
         >
-          {/* Backdrop with backdrop-blur */}
+          {/* Backdrop with solid semi-transparent color - zero blur texture flicker */}
           <div
-            className="fixed inset-0 bg-charcoal-950/45 backdrop-blur-sm -z-10"
-            onClick={closeOnClickOutside ? onClose : undefined}
+            className="fixed inset-0 bg-charcoal-950/60 dark:bg-black/75 -z-10"
+            onClick={closeOnClickOutside ? () => onCloseRef.current() : undefined}
             data-testid="modal-backdrop"
           />
 
           {/* Dialog Container */}
           <motion.div
             key="modal-dialog"
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            initial={{ opacity: 0, scale: 0.96, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 8 }}
+            exit={{ opacity: 0, scale: 0.96, y: 8 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
               "relative w-full max-w-lg max-h-[92vh] flex flex-col rounded-2xl bg-white dark:bg-charcoal-900",
               "border border-sand-200/80 dark:border-charcoal-800",
-              "shadow-2xl z-10 p-4 sm:p-6 transform-gpu",
+              "shadow-2xl z-10 p-4 sm:p-6",
               className
             )}
           >
@@ -93,7 +94,7 @@ export const Modal: React.FC<ModalProps> = ({
               </div>
               <button
                 type="button"
-                onClick={onClose}
+                onClick={() => onCloseRef.current()}
                 aria-label="Close dialog"
                 className="rounded-lg p-1.5 text-charcoal-400 hover:text-charcoal-700 dark:hover:text-sand-200 hover:bg-sand-100 dark:hover:bg-charcoal-800 transition-colors shrink-0"
               >
