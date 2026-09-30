@@ -24,7 +24,9 @@ export const SlideOverDrawer: React.FC<SlideOverDrawerProps> = ({
   remainingRoutinesCount = 0,
   children,
 }) => {
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(() =>
+    typeof window !== "undefined" ? window.innerWidth < 640 : false
+  );
 
   useEffect(() => {
     const checkMobile = () => {
@@ -47,13 +49,13 @@ export const SlideOverDrawer: React.FC<SlideOverDrawerProps> = ({
   useEffect(() => {
     if (isOpen) {
       window.addEventListener("keydown", handleKeyDown);
+      const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+        document.body.style.overflow = originalOverflow || "unset";
+      };
     }
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "unset";
-    };
   }, [isOpen, handleKeyDown]);
 
   const variants = {
@@ -71,32 +73,34 @@ export const SlideOverDrawer: React.FC<SlideOverDrawerProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div
+        <motion.div
+          key="drawer-overlay"
           role="dialog"
           aria-modal="true"
           aria-label="Panel Akses Cepat"
-          className="fixed inset-0 z-50 flex sm:justify-end"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15, ease: "easeOut" }}
+          className="fixed inset-0 z-50 flex sm:justify-end transform-gpu"
         >
           {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-charcoal-900/40 backdrop-blur-sm"
+          <div
+            className="fixed inset-0 bg-charcoal-950/45 backdrop-blur-sm -z-10"
             onClick={onClose}
             data-testid="drawer-backdrop"
           />
 
           {/* Drawer Container (Desktop: Right Slide-Over, Mobile: Bottom Sheet) */}
           <motion.div
+            key="drawer-panel-card"
             variants={variants}
             initial="hidden"
             animate="visible"
             exit="exit"
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className={cn(
-              "relative z-10 flex flex-col bg-white dark:bg-charcoal-900 shadow-2xl",
+              "relative z-10 flex flex-col bg-white dark:bg-charcoal-900 shadow-2xl transform-gpu",
               "border-sand-200/80 dark:border-charcoal-800",
               // Mobile layout: Bottom sheet
               "w-full max-h-[88vh] mt-auto rounded-t-3xl border-t",
@@ -203,7 +207,7 @@ export const SlideOverDrawer: React.FC<SlideOverDrawerProps> = ({
               {children}
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );

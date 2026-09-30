@@ -214,29 +214,31 @@ export const GoalManagerView: React.FC<GoalManagerViewProps> = ({
         )}
       </div>
 
-      {/* Goal Forge Wizard Modal */}
-      <GoalForgeWizard
-        isOpen={isForgeOpen || !!editingGoal}
-        onClose={() => {
-          closeForgeModal();
-          closeEditModal();
-        }}
-        initialGoal={editingGoal}
-        onSubmit={async (data) => {
-          if (editingGoal) {
-            await updateGoal({
-              id: editingGoal.id,
-              ...data,
-            });
-          } else {
-            await createGoal(data);
-          }
-        }}
-        isLoading={isLoading}
-        categories={categoryList}
-        onAddCategory={addCategory}
-        onDeleteCategory={deleteCategory}
-      />
+      {/* Goal Forge Wizard Modal (Rendered only when standalone without root shell) */}
+      {!externalController && (
+        <GoalForgeWizard
+          isOpen={isForgeOpen || !!editingGoal}
+          onClose={() => {
+            closeForgeModal();
+            closeEditModal();
+          }}
+          initialGoal={editingGoal}
+          onSubmit={async (data) => {
+            if (editingGoal) {
+              await updateGoal({
+                id: editingGoal.id,
+                ...data,
+              });
+            } else {
+              await createGoal(data);
+            }
+          }}
+          isLoading={isLoading}
+          categories={categoryList}
+          onAddCategory={addCategory}
+          onDeleteCategory={deleteCategory}
+        />
+      )}
     </div>
   );
 };

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scrollbar-gutter: stable;
+}
+
 :root {
   --background: #FDFBF7;
   --foreground: #1C1917;

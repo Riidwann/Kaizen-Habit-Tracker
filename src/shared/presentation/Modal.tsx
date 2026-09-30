@@ -46,32 +46,34 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div
+        <motion.div
+          key="modal-overlay"
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15, ease: "easeOut" }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto transform-gpu"
         >
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-charcoal-900/40 backdrop-blur-sm"
+          {/* Backdrop with backdrop-blur */}
+          <div
+            className="fixed inset-0 bg-charcoal-950/45 backdrop-blur-sm -z-10"
             onClick={closeOnClickOutside ? onClose : undefined}
             data-testid="modal-backdrop"
           />
 
           {/* Dialog Container */}
           <motion.div
+            key="modal-dialog"
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            transition={{ type: "spring", damping: 25, stiffness: 350 }}
+            exit={{ opacity: 0, scale: 0.95, y: 8 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
               "relative w-full max-w-lg max-h-[92vh] flex flex-col rounded-2xl bg-white dark:bg-charcoal-900",
               "border border-sand-200/80 dark:border-charcoal-800",
-              "shadow-xl z-10 p-4 sm:p-6",
+              "shadow-2xl z-10 p-4 sm:p-6 transform-gpu",
               className
             )}
           >
@@ -102,7 +104,7 @@ export const Modal: React.FC<ModalProps> = ({
             {/* Body with vertical scroll for long forms / mobile keyboards */}
             <div className="overflow-y-auto overflow-x-hidden pr-0.5 flex-1">{children}</div>
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );

@@ -206,9 +206,8 @@ export default function HomePage() {
     rewardController,
   ]);
 
-  // Open Forge Wizard from anywhere (switches to Goals tab)
+  // Open Forge Wizard from anywhere
   const handleOpenForge = useCallback(() => {
-    setActiveTab("goals");
     goalsController.openForgeModal();
   }, [goalsController]);
 
@@ -336,31 +335,29 @@ export default function HomePage() {
         controller={backupController}
       />
 
-      {/* 5.4 Goal Forge Wizard Modal (Active when opened outside goals tab) */}
-      {activeTab !== "goals" && (
-        <GoalForgeWizard
-          isOpen={goalsController.isForgeOpen || !!goalsController.editingGoal}
-          onClose={() => {
-            goalsController.closeForgeModal();
-            goalsController.closeEditModal();
-          }}
-          initialGoal={goalsController.editingGoal}
-          onSubmit={async (data) => {
-            if (goalsController.editingGoal) {
-              await goalsController.updateGoal({
-                id: goalsController.editingGoal.id,
-                ...data,
-              });
-            } else {
-              await goalsController.createGoal(data as any);
-            }
-          }}
-          isLoading={goalsController.isLoading}
-          categories={goalsController.categories}
-          onAddCategory={goalsController.addCategory}
-          onDeleteCategory={goalsController.deleteCategory}
-        />
-      )}
+      {/* 5.4 Goal Forge Wizard Modal */}
+      <GoalForgeWizard
+        isOpen={goalsController.isForgeOpen || !!goalsController.editingGoal}
+        onClose={() => {
+          goalsController.closeForgeModal();
+          goalsController.closeEditModal();
+        }}
+        initialGoal={goalsController.editingGoal}
+        onSubmit={async (data) => {
+          if (goalsController.editingGoal) {
+            await goalsController.updateGoal({
+              id: goalsController.editingGoal.id,
+              ...data,
+            });
+          } else {
+            await goalsController.createGoal(data as any);
+          }
+        }}
+        isLoading={goalsController.isLoading}
+        categories={goalsController.categories}
+        onAddCategory={goalsController.addCategory}
+        onDeleteCategory={goalsController.deleteCategory}
+      />
 
       {/* 4. Mobile Floating Quick-Access Pill (Single-Hand Ergonomics) */}
       <button
