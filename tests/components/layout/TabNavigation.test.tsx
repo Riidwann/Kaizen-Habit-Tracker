@@ -26,4 +26,10 @@ describe("TabNavigation (3 Zen Tabs)", () => {
 
     expect(handleTabChange).toHaveBeenCalledWith("goals");
   });
+
+  it("is memoized with React.memo and has displayName", () => {
+    expect(TabNavigation.displayName).toBe("TabNavigation");
+    expect((TabNavigation as any).$$typeof).toBe(Symbol.for("react.memo"));
+  });
 });
+

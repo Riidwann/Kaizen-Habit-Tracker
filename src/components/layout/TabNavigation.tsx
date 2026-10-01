@@ -47,7 +47,7 @@ export interface TabNavigationProps {
   className?: string;
 }
 
-export const TabNavigation: React.FC<TabNavigationProps> = ({
+export const TabNavigation: React.FC<TabNavigationProps> = React.memo(({
   activeTab,
   onTabChange,
   className,
@@ -119,4 +119,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({
       </div>
     </nav>
   );
-};
+});
+
+TabNavigation.displayName = "TabNavigation";
+

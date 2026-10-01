@@ -75,4 +75,10 @@ describe("Header with HeaderMenu", () => {
     fireEvent.click(routineBtn);
     expect(handleOpenRoutine).toHaveBeenCalledTimes(1);
   });
+
+  it("is memoized with React.memo and has displayName", () => {
+    expect(Header.displayName).toBe("Header");
+    expect((Header as any).$$typeof).toBe(Symbol.for("react.memo"));
+  });
 });
+

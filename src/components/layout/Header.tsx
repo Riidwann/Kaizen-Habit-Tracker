@@ -44,7 +44,7 @@ export const EnsoLogo: React.FC<{ className?: string }> = ({ className = "w-8 h-
   </svg>
 );
 
-export const Header: React.FC<HeaderProps> = ({
+export const Header: React.FC<HeaderProps> = React.memo(({
   currentStreak = 0,
   isGracePeriod = false,
   onOpenHansei,
@@ -60,7 +60,7 @@ export const Header: React.FC<HeaderProps> = ({
   activeTodosCount,
   remainingRoutinesCount,
   className,
-}) => {
+}: HeaderProps) => {
   const [internalDark, setInternalDark] = useState<boolean>(false);
 
   useEffect(() => {
@@ -194,5 +194,8 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
     </header>
   );
-};
+});
+
+Header.displayName = "Header";
+
 
