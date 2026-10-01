@@ -1,50 +1,84 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { TabNavigation, TabId } from "@/components/layout/TabNavigation";
-import { KaizenGuideModal } from "@/components/layout/KaizenGuideModal";
 import { usePwaInstall } from "@/hooks/usePwaInstall";
 
 // Module Controllers & Views
-import {
-  GoalManagerView,
-  GoalForgeWizard,
-  useGoalsController,
-} from "@/modules/goals";
+import { useGoalsController } from "@/modules/goals";
 import {
   DailySanctuaryView,
   useSanctuaryController,
 } from "@/modules/sanctuary";
 import { LocalStorageSanctuaryRepository } from "@/modules/sanctuary/infrastructure/LocalStorageSanctuaryRepository";
-import {
-  CompoundVisualizerView,
-  HanseiModal,
-  useReflectionController,
-} from "@/modules/reflection";
-import {
-  DataBackupModal,
-  useBackupController,
-} from "@/modules/backup";
-import {
-  SlideOverDrawer,
-  DrawerTab,
-} from "@/components/layout/SlideOverDrawer";
-import {
-  useTodoController,
-  TodoListPanel,
-} from "@/modules/todo";
-import {
-  useRoutineController,
-  RoutineSchedulePanel,
-} from "@/modules/routines";
+import { useReflectionController } from "@/modules/reflection";
+import { useBackupController } from "@/modules/backup";
+import type { DrawerTab } from "@/components/layout/SlideOverDrawer";
+import { useTodoController } from "@/modules/todo";
+import { useRoutineController } from "@/modules/routines";
 import {
   useRewardController,
   SelfRewardBanner,
 } from "@/modules/rewards";
 import { LocalStorageReflectionRepository } from "@/modules/reflection/infrastructure/LocalStorageReflectionRepository";
 import { ListTodo } from "lucide-react";
+
+// Dynamically split modals (loaded on demand)
+const GoalForgeWizard = dynamic(
+  () => import("@/modules/goals").then((mod) => mod.GoalForgeWizard),
+  { ssr: false }
+);
+const HanseiModal = dynamic(
+  () => import("@/modules/reflection").then((mod) => mod.HanseiModal),
+  { ssr: false }
+);
+const DataBackupModal = dynamic(
+  () => import("@/modules/backup").then((mod) => mod.DataBackupModal),
+  { ssr: false }
+);
+const KaizenGuideModal = dynamic(
+  () => import("@/components/layout/KaizenGuideModal").then((mod) => mod.KaizenGuideModal),
+  { ssr: false }
+);
+const SlideOverDrawer = dynamic(
+  () => import("@/components/layout/SlideOverDrawer").then((mod) => mod.SlideOverDrawer),
+  { ssr: false }
+);
+const TodoListPanel = dynamic(
+  () => import("@/modules/todo").then((mod) => mod.TodoListPanel),
+  { ssr: false }
+);
+const RoutineSchedulePanel = dynamic(
+  () => import("@/modules/routines").then((mod) => mod.RoutineSchedulePanel),
+  { ssr: false }
+);
+
+// Dynamically split secondary tab views
+const GoalManagerView = dynamic(
+  () => import("@/modules/goals").then((mod) => mod.GoalManagerView),
+  {
+    loading: () => (
+      <div className="py-12 text-center text-charcoal-400 dark:text-sand-500 animate-pulse text-sm">
+        Memuat target Kaizen...
+      </div>
+    ),
+    ssr: false,
+  }
+);
+const CompoundVisualizerView = dynamic(
+  () => import("@/modules/reflection").then((mod) => mod.CompoundVisualizerView),
+  {
+    loading: () => (
+      <div className="py-12 text-center text-charcoal-400 dark:text-sand-500 animate-pulse text-sm">
+        Memuat visualisasi kemajuan...
+      </div>
+    ),
+    ssr: false,
+  }
+);
 
 // UI Kit
 import { inMemoryEventBus } from "@/shared/infrastructure/InMemoryEventBus";
@@ -211,6 +245,21 @@ export default function HomePage() {
     goalsController.openForgeModal();
   }, [goalsController]);
 
+  // Stable callbacks for modals and drawer
+  const handleOpenBackup = useCallback(() => setIsBackupModalOpen(true), []);
+  const handleCloseBackup = useCallback(() => setIsBackupModalOpen(false), []);
+  const handleOpenGuide = useCallback(() => setIsGuideModalOpen(true), []);
+  const handleCloseGuide = useCallback(() => setIsGuideModalOpen(false), []);
+  const handleOpenTodo = useCallback(() => {
+    setDrawerTab("todo");
+    setIsDrawerOpen(true);
+  }, []);
+  const handleOpenRoutine = useCallback(() => {
+    setDrawerTab("routine");
+    setIsDrawerOpen(true);
+  }, []);
+  const handleCloseDrawer = useCallback(() => setIsDrawerOpen(false), []);
+
   return (
     <div className="min-h-screen flex flex-col bg-sand-50 dark:bg-charcoal-950 text-charcoal-900 dark:text-sand-100 transition-colors overflow-x-hidden">
       {/* 1. Zen Japandi Header */}
@@ -218,19 +267,13 @@ export default function HomePage() {
         currentStreak={reflectionController.stats.currentStreak}
         isGracePeriod={reflectionController.stats.isGracePeriod}
         onOpenHansei={reflectionController.openHanseiModal}
-        onOpenBackup={() => setIsBackupModalOpen(true)}
-        onOpenGuide={() => setIsGuideModalOpen(true)}
+        onOpenBackup={handleOpenBackup}
+        onOpenGuide={handleOpenGuide}
         onLoadSample={handleLoadSample}
         onInstallPwa={promptInstall}
         canInstallPwa={isInstallable}
-        onOpenTodo={() => {
-          setDrawerTab("todo");
-          setIsDrawerOpen(true);
-        }}
-        onOpenRoutine={() => {
-          setDrawerTab("routine");
-          setIsDrawerOpen(true);
-        }}
+        onOpenTodo={handleOpenTodo}
+        onOpenRoutine={handleOpenRoutine}
         activeTodosCount={todoController.activeTodosCount}
         remainingRoutinesCount={routineController.remainingCountToday}
       />
@@ -264,7 +307,7 @@ export default function HomePage() {
               />
               <DailySanctuaryView
                 controller={sanctuaryController}
-                onOpenGuide={() => setIsGuideModalOpen(true)}
+                onOpenGuide={handleOpenGuide}
               />
             </motion.div>
           )}
@@ -314,7 +357,7 @@ export default function HomePage() {
       {/* 5.1 Kaizen Guide Modal */}
       <KaizenGuideModal
         isOpen={isGuideModalOpen}
-        onClose={() => setIsGuideModalOpen(false)}
+        onClose={handleCloseGuide}
         onOpenForge={handleOpenForge}
       />
 
@@ -331,7 +374,7 @@ export default function HomePage() {
       {/* 5.3 Data Backup & Restore Modal */}
       <DataBackupModal
         isOpen={isBackupModalOpen}
-        onClose={() => setIsBackupModalOpen(false)}
+        onClose={handleCloseBackup}
         controller={backupController}
       />
 
@@ -362,10 +405,7 @@ export default function HomePage() {
       {/* 4. Mobile Floating Quick-Access Pill (Single-Hand Ergonomics) */}
       <button
         type="button"
-        onClick={() => {
-          setDrawerTab("todo");
-          setIsDrawerOpen(true);
-        }}
+        onClick={handleOpenTodo}
         aria-label="Buka Akses Cepat To-Do & Jadwal"
         className="sm:hidden fixed bottom-20 right-4 z-30 flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-charcoal-900 text-sand-50 dark:bg-sand-100 dark:text-charcoal-900 shadow-lg shadow-charcoal-900/20 active:scale-95 transition-all border border-sand-200/20"
       >
@@ -381,7 +421,7 @@ export default function HomePage() {
       {/* 5.5 Quick-Access Slide-Over Drawer / Bottom Sheet */}
       <SlideOverDrawer
         isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
+        onClose={handleCloseDrawer}
         activeTab={drawerTab}
         onTabChange={setDrawerTab}
         activeTodosCount={todoController.activeTodosCount}
