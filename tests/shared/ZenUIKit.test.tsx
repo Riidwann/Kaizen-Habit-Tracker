@@ -60,11 +60,14 @@ describe("Zen UI Kit", () => {
       expect(screen.getByTestId("left-icon")).toBeInTheDocument();
     });
 
-    it("applies GPU-accelerated active transform classes without framer-motion overhead", () => {
+    it("applies GPU-accelerated active transform classes without framer-motion overhead and respects accessibility", () => {
       render(<Button variant="primary">Kirim</Button>);
       const button = screen.getByRole("button", { name: /kirim/i });
       expect(button.className).toContain("active:scale-[0.98]");
       expect(button.className).toContain("transition-all");
+      expect(button.className).toContain("motion-reduce:transition-none");
+      expect(button.className).toContain("motion-reduce:active:scale-100");
+      expect(button.className).toContain("min-h-[44px]");
     });
   });
 
