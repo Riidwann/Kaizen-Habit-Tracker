@@ -1,5 +1,4 @@
 import React, { forwardRef } from "react";
-import { motion, HTMLMotionProps } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { cn } from "./utils";
 
@@ -7,7 +6,7 @@ export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "eme
 export type ButtonSize = "sm" | "md" | "lg";
 
 export interface ButtonProps
-  extends Omit<HTMLMotionProps<"button">, "children"> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   isLoading?: boolean;
@@ -34,9 +33,9 @@ const variantStyles: Record<ButtonVariant, string> = {
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "px-3 py-1.5 text-xs rounded-lg gap-1.5",
-  md: "px-4 py-2 text-sm rounded-xl gap-2",
-  lg: "px-5 py-2.5 text-base rounded-xl gap-2.5",
+  sm: "px-3 py-1.5 text-xs rounded-lg gap-1.5 min-h-[36px]",
+  md: "px-4 py-2 text-sm rounded-xl gap-2 min-h-[44px]",
+  lg: "px-5 py-2.5 text-base rounded-xl gap-2.5 min-h-[48px]",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -50,6 +49,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       disabled,
       children,
+      type = "button",
       ...props
     },
     ref
@@ -57,17 +57,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const isDisabled = disabled || isLoading;
 
     return (
-      <motion.button
+      <button
         ref={ref}
-        type="button"
+        type={type}
         disabled={isDisabled}
-        whileTap={{ scale: isDisabled ? 1 : 0.98 }}
-        whileHover={{ scale: isDisabled ? 1 : 1.01 }}
-        transition={{ duration: 0.12 }}
         className={cn(
-          "inline-flex items-center justify-center font-medium transition-colors select-none",
+          "inline-flex items-center justify-center font-medium transition-all duration-100 ease-out select-none",
+          "active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-          "disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
+          "disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:active:scale-100",
           variantStyles[variant],
           sizeStyles[size],
           className
@@ -82,7 +80,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {!isLoading && rightIcon && (
           <span className="inline-flex shrink-0 items-center">{rightIcon}</span>
         )}
-      </motion.button>
+      </button>
     );
   }
 );
