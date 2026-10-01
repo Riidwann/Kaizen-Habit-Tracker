@@ -111,6 +111,9 @@ export default function HomePage() {
   const reflectionRef = useRef(reflectionController);
   reflectionRef.current = reflectionController;
 
+  const backupRef = useRef(backupController);
+  backupRef.current = backupController;
+
   const todoRef = useRef(todoController);
   todoRef.current = todoController;
 
@@ -218,34 +221,29 @@ export default function HomePage() {
 
   // Handle loading sample data and refreshing views
   const handleLoadSample = useCallback(async () => {
-    const success = await backupController.handleLoadSampleData();
+    const success = await backupRef.current.handleLoadSampleData();
     if (success) {
       await Promise.all([
-        goalsController.refreshGoals(),
-        sanctuaryController.refreshActions(),
-        reflectionController.refreshStats(),
-        reflectionController.refreshReflections(),
-        todoController.refreshTodos(),
-        routineController.refreshRoutines(),
-        rewardController.refreshRewards(),
+        goalsRef.current.refreshGoals(),
+        sanctuaryRef.current.refreshActions(),
+        reflectionRef.current.refreshStats(),
+        reflectionRef.current.refreshReflections(),
+        todoRef.current.refreshTodos(),
+        routineRef.current.refreshRoutines(),
+        rewardRef.current.refreshRewards(),
       ]);
     }
-  }, [
-    backupController,
-    goalsController,
-    sanctuaryController,
-    reflectionController,
-    todoController,
-    routineController,
-    rewardController,
-  ]);
+  }, []);
 
   // Open Forge Wizard from anywhere
   const handleOpenForge = useCallback(() => {
-    goalsController.openForgeModal();
-  }, [goalsController]);
+    goalsRef.current.openForgeModal();
+  }, []);
 
   // Stable callbacks for modals and drawer
+  const handleOpenHansei = useCallback(() => {
+    reflectionRef.current.openHanseiModal();
+  }, []);
   const handleOpenBackup = useCallback(() => setIsBackupModalOpen(true), []);
   const handleCloseBackup = useCallback(() => setIsBackupModalOpen(false), []);
   const handleOpenGuide = useCallback(() => setIsGuideModalOpen(true), []);
@@ -266,7 +264,7 @@ export default function HomePage() {
       <Header
         currentStreak={reflectionController.stats.currentStreak}
         isGracePeriod={reflectionController.stats.isGracePeriod}
-        onOpenHansei={reflectionController.openHanseiModal}
+        onOpenHansei={handleOpenHansei}
         onOpenBackup={handleOpenBackup}
         onOpenGuide={handleOpenGuide}
         onLoadSample={handleLoadSample}
@@ -346,7 +344,7 @@ export default function HomePage() {
                 compoundMultiplier={reflectionController.stats.compoundMultiplier}
                 percentageGain={reflectionController.stats.percentageGain}
                 reflections={reflectionController.reflections}
-                onOpenHanseiModal={reflectionController.openHanseiModal}
+                onOpenHanseiModal={handleOpenHansei}
               />
             </motion.div>
           )}
