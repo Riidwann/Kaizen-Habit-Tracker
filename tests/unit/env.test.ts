@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import React from "react";
-import packageJson from "../../package.json";
+import nextConfig from "../../next.config.mjs";
 
 describe("Environment & Test Runner Verification", () => {
   it("verifies basic arithmetic and Kaizen 1% formula", () => {
@@ -30,11 +30,8 @@ describe("Environment & Test Runner Verification", () => {
   });
 });
 
-describe("Environment & Package Configuration", () => {
-  it("should not contain unused canvas-confetti dependency", () => {
-    const deps = (packageJson as any).dependencies || {};
-    const devDeps = (packageJson as any).devDependencies || {};
-    expect(deps["canvas-confetti"]).toBeUndefined();
-    expect(devDeps["@types/canvas-confetti"]).toBeUndefined();
+describe("Environment & Next.js Configuration", () => {
+  it("should configure optimizePackageImports for lucide-react", () => {
+    expect(nextConfig.experimental?.optimizePackageImports).toContain("lucide-react");
   });
 });
