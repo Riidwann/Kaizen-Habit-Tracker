@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import React from "react";
+import fs from "fs";
+import path from "path";
 import nextConfig from "../../next.config.mjs";
 
 describe("Environment & Test Runner Verification", () => {
@@ -34,4 +36,15 @@ describe("Environment & Next.js Configuration", () => {
   it("should configure optimizePackageImports for lucide-react", () => {
     expect(nextConfig.experimental?.optimizePackageImports).toContain("lucide-react");
   });
+
+  it("should have valid vercel.json with zero-cache header for service worker", () => {
+    const vercelPath = path.resolve(__dirname, "../../vercel.json");
+    expect(fs.existsSync(vercelPath)).toBe(true);
+    const config = JSON.parse(fs.readFileSync(vercelPath, "utf-8"));
+    expect(Array.isArray(config.headers)).toBe(true);
+    const swHeader = config.headers.find((h: any) => h.source === "/sw.js");
+    expect(swHeader).toBeDefined();
+    expect(swHeader.headers.some((hdr: any) => hdr.key === "Cache-Control" && hdr.value.includes("max-age=0"))).toBe(true);
+  });
 });
+
