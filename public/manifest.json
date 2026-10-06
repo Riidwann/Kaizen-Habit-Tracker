@@ -4,8 +4,8 @@
   "description": "Aplikasi habit tracker berbasis filosofi Kaizen 1% dan aturan 2 menit.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FAFAF9",
-  "theme_color": "#0F172A",
+  "background_color": "#FDFBF7",
+  "theme_color": "#121214",
   "orientation": "portrait",
   "icons": [
     {

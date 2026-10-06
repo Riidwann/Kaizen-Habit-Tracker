@@ -23,26 +23,32 @@ export interface HeaderProps {
 }
 
 /**
- * Zen Ensō Symbol Icon
- * Represents enlightenment, strength, elegance, the universe, and the void (mu).
+ * Tobi-Ishi K Monogram (Concept B: Zen Stepping Stones)
+ * Grounded spine (daily discipline) + Upper 1% stone (emerald) + Lower foundation stone.
  */
-export const EnsoLogo: React.FC<{ className?: string }> = ({ className = "w-8 h-8" }) => (
+export const TobiIshiLogo: React.FC<{ className?: string }> = ({ className = "w-8 h-8" }) => (
   <svg
-    viewBox="0 0 100 100"
+    viewBox="0 0 256 256"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={cn("text-sage-600 dark:text-sage-400 shrink-0", className)}
-    aria-label="Zen Ensō Circle"
+    className={cn("shrink-0", className)}
+    aria-label="Tobi-Ishi K - KaizenFlow Logo"
   >
-    <path
-      d="M50 12 C 28 12, 12 28, 12 50 C 12 72, 29 88, 50 88 C 72 88, 88 71, 88 51 C 88 35, 78 21, 62 17"
-      stroke="currentColor"
-      strokeWidth="11"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    {/* Grounded Habit Spine */}
+    <rect x="50" y="42" width="32" height="172" rx="16" className="fill-charcoal-900 dark:fill-sand-50" />
+    {/* Upper Stepping Stone: 1% Continuous Growth Accent */}
+    <g transform="translate(116, 114) rotate(-45)">
+      <rect x="0" y="-16" width="122" height="32" rx="16" className="fill-emerald-600 dark:fill-emerald-400" />
+    </g>
+    {/* Lower Stepping Stone */}
+    <g transform="translate(116, 142) rotate(45)">
+      <rect x="0" y="-16" width="94" height="32" rx="16" className="fill-charcoal-900 dark:fill-sand-50" />
+    </g>
   </svg>
 );
+
+// Backward compatibility alias
+export const EnsoLogo = TobiIshiLogo;
 
 export const Header: React.FC<HeaderProps> = React.memo(({
   currentStreak = 0,
@@ -106,7 +112,7 @@ export const Header: React.FC<HeaderProps> = React.memo(({
       <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
         {/* Brand & Logo */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <EnsoLogo className="w-7 h-7 sm:w-8 sm:h-8" />
+          <TobiIshiLogo className="w-7 h-7 sm:w-8 sm:h-8" />
           <div className="flex flex-col">
             <div className="flex items-center gap-1">
               <span className="text-base sm:text-lg font-bold tracking-tight text-charcoal-900 dark:text-sand-50">

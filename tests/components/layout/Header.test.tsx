@@ -1,7 +1,7 @@
 import React from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { Header } from "@/components/layout/Header";
+import { Header, TobiIshiLogo, EnsoLogo } from "@/components/layout/Header";
 
 describe("Header with HeaderMenu", () => {
   it("renders brand, streak badge, theme toggle, and menu button", () => {
@@ -14,9 +14,20 @@ describe("Header with HeaderMenu", () => {
     );
 
     expect(screen.getByText("KaizenFlow")).toBeInTheDocument();
+    expect(screen.getByLabelText("Tobi-Ishi K - KaizenFlow Logo")).toBeInTheDocument();
     expect(screen.getByText(/Satu langkah kecil hari ini\./i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Menu Opsi/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Switch to/i })).toBeInTheDocument();
+  });
+
+  it("renders TobiIshiLogo (Concept B monogram) with correct aria-label and accessible graphic", () => {
+    render(<TobiIshiLogo />);
+    const logo = screen.getByLabelText("Tobi-Ishi K - KaizenFlow Logo");
+    expect(logo).toBeInTheDocument();
+  });
+
+  it("exports EnsoLogo as an alias to TobiIshiLogo for backward compatibility", () => {
+    expect(EnsoLogo).toBe(TobiIshiLogo);
   });
 
   it("opens menu dropdown when Menu Opsi is clicked", () => {

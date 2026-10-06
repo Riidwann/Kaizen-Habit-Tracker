@@ -46,5 +46,14 @@ describe("Environment & Next.js Configuration", () => {
     expect(swHeader).toBeDefined();
     expect(swHeader.headers.some((hdr: any) => hdr.key === "Cache-Control" && hdr.value.includes("max-age=0"))).toBe(true);
   });
+
+  it("should have valid manifest.json with Concept B colors and icons", () => {
+    const manifestPath = path.resolve(__dirname, "../../public/manifest.json");
+    expect(fs.existsSync(manifestPath)).toBe(true);
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+    expect(manifest.background_color).toBe("#FDFBF7");
+    expect(manifest.theme_color).toBe("#121214");
+    expect(manifest.icons).toHaveLength(2);
+  });
 });
 
