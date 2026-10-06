@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Calendar, Compass, Sun } from "lucide-react";
 import { MicroActionCard } from "./MicroActionCard";
 import { ActionTimerModal } from "./ActionTimerModal";
@@ -60,7 +60,7 @@ export const DailySanctuaryView: React.FC<DailySanctuaryViewProps> = ({
 
     for (const action of actions) {
       const matchedGoal = goals?.find((g: any) => g.id === action.goalId);
-      const groupKey = matchedGoal ? matchedGoal.id : (action.goalId && action.goalId !== "unlinked" ? action.goalId : "unlinked");
+      const groupKey = matchedGoal ? matchedGoal.id : (goals && goals.length > 0 ? "unlinked" : "default");
       const goalTitle = matchedGoal ? matchedGoal.title : (goals && goals.length > 0 ? "Fokus Harian Lainnya" : "Fokus Hari Ini");
       const category = (matchedGoal && typeof matchedGoal.category === "string" ? matchedGoal.category : undefined) || action.category || "general";
 

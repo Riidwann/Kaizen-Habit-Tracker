@@ -205,5 +205,44 @@ describe("DailySanctuaryView", () => {
     expect(screen.queryByText(/Fokus pada 1–3 langkah mikro sederhana hari ini/i)).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /panduan/i })).not.toBeInTheDocument();
   });
+
+  it("coalesces multiple actions with different unmatched goal IDs under a single 'Fokus Harian Lainnya' section", () => {
+    const orphan1 = MicroAction.create({
+      id: "act-orphan-1",
+      goalId: "deleted-goal-1",
+      title: "Tindakan tanpa target 1",
+      scaleDownTitle: "Peringan 1",
+      estimatedMinutes: 1,
+      isActiveToday: true,
+      isCompletedToday: false,
+    }).unwrap();
+
+    const orphan2 = MicroAction.create({
+      id: "act-orphan-2",
+      goalId: "deleted-goal-2",
+      title: "Tindakan tanpa target 2",
+      scaleDownTitle: "Peringan 2",
+      estimatedMinutes: 1,
+      isActiveToday: true,
+      isCompletedToday: false,
+    }).unwrap();
+
+    const controllerWithOrphans = {
+      ...mockController,
+      actions: [orphan1, orphan2],
+      totalCount: 2,
+    };
+
+    const goals = [
+      { id: "active-goal-1", title: "Target Aktif", category: "work" },
+    ];
+
+    render(<DailySanctuaryView controller={controllerWithOrphans} goals={goals} />);
+
+    const headers = screen.getAllByRole("heading", { name: /fokus harian lainnya/i });
+    expect(headers).toHaveLength(1);
+    expect(screen.getByText("Tindakan tanpa target 1")).toBeInTheDocument();
+    expect(screen.getByText("Tindakan tanpa target 2")).toBeInTheDocument();
+  });
 });
 

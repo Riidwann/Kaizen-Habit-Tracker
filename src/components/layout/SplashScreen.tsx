@@ -18,10 +18,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
 
   const handleDismiss = useCallback(() => {
     setIsVisible(false);
-    setTimeout(() => {
-      onComplete?.();
-    }, 300);
-  }, [onComplete]);
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -32,11 +29,19 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   }, [minDurationMs, handleDismiss]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={onComplete}>
       {isVisible && (
         <motion.div
           data-testid="splash-screen"
+          role="button"
+          tabIndex={0}
+          aria-label="Tutup splash screen"
           onClick={handleDismiss}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " " || e.key === "Escape") {
+              handleDismiss();
+            }
+          }}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.03 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}

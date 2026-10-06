@@ -67,42 +67,33 @@ export class WebAudioService {
     }
   }
 
-  public playSuccessChime(): void {
+  private runNonBlocking(task: () => void): void {
     if (
       typeof window !== "undefined" &&
       typeof window.requestAnimationFrame === "function" &&
       process.env.NODE_ENV !== "test"
     ) {
-      window.requestAnimationFrame(() => {
-        this.playChime(528, 1.8);
-        setTimeout(() => {
-          this.playChime(660, 1.4);
-        }, 180);
-      });
+      window.requestAnimationFrame(task);
     } else {
+      task();
+    }
+  }
+
+  public playSuccessChime(): void {
+    this.runNonBlocking(() => {
       this.playChime(528, 1.8);
       setTimeout(() => {
         this.playChime(660, 1.4);
       }, 180);
-    }
+    });
   }
 
   public playCompletionChime(): void {
-    if (
-      typeof window !== "undefined" &&
-      typeof window.requestAnimationFrame === "function" &&
-      process.env.NODE_ENV !== "test"
-    ) {
-      window.requestAnimationFrame(() => {
-        this.playChime(440, 1.2);
-        setTimeout(() => this.playChime(528, 1.4), 140);
-        setTimeout(() => this.playChime(660, 1.8), 280);
-      });
-    } else {
+    this.runNonBlocking(() => {
       this.playChime(440, 1.2);
       setTimeout(() => this.playChime(528, 1.4), 140);
       setTimeout(() => this.playChime(660, 1.8), 280);
-    }
+    });
   }
 }
 
