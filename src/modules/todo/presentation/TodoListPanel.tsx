@@ -9,6 +9,7 @@ import {
   AlertCircle,
   CheckCircle2,
   ListTodo,
+  SlidersHorizontal,
 } from "lucide-react";
 import { useTodoController, TodoFilter } from "./useTodoController";
 import { TodoPriority } from "../domain/TodoItem";
@@ -83,6 +84,7 @@ export const TodoListPanel: React.FC<TodoListPanelProps> = ({
   const [priority, setPriority] = useState<TodoPriority>("medium");
   const [dueDate, setDueDate] = useState<string>("");
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
@@ -135,6 +137,21 @@ export const TodoListPanel: React.FC<TodoListPanelProps> = ({
             className="flex-1 min-h-[44px] px-3.5 rounded-xl bg-white dark:bg-charcoal-900 border border-sand-300/80 dark:border-charcoal-700 text-charcoal-900 dark:text-sand-50 placeholder:text-charcoal-400 dark:placeholder:text-sand-500 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500 transition-colors"
           />
           <button
+            type="button"
+            onClick={() => setIsOptionsOpen((prev) => !prev)}
+            aria-label="Atur prioritas dan tenggat"
+            aria-expanded={isOptionsOpen}
+            title="Pengaturan prioritas dan tenggat"
+            className={cn(
+              "min-h-[44px] min-w-[44px] p-2.5 rounded-xl border flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-sage-500 shrink-0",
+              isOptionsOpen
+                ? "bg-sage-100 dark:bg-sage-950/60 border-sage-400 dark:border-sage-700 text-sage-800 dark:text-sage-200"
+                : "bg-white dark:bg-charcoal-900 border-sand-300/80 dark:border-charcoal-700 text-charcoal-500 dark:text-sand-400 hover:text-charcoal-800 dark:hover:text-sand-200 hover:border-sand-400"
+            )}
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+          </button>
+          <button
             type="submit"
             disabled={!title.trim() || isSubmitting}
             aria-label="Simpan tugas baru"
@@ -145,73 +162,75 @@ export const TodoListPanel: React.FC<TodoListPanelProps> = ({
           </button>
         </div>
 
-        {/* Priority & Due Date Options */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-          {/* Priority Selector Pills */}
-          <div className="flex items-center gap-1.5" role="radiogroup" aria-label="Prioritas tugas">
-            <span className="text-[11px] font-medium text-charcoal-500 dark:text-sand-400 mr-0.5">
-              Prioritas:
-            </span>
-            {PRIORITY_OPTIONS.map((opt) => {
-              const isSelected = priority === opt.id;
-              return (
-                <button
-                  key={opt.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={isSelected}
-                  onClick={() => setPriority(opt.id)}
-                  className={cn(
-                    "min-h-[36px] px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-all focus:outline-none focus:ring-2 focus:ring-sage-500",
-                    isSelected
-                      ? opt.activeClass
-                      : "bg-white/60 dark:bg-charcoal-900/60 border-sand-300/60 dark:border-charcoal-700 text-charcoal-600 dark:text-sand-400 hover:border-sand-400"
-                  )}
-                >
-                  {opt.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Due Date Toggle */}
-          <div className="flex items-center gap-1.5">
-            {!showDatePicker && !dueDate ? (
-              <button
-                type="button"
-                onClick={() => setShowDatePicker(true)}
-                className="min-h-[36px] px-2.5 py-1 rounded-lg text-[11px] font-medium text-charcoal-600 dark:text-sand-400 hover:bg-sand-200/50 dark:hover:bg-charcoal-800 border border-dashed border-sand-300 dark:border-charcoal-700 flex items-center gap-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-sage-500"
-              >
-                <Calendar className="w-3.5 h-3.5 text-charcoal-500 dark:text-sand-400" />
-                <span>Batas Waktu</span>
-              </button>
-            ) : (
-              <div className="flex items-center gap-1">
-                <input
-                  type="date"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                  aria-label="Pilih tanggal batas waktu"
-                  className="min-h-[36px] px-2 py-1 rounded-lg bg-white dark:bg-charcoal-900 border border-sand-300 dark:border-charcoal-700 text-xs text-charcoal-800 dark:text-sand-200 focus:outline-none focus:ring-2 focus:ring-sage-500"
-                />
-                {dueDate && (
+        {/* Priority & Due Date Options (Collapsible) */}
+        {isOptionsOpen && (
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-sand-200/60 dark:border-charcoal-800/80">
+            {/* Priority Selector Pills */}
+            <div className="flex items-center gap-1.5" role="radiogroup" aria-label="Prioritas tugas">
+              <span className="text-[11px] font-medium text-charcoal-500 dark:text-sand-400 mr-0.5">
+                Prioritas:
+              </span>
+              {PRIORITY_OPTIONS.map((opt) => {
+                const isSelected = priority === opt.id;
+                return (
                   <button
+                    key={opt.id}
                     type="button"
-                    onClick={() => {
-                      setDueDate("");
-                      setShowDatePicker(false);
-                    }}
-                    aria-label="Hapus batas waktu"
-                    className="p-1 rounded-md text-charcoal-400 hover:text-charcoal-700 dark:hover:text-sand-200 text-xs"
-                    title="Batal tanggal"
+                    role="radio"
+                    aria-checked={isSelected}
+                    onClick={() => setPriority(opt.id)}
+                    className={cn(
+                      "min-h-[36px] px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-all focus:outline-none focus:ring-2 focus:ring-sage-500",
+                      isSelected
+                        ? opt.activeClass
+                        : "bg-white/60 dark:bg-charcoal-900/60 border-sand-300/60 dark:border-charcoal-700 text-charcoal-600 dark:text-sand-400 hover:border-sand-400"
+                    )}
                   >
-                    ✕
+                    {opt.label}
                   </button>
-                )}
-              </div>
-            )}
+                );
+              })}
+            </div>
+
+            {/* Due Date Toggle */}
+            <div className="flex items-center gap-1.5">
+              {!showDatePicker && !dueDate ? (
+                <button
+                  type="button"
+                  onClick={() => setShowDatePicker(true)}
+                  className="min-h-[36px] px-2.5 py-1 rounded-lg text-[11px] font-medium text-charcoal-600 dark:text-sand-400 hover:bg-sand-200/50 dark:hover:bg-charcoal-800 border border-dashed border-sand-300 dark:border-charcoal-700 flex items-center gap-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-sage-500"
+                >
+                  <Calendar className="w-3.5 h-3.5 text-charcoal-500 dark:text-sand-400" />
+                  <span>Batas Waktu</span>
+                </button>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <input
+                    type="date"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                    aria-label="Pilih tanggal batas waktu"
+                    className="min-h-[36px] px-2 py-1 rounded-lg bg-white dark:bg-charcoal-900 border border-sand-300 dark:border-charcoal-700 text-xs text-charcoal-800 dark:text-sand-200 focus:outline-none focus:ring-2 focus:ring-sage-500"
+                  />
+                  {dueDate && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDueDate("");
+                        setShowDatePicker(false);
+                      }}
+                      aria-label="Hapus batas waktu"
+                      className="p-1 rounded-md text-charcoal-400 hover:text-charcoal-700 dark:hover:text-sand-200 text-xs"
+                      title="Batal tanggal"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Validation or Controller Error Message */}
         {(validationError || error) && (

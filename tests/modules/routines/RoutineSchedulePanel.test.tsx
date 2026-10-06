@@ -61,6 +61,15 @@ describe("RoutineSchedulePanel Component", () => {
     });
   });
 
+  it("toggles recurring day chips when options button is clicked", () => {
+    const controller = createMockController();
+    render(<RoutineSchedulePanel controller={controller} />);
+    const toggleBtn = screen.getByLabelText(/Atur hari pengulangan/i);
+    expect(screen.queryByText("Pilih Hari")).not.toBeInTheDocument();
+    fireEvent.click(toggleBtn);
+    expect(screen.getByText("Pilih Hari")).toBeInTheDocument();
+  });
+
   it("toggles routine completion and deletes routine", async () => {
     const controller = createMockController();
     render(<RoutineSchedulePanel controller={controller} />);

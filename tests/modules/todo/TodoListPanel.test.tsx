@@ -48,6 +48,10 @@ describe("TodoListPanel Component", () => {
     const input = screen.getByPlaceholderText(/Tambah tugas baru\.\.\./i);
     fireEvent.change(input, { target: { value: "Tugas Baru Kaizen" } });
 
+    // Open options toggle
+    const toggleBtn = screen.getByLabelText(/Atur prioritas dan tenggat/i);
+    fireEvent.click(toggleBtn);
+
     // Select priority Rendah
     const lowPriorityBtn = screen.getByRole("radio", { name: "Rendah" });
     fireEvent.click(lowPriorityBtn);
@@ -62,6 +66,15 @@ describe("TodoListPanel Component", () => {
         dueDate: null,
       });
     });
+  });
+
+  it("toggles secondary options (priority and due date) when toggle button is clicked", () => {
+    const controller = createMockController();
+    render(<TodoListPanel controller={controller} />);
+    const toggleBtn = screen.getByLabelText(/Atur prioritas dan tenggat/i);
+    expect(screen.queryByRole("radio", { name: "Rendah" })).not.toBeInTheDocument();
+    fireEvent.click(toggleBtn);
+    expect(screen.getByRole("radio", { name: "Rendah" })).toBeInTheDocument();
   });
 
   it("toggles task completion and deletes task", async () => {

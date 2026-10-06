@@ -8,6 +8,7 @@ import {
   CalendarClock,
   AlertCircle,
   Sparkles,
+  SlidersHorizontal,
 } from "lucide-react";
 import { useRoutineController } from "./useRoutineController";
 import { cn } from "@/shared/presentation/utils";
@@ -46,6 +47,7 @@ export const RoutineSchedulePanel: React.FC<RoutineSchedulePanelProps> = ({
   const [title, setTitle] = useState("");
   const [time, setTime] = useState("07:00");
   const [selectedDays, setSelectedDays] = useState<number[]>([1, 2, 3, 4, 5, 6, 0]);
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
@@ -137,9 +139,26 @@ export const RoutineSchedulePanel: React.FC<RoutineSchedulePanelProps> = ({
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
                 aria-label="Waktu rutinitas"
-                className="min-h-[44px] px-2.5 rounded-xl bg-white dark:bg-charcoal-900 border border-sand-300/80 dark:border-charcoal-700 text-xs sm:text-sm font-semibold text-charcoal-900 dark:text-sand-50 focus:outline-none focus:ring-2 focus:ring-sage-500"
+                className="w-24 sm:w-auto min-h-[44px] px-2.5 rounded-xl bg-white dark:bg-charcoal-900 border border-sand-300/80 dark:border-charcoal-700 text-xs sm:text-sm font-semibold text-charcoal-900 dark:text-sand-50 focus:outline-none focus:ring-2 focus:ring-sage-500"
               />
             </div>
+
+            {/* Options Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setIsOptionsOpen((prev) => !prev)}
+              aria-label="Atur hari pengulangan"
+              aria-expanded={isOptionsOpen}
+              title="Atur hari pengulangan"
+              className={cn(
+                "min-h-[44px] min-w-[44px] p-2.5 rounded-xl border flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 shrink-0",
+                isOptionsOpen
+                  ? "bg-amber-100 dark:bg-amber-950/60 border-amber-400 dark:border-amber-700 text-amber-800 dark:text-amber-200"
+                  : "bg-white dark:bg-charcoal-900 border-sand-300/80 dark:border-charcoal-700 text-charcoal-500 dark:text-sand-400 hover:text-charcoal-800 dark:hover:text-sand-200 hover:border-sand-400"
+              )}
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+            </button>
 
             {/* Submit Button */}
             <button
@@ -154,61 +173,63 @@ export const RoutineSchedulePanel: React.FC<RoutineSchedulePanelProps> = ({
           </div>
         </div>
 
-        {/* Day Selector Chips */}
-        <div className="space-y-1.5 pt-1">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium text-charcoal-500 dark:text-sand-400">
-              Hari Aktif:
-            </span>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleSelectAllDays}
-                className="text-[10px] font-semibold text-sage-600 dark:text-sage-400 hover:underline"
-              >
-                Setiap Hari
-              </button>
-              <span className="text-charcoal-300 dark:text-charcoal-600 text-xs">|</span>
-              <button
-                type="button"
-                onClick={handleSelectWeekdays}
-                className="text-[10px] font-semibold text-sage-600 dark:text-sage-400 hover:underline"
-              >
-                Hari Kerja
-              </button>
+        {/* Day Selector Chips (Collapsible) */}
+        {isOptionsOpen && (
+          <div className="space-y-1.5 pt-2 border-t border-sand-200/60 dark:border-charcoal-800/80">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-medium text-charcoal-500 dark:text-sand-400">
+                Pilih Hari
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleSelectAllDays}
+                  className="text-[10px] font-semibold text-sage-600 dark:text-sage-400 hover:underline"
+                >
+                  Setiap Hari
+                </button>
+                <span className="text-charcoal-300 dark:text-charcoal-600 text-xs">|</span>
+                <button
+                  type="button"
+                  onClick={handleSelectWeekdays}
+                  className="text-[10px] font-semibold text-sage-600 dark:text-sage-400 hover:underline"
+                >
+                  Hari Kerja
+                </button>
+              </div>
+            </div>
+
+            <div
+              className="grid grid-cols-7 gap-1"
+              role="group"
+              aria-label="Pilih hari aktif rutinitas"
+            >
+              {DAYS_META.map((item) => {
+                const isSelected = selectedDays.includes(item.day);
+                const isToday = item.day === todayDay;
+
+                return (
+                  <button
+                    key={item.day}
+                    type="button"
+                    onClick={() => handleToggleDay(item.day)}
+                    aria-pressed={isSelected}
+                    title={`${item.label}${isToday ? " (Hari Ini)" : ""}`}
+                    className={cn(
+                      "min-h-[36px] py-1 px-0.5 rounded-lg text-[11px] font-bold transition-all flex flex-col items-center justify-center border focus:outline-none focus:ring-2 focus:ring-amber-500",
+                      isSelected
+                        ? "bg-amber-600 border-amber-600 text-white shadow-xs"
+                        : "bg-white/70 dark:bg-charcoal-900/70 border-sand-300/60 dark:border-charcoal-700 text-charcoal-500 dark:text-sand-400 hover:border-sand-400",
+                      isToday && !isSelected && "ring-1 ring-amber-400"
+                    )}
+                  >
+                    <span>{item.short}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
-
-          <div
-            className="grid grid-cols-7 gap-1"
-            role="group"
-            aria-label="Pilih hari aktif rutinitas"
-          >
-            {DAYS_META.map((item) => {
-              const isSelected = selectedDays.includes(item.day);
-              const isToday = item.day === todayDay;
-
-              return (
-                <button
-                  key={item.day}
-                  type="button"
-                  onClick={() => handleToggleDay(item.day)}
-                  aria-pressed={isSelected}
-                  title={`${item.label}${isToday ? " (Hari Ini)" : ""}`}
-                  className={cn(
-                    "min-h-[36px] py-1 px-0.5 rounded-lg text-[11px] font-bold transition-all flex flex-col items-center justify-center border focus:outline-none focus:ring-2 focus:ring-amber-500",
-                    isSelected
-                      ? "bg-amber-600 border-amber-600 text-white shadow-xs"
-                      : "bg-white/70 dark:bg-charcoal-900/70 border-sand-300/60 dark:border-charcoal-700 text-charcoal-500 dark:text-sand-400 hover:border-sand-400",
-                    isToday && !isSelected && "ring-1 ring-amber-400"
-                  )}
-                >
-                  <span>{item.short}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        )}
 
         {/* Validation or Controller Error Message */}
         {(validationError || error) && (
