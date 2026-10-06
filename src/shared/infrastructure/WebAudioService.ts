@@ -68,18 +68,41 @@ export class WebAudioService {
   }
 
   public playSuccessChime(): void {
-    // 528Hz Solfeggio "Transformation/Miracles" frequency followed by 660Hz Zen harmonizer
-    this.playChime(528, 1.8);
-    setTimeout(() => {
-      this.playChime(660, 1.4);
-    }, 180);
+    if (
+      typeof window !== "undefined" &&
+      typeof window.requestAnimationFrame === "function" &&
+      process.env.NODE_ENV !== "test"
+    ) {
+      window.requestAnimationFrame(() => {
+        this.playChime(528, 1.8);
+        setTimeout(() => {
+          this.playChime(660, 1.4);
+        }, 180);
+      });
+    } else {
+      this.playChime(528, 1.8);
+      setTimeout(() => {
+        this.playChime(660, 1.4);
+      }, 180);
+    }
   }
 
   public playCompletionChime(): void {
-    // Gentle 3-tone peaceful chime
-    this.playChime(440, 1.2);
-    setTimeout(() => this.playChime(528, 1.4), 140);
-    setTimeout(() => this.playChime(660, 1.8), 280);
+    if (
+      typeof window !== "undefined" &&
+      typeof window.requestAnimationFrame === "function" &&
+      process.env.NODE_ENV !== "test"
+    ) {
+      window.requestAnimationFrame(() => {
+        this.playChime(440, 1.2);
+        setTimeout(() => this.playChime(528, 1.4), 140);
+        setTimeout(() => this.playChime(660, 1.8), 280);
+      });
+    } else {
+      this.playChime(440, 1.2);
+      setTimeout(() => this.playChime(528, 1.4), 140);
+      setTimeout(() => this.playChime(660, 1.8), 280);
+    }
   }
 }
 

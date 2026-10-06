@@ -78,13 +78,12 @@ export const MicroActionCard = React.forwardRef<HTMLDivElement, MicroActionCardP
     return (
       <motion.div
         ref={ref}
-        layout
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.2 }}
+        exit={{ opacity: 0, scale: 0.98 }}
+        transition={{ duration: 0.12, ease: "easeOut" }}
         className={cn(
-          "relative group flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl transition-all duration-200",
+          "relative group flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl transition-colors duration-150",
           "bg-white dark:bg-charcoal-900 border",
           action.isCompletedToday
             ? "border-sage-200 dark:border-sage-900/40 bg-sage-50/20 dark:bg-sage-950/10"
