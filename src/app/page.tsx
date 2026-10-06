@@ -326,6 +326,7 @@ export default function HomePage() {
               />
               <DailySanctuaryView
                 controller={sanctuaryController}
+                goals={goalsController.goals}
                 onOpenGuide={handleOpenGuide}
               />
             </motion.div>

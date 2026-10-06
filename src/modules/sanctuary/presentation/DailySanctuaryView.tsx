@@ -1,22 +1,29 @@
 import React, { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Calendar, Compass, ShieldCheck, Sun, HelpCircle } from "lucide-react";
+import { Calendar, Compass, Sun } from "lucide-react";
 import { MicroActionCard } from "./MicroActionCard";
 import { ActionTimerModal } from "./ActionTimerModal";
 import { DailyCompletionState } from "./DailyCompletionState";
 import { useSanctuaryController, SanctuaryController } from "./useSanctuaryController";
 import { Card } from "@/shared/presentation/Card";
-import { Badge } from "@/shared/presentation/Badge";
-import { Button } from "@/shared/presentation/Button";
+import { MicroAction } from "../domain/MicroAction";
+
+export interface DailySanctuaryGoalInfo {
+  id: string;
+  title: string;
+  category?: string;
+}
 
 export interface DailySanctuaryViewProps {
   controller?: SanctuaryController;
+  goals?: DailySanctuaryGoalInfo[] | any[];
   onOpenGuide?: () => void;
   className?: string;
 }
 
 export const DailySanctuaryView: React.FC<DailySanctuaryViewProps> = ({
   controller: injectedController,
+  goals,
   onOpenGuide,
   className = "",
 }) => {
@@ -39,6 +46,37 @@ export const DailySanctuaryView: React.FC<DailySanctuaryViewProps> = ({
     handleCloseTimer,
     handleTimerComplete,
   } = controller;
+
+  // Group micro-actions by parent goal
+  interface ActionGroup {
+    goalId: string;
+    goalTitle: string;
+    category: string;
+    actions: MicroAction[];
+  }
+
+  const groupedActions = useMemo<ActionGroup[]>(() => {
+    const groupsMap = new Map<string, ActionGroup>();
+
+    for (const action of actions) {
+      const matchedGoal = goals?.find((g: any) => g.id === action.goalId);
+      const groupKey = matchedGoal ? matchedGoal.id : (action.goalId && action.goalId !== "unlinked" ? action.goalId : "unlinked");
+      const goalTitle = matchedGoal ? matchedGoal.title : (goals && goals.length > 0 ? "Fokus Harian Lainnya" : "Fokus Hari Ini");
+      const category = (matchedGoal && typeof matchedGoal.category === "string" ? matchedGoal.category : undefined) || action.category || "general";
+
+      if (!groupsMap.has(groupKey)) {
+        groupsMap.set(groupKey, {
+          goalId: groupKey,
+          goalTitle,
+          category,
+          actions: [],
+        });
+      }
+      groupsMap.get(groupKey)!.actions.push(action);
+    }
+
+    return Array.from(groupsMap.values());
+  }, [actions, goals]);
 
   // Format today's date in serene Indonesian format
   const todayFormatted = useMemo(() => {
@@ -65,9 +103,6 @@ export const DailySanctuaryView: React.FC<DailySanctuaryViewProps> = ({
                 <Compass className="w-3.5 h-3.5" />
                 Fokus Utama Hari Ini
               </span>
-              <Badge variant="sage" size="sm">
-                1-3 Tindakan
-              </Badge>
             </div>
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-charcoal-900 dark:text-sand-50">
               Fokus Hari Ini
@@ -75,29 +110,12 @@ export const DailySanctuaryView: React.FC<DailySanctuaryViewProps> = ({
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-auto">
-            {onOpenGuide && (
-              <button
-                type="button"
-                onClick={onOpenGuide}
-                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-sage-100/70 text-sage-800 dark:bg-sage-950/40 dark:text-sage-300 text-xs font-medium hover:bg-sage-200 transition-colors"
-                title="Pelajari prinsip Kaizen & cara pakai"
-              >
-                <HelpCircle className="w-3.5 h-3.5 text-sage-600" />
-                <span>Panduan</span>
-              </button>
-            )}
-
             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-sand-100 dark:bg-charcoal-800 text-charcoal-600 dark:text-sand-300 text-xs font-medium border border-sand-200/80 dark:border-charcoal-700">
               <Calendar className="w-3.5 h-3.5 text-sage-600 dark:text-sage-400" />
               <span>{todayFormatted}</span>
             </div>
           </div>
         </div>
-
-        <p className="text-sm text-charcoal-600 dark:text-sand-400 leading-relaxed max-w-2xl">
-          Fokus pada 1–3 langkah mikro sederhana hari ini. Tidak ada daftar panjang yang membingungkan.
-          Hanya kemajuan 1% yang terjangkau dan menenangkan.
-        </p>
       </header>
 
       {/* 1% Daily Progress Bar */}
@@ -162,19 +180,29 @@ export const DailySanctuaryView: React.FC<DailySanctuaryViewProps> = ({
           </p>
         </Card>
       ) : (
-        /* 1-3 MicroAction Cards */
-        <div className="space-y-3">
-          <AnimatePresence mode="popLayout">
-            {actions.map((action) => (
-              <MicroActionCard
-                key={action.id}
-                action={action}
-                onToggleComplete={handleToggleComplete}
-                onToggleScaleDown={handleToggleScaleDown}
-                onStartTimer={handleOpenTimer}
-              />
-            ))}
-          </AnimatePresence>
+        /* Grouped MicroAction Cards */
+        <div className="space-y-6">
+          {groupedActions.map((group) => (
+            <section key={group.goalId} className="space-y-2.5">
+              <div className="flex items-center gap-2 px-1">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                <h2 className="text-xs font-bold uppercase tracking-wider text-charcoal-700 dark:text-sand-300">
+                  {group.goalTitle}
+                </h2>
+              </div>
+              <div className="space-y-2.5">
+                {group.actions.map((action) => (
+                  <MicroActionCard
+                    key={action.id}
+                    action={action}
+                    onToggleComplete={() => handleToggleComplete(action.id)}
+                    onToggleScaleDown={() => handleToggleScaleDown(action.id)}
+                    onStartTimer={() => handleOpenTimer(action)}
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
         </div>
       )}
 

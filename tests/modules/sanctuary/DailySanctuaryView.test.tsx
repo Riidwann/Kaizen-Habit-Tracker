@@ -54,7 +54,7 @@ describe("DailySanctuaryView", () => {
   it("renders header with progress bar and 1-3 micro-action cards", () => {
     render(<DailySanctuaryView controller={mockController} />);
 
-    expect(screen.getByText(/daily sanctuary|fokus hari ini/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: /daily sanctuary|fokus hari ini/i })).toBeInTheDocument();
     expect(screen.getByText(/0 dari 2 selesai/i)).toBeInTheDocument();
     expect(screen.getByText("Write 1 TypeScript interface")).toBeInTheDocument();
     expect(screen.getByText("Drink a glass of warm water")).toBeInTheDocument();
@@ -153,4 +153,57 @@ describe("DailySanctuaryView", () => {
     render(<DailySanctuaryView controller={emptyController} />);
     expect(screen.getByRole("heading", { name: /belum ada fokus/i })).toBeInTheDocument();
   });
+
+  it("groups micro-actions by their parent goals with clean headers", () => {
+    const goals = [
+      { id: "goal-1", title: "Belajar Next.js", category: "learning" },
+      { id: "goal-2", title: "Kesehatan Fisik", category: "health" },
+    ];
+
+    render(<DailySanctuaryView controller={mockController} goals={goals} />);
+
+    expect(screen.getByRole("heading", { name: /belajar next\.js/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /kesehatan fisik/i })).toBeInTheDocument();
+    expect(screen.getByText("Write 1 TypeScript interface")).toBeInTheDocument();
+    expect(screen.getByText("Drink a glass of warm water")).toBeInTheDocument();
+  });
+
+  it("places unassociated actions under 'Fokus Harian Lainnya'", () => {
+    const unassociatedAction = MicroAction.create({
+      id: "act-3",
+      goalId: "unlinked",
+      title: "Regangkan otot leher",
+      scaleDownTitle: "Tarik napas dalam 3 kali",
+      estimatedMinutes: 1,
+      category: "health",
+      isActiveToday: true,
+      isCompletedToday: false,
+    }).unwrap();
+
+    const controllerWithUnlinked = {
+      ...mockController,
+      actions: [action1, unassociatedAction],
+      totalCount: 2,
+    };
+
+    const goals = [
+      { id: "goal-1", title: "Belajar Next.js", category: "learning" },
+    ];
+
+    render(<DailySanctuaryView controller={controllerWithUnlinked} goals={goals} />);
+
+    expect(screen.getByRole("heading", { name: /belajar next\.js/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /fokus harian lainnya/i })).toBeInTheDocument();
+    expect(screen.getByText("Regangkan otot leher")).toBeInTheDocument();
+  });
+
+  it("does not render clutter badge, guide paragraph, or top guide button in header", () => {
+    const onOpenGuide = vi.fn();
+    render(<DailySanctuaryView controller={mockController} onOpenGuide={onOpenGuide} />);
+
+    expect(screen.queryByText(/1-3 Tindakan/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Fokus pada 1–3 langkah mikro sederhana hari ini/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /panduan/i })).not.toBeInTheDocument();
+  });
 });
+
