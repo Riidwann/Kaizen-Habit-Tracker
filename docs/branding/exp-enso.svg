@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title-enso">
+  <title id="title-enso">Ensō Zen - Open Habit Circle</title>
+  <!-- Authentic Open Ensō Circle: 300° continuous sweeping habit loop -->
+  <path fill="none" stroke="#18181B" stroke-width="28" stroke-linecap="round" d="
+    M 188 178
+    A 88 88 0 1 1 188 78
+  "/>
+  <!-- 1% Habit Seed: Grounded focal point of daily action -->
+  <circle cx="188" cy="128" r="16" fill="#18181B" />
+</svg>

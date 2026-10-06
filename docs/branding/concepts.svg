@@ -1,0 +1,240 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="984" viewBox="0 0 1600 984"><defs><filter id="grey"><feColorMatrix type="saturate" values="0"/></filter></defs><rect width="1600" height="984" fill="#f7f7f4"/><text x="60" y="78" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="40" font-weight="700" fill="#161616">KaizenFlow — Konsep Logo Habit Tracker</text><text x="60" y="116" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="20" fill="#6b6b6b">Concepts for review — pick a direction (or tell me what you like in each).</text><rect x="60" y="150" width="474.667" height="774" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-a" viewBox="0 0 256 256" x="90" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title id="c0-title-a">Ensō 1% - Ascending Zen Habit Loop</title>
+  <!-- Sweeping Ensō Ring with 1% Stepped Horizon -->
+  <path fill="none" stroke="#18181B" stroke-width="26" stroke-linecap="round" d="
+    M 178 184
+    A 86 86 0 1 1 184 76
+    L 208 52
+  "/>
+  <!-- The 1% Habit Seed (Daily Micro-Action Anchor) -->
+  <circle cx="180" cy="130" r="14" fill="#18181B" />
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-lockup-a" viewBox="0 0 800 256" x="90" y="514" width="414.667" height="120" preserveAspectRatio="xMidYMid meet">
+  <title id="l0-title-lockup-a">KaizenFlow - Ensō 1% Horizontal Lockup</title>
+  <!-- Symbol -->
+  <g transform="translate(16, 28) scale(0.78)">
+    <path fill="none" stroke="#18181B" stroke-width="26" stroke-linecap="round" d="
+      M 178 184
+      A 86 86 0 1 1 184 76
+      L 208 52
+    "/>
+    <circle cx="180" cy="130" r="14" fill="#18181B" />
+  </g>
+  <!-- Brand Wordmark -->
+  <text x="248" y="146" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Plus Jakarta Sans', sans-serif" font-size="64" font-weight="700" letter-spacing="-0.03em" fill="#18181B">Kaizen<tspan font-weight="400" fill="#52525B">Flow</tspan></text>
+  <!-- Tagline -->
+  <text x="250" y="182" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="500" letter-spacing="0.18em" fill="#71717A">1% BETTER EVERY DAY</text>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-a" viewBox="0 0 256 256" x="90" y="660" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title id="s064-title-a">Ensō 1% - Ascending Zen Habit Loop</title>
+  <!-- Sweeping Ensō Ring with 1% Stepped Horizon -->
+  <path fill="none" stroke="#18181B" stroke-width="26" stroke-linecap="round" d="
+    M 178 184
+    A 86 86 0 1 1 184 76
+    L 208 52
+  "/>
+  <!-- The 1% Habit Seed (Daily Micro-Action Anchor) -->
+  <circle cx="180" cy="130" r="14" fill="#18181B" />
+</svg></g><text x="122" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-a" viewBox="0 0 256 256" x="180" y="692" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title id="s032-title-a">Ensō 1% - Ascending Zen Habit Loop</title>
+  <!-- Sweeping Ensō Ring with 1% Stepped Horizon -->
+  <path fill="none" stroke="#18181B" stroke-width="26" stroke-linecap="round" d="
+    M 178 184
+    A 86 86 0 1 1 184 76
+    L 208 52
+  "/>
+  <!-- The 1% Habit Seed (Daily Micro-Action Anchor) -->
+  <circle cx="180" cy="130" r="14" fill="#18181B" />
+</svg></g><text x="196" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-a" viewBox="0 0 256 256" x="238" y="708" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title id="s016-title-a">Ensō 1% - Ascending Zen Habit Loop</title>
+  <!-- Sweeping Ensō Ring with 1% Stepped Horizon -->
+  <path fill="none" stroke="#18181B" stroke-width="26" stroke-linecap="round" d="
+    M 178 184
+    A 86 86 0 1 1 184 76
+    L 208 52
+  "/>
+  <!-- The 1% Habit Seed (Daily Micro-Action Anchor) -->
+  <circle cx="180" cy="130" r="14" fill="#18181B" />
+</svg></g><text x="246" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="90.0" y="780" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">A · Ensō 1%</text><text x="90.0" y="814" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Lingkaran Zen bertahap dengan habit seed:</text><text x="90.0" y="840" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">siklus terbuka perbaikan 1%.</text><rect x="562.667" y="150" width="474.667" height="774" rx="18" fill="#fff" stroke="#161616" stroke-width="2"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-b" viewBox="0 0 256 256" x="592.667" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title id="c1-title-b">Tobi-Ishi K - Zen Stepping Stones Monogram</title>
+  <!-- Grounded Habit Spine (Daily Discipline) -->
+  <rect x="50" y="42" width="32" height="172" rx="16" fill="#18181B" />
+
+  <!-- Upper Stepping Stone: 1% Continuous Growth (Soaring Ascending Reach) -->
+  <g transform="translate(116, 114) rotate(-45)">
+    <rect x="0" y="-16" width="122" height="32" rx="16" fill="#18181B" />
+  </g>
+
+  <!-- Lower Stepping Stone: Daily Consistency Foundation -->
+  <g transform="translate(116, 142) rotate(45)">
+    <rect x="0" y="-16" width="94" height="32" rx="16" fill="#18181B" />
+  </g>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-lockup-b" viewBox="0 0 800 256" x="592.667" y="514" width="414.667" height="120" preserveAspectRatio="xMidYMid meet">
+  <title id="l1-title-lockup-b">KaizenFlow - Tobi-Ishi K Horizontal Lockup</title>
+  <!-- Symbol -->
+  <g transform="translate(16, 28) scale(0.78)">
+    <rect x="50" y="42" width="32" height="172" rx="16" fill="#18181B" />
+    <g transform="translate(116, 114) rotate(-45)">
+      <rect x="0" y="-16" width="122" height="32" rx="16" fill="#18181B" />
+    </g>
+    <g transform="translate(116, 142) rotate(45)">
+      <rect x="0" y="-16" width="94" height="32" rx="16" fill="#18181B" />
+    </g>
+  </g>
+  <!-- Brand Wordmark -->
+  <text x="248" y="146" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Plus Jakarta Sans', sans-serif" font-size="64" font-weight="700" letter-spacing="-0.03em" fill="#18181B">Kaizen<tspan font-weight="400" fill="#52525B">Flow</tspan></text>
+  <!-- Tagline -->
+  <text x="250" y="182" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="500" letter-spacing="0.18em" fill="#71717A">1% BETTER EVERY DAY</text>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-b" viewBox="0 0 256 256" x="592.667" y="660" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title id="s164-title-b">Tobi-Ishi K - Zen Stepping Stones Monogram</title>
+  <!-- Grounded Habit Spine (Daily Discipline) -->
+  <rect x="50" y="42" width="32" height="172" rx="16" fill="#18181B" />
+
+  <!-- Upper Stepping Stone: 1% Continuous Growth (Soaring Ascending Reach) -->
+  <g transform="translate(116, 114) rotate(-45)">
+    <rect x="0" y="-16" width="122" height="32" rx="16" fill="#18181B" />
+  </g>
+
+  <!-- Lower Stepping Stone: Daily Consistency Foundation -->
+  <g transform="translate(116, 142) rotate(45)">
+    <rect x="0" y="-16" width="94" height="32" rx="16" fill="#18181B" />
+  </g>
+</svg></g><text x="624.667" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-b" viewBox="0 0 256 256" x="682.667" y="692" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title id="s132-title-b">Tobi-Ishi K - Zen Stepping Stones Monogram</title>
+  <!-- Grounded Habit Spine (Daily Discipline) -->
+  <rect x="50" y="42" width="32" height="172" rx="16" fill="#18181B" />
+
+  <!-- Upper Stepping Stone: 1% Continuous Growth (Soaring Ascending Reach) -->
+  <g transform="translate(116, 114) rotate(-45)">
+    <rect x="0" y="-16" width="122" height="32" rx="16" fill="#18181B" />
+  </g>
+
+  <!-- Lower Stepping Stone: Daily Consistency Foundation -->
+  <g transform="translate(116, 142) rotate(45)">
+    <rect x="0" y="-16" width="94" height="32" rx="16" fill="#18181B" />
+  </g>
+</svg></g><text x="698.667" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-b" viewBox="0 0 256 256" x="740.667" y="708" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title id="s116-title-b">Tobi-Ishi K - Zen Stepping Stones Monogram</title>
+  <!-- Grounded Habit Spine (Daily Discipline) -->
+  <rect x="50" y="42" width="32" height="172" rx="16" fill="#18181B" />
+
+  <!-- Upper Stepping Stone: 1% Continuous Growth (Soaring Ascending Reach) -->
+  <g transform="translate(116, 114) rotate(-45)">
+    <rect x="0" y="-16" width="122" height="32" rx="16" fill="#18181B" />
+  </g>
+
+  <!-- Lower Stepping Stone: Daily Consistency Foundation -->
+  <g transform="translate(116, 142) rotate(45)">
+    <rect x="0" y="-16" width="94" height="32" rx="16" fill="#18181B" />
+  </g>
+</svg></g><text x="748.667" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="592.6666666666667" y="780" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">B · Tobi-Ishi K</text><text x="592.6666666666667" y="808" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="15" font-weight="700" fill="#161616" letter-spacing="1.5">RECOMMENDED</text><text x="592.6666666666667" y="842" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Tiga batu pijakan Zen membentuk inisial K:</text><text x="592.6666666666667" y="868" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">disiplin &amp; lompatan bertumbuh.</text><rect x="1065.33" y="150" width="474.667" height="774" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-c" viewBox="0 0 256 256" x="1095.33" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title id="c2-title-c">Tunas Kaizen - Geometric Habit Sprout</title>
+  <!-- Left Leaf (Foundation & Discipline) -->
+  <path fill="#18181B" d="
+    M 120 196
+    C 68 184, 48 136, 56 96
+    C 64 68, 88 52, 116 48
+    C 118 90, 114 146, 120 196
+    Z
+  "/>
+
+  <!-- Right Leaf (1% Compounded Growth - Elevated) -->
+  <path fill="#18181B" d="
+    M 136 182
+    C 136 132, 140 76, 134 32
+    C 164 36, 196 60, 200 98
+    C 204 142, 180 174, 136 182
+    Z
+  "/>
+
+  <!-- Root Pebble (The 2-Minute Habit Anchor) -->
+  <circle cx="128" cy="218" r="14" fill="#18181B" />
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-lockup-c" viewBox="0 0 800 256" x="1095.33" y="514" width="414.667" height="120" preserveAspectRatio="xMidYMid meet">
+  <title id="l2-title-lockup-c">KaizenFlow - Tunas Kaizen Horizontal Lockup</title>
+  <!-- Symbol -->
+  <g transform="translate(16, 28) scale(0.78)">
+    <path fill="#18181B" d="
+      M 120 196
+      C 68 184, 48 136, 56 96
+      C 64 68, 88 52, 116 48
+      C 118 90, 114 146, 120 196
+      Z
+    "/>
+    <path fill="#18181B" d="
+      M 136 182
+      C 136 132, 140 76, 134 32
+      C 164 36, 196 60, 200 98
+      C 204 142, 180 174, 136 182
+      Z
+    "/>
+    <circle cx="128" cy="218" r="14" fill="#18181B" />
+  </g>
+  <!-- Brand Wordmark -->
+  <text x="248" y="146" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Plus Jakarta Sans', sans-serif" font-size="64" font-weight="700" letter-spacing="-0.03em" fill="#18181B">Kaizen<tspan font-weight="400" fill="#52525B">Flow</tspan></text>
+  <!-- Tagline -->
+  <text x="250" y="182" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="500" letter-spacing="0.18em" fill="#71717A">1% BETTER EVERY DAY</text>
+</svg></g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-c" viewBox="0 0 256 256" x="1095.33" y="660" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title id="s264-title-c">Tunas Kaizen - Geometric Habit Sprout</title>
+  <!-- Left Leaf (Foundation & Discipline) -->
+  <path fill="#18181B" d="
+    M 120 196
+    C 68 184, 48 136, 56 96
+    C 64 68, 88 52, 116 48
+    C 118 90, 114 146, 120 196
+    Z
+  "/>
+
+  <!-- Right Leaf (1% Compounded Growth - Elevated) -->
+  <path fill="#18181B" d="
+    M 136 182
+    C 136 132, 140 76, 134 32
+    C 164 36, 196 60, 200 98
+    C 204 142, 180 174, 136 182
+    Z
+  "/>
+
+  <!-- Root Pebble (The 2-Minute Habit Anchor) -->
+  <circle cx="128" cy="218" r="14" fill="#18181B" />
+</svg></g><text x="1127.33" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-c" viewBox="0 0 256 256" x="1185.33" y="692" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title id="s232-title-c">Tunas Kaizen - Geometric Habit Sprout</title>
+  <!-- Left Leaf (Foundation & Discipline) -->
+  <path fill="#18181B" d="
+    M 120 196
+    C 68 184, 48 136, 56 96
+    C 64 68, 88 52, 116 48
+    C 118 90, 114 146, 120 196
+    Z
+  "/>
+
+  <!-- Right Leaf (1% Compounded Growth - Elevated) -->
+  <path fill="#18181B" d="
+    M 136 182
+    C 136 132, 140 76, 134 32
+    C 164 36, 196 60, 200 98
+    C 204 142, 180 174, 136 182
+    Z
+  "/>
+
+  <!-- Root Pebble (The 2-Minute Habit Anchor) -->
+  <circle cx="128" cy="218" r="14" fill="#18181B" />
+</svg></g><text x="1201.33" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title-c" viewBox="0 0 256 256" x="1243.33" y="708" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title id="s216-title-c">Tunas Kaizen - Geometric Habit Sprout</title>
+  <!-- Left Leaf (Foundation & Discipline) -->
+  <path fill="#18181B" d="
+    M 120 196
+    C 68 184, 48 136, 56 96
+    C 64 68, 88 52, 116 48
+    C 118 90, 114 146, 120 196
+    Z
+  "/>
+
+  <!-- Right Leaf (1% Compounded Growth - Elevated) -->
+  <path fill="#18181B" d="
+    M 136 182
+    C 136 132, 140 76, 134 32
+    C 164 36, 196 60, 200 98
+    C 204 142, 180 174, 136 182
+    Z
+  "/>
+
+  <!-- Root Pebble (The 2-Minute Habit Anchor) -->
+  <circle cx="128" cy="218" r="14" fill="#18181B" />
+</svg></g><text x="1251.33" y="744" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="1095.3333333333335" y="780" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">C · Tunas Kaizen</text><text x="1095.3333333333335" y="814" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Tunas kebiasaan geometris: aksi mikro 2</text><text x="1095.3333333333335" y="840" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">menit yang berlipat ganda.</text></svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title-a">
+  <title id="title-a">Ensō 1% - Ascending Habit Ring</title>
+  <!-- Main Zen Ensō Loop with 1% Stepped Apex -->
+  <path fill="none" stroke="#18181B" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" d="
+    M 172 176
+    A 86 86 0 1 1 168 80
+    L 204 44
+  "/>
+  <!-- 1% Habit Seed (Micro-Action Focal Point) -->
+  <circle cx="184" cy="128" r="14" fill="#18181B" />
+</svg>

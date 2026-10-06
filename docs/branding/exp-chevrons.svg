@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title-chev">
+  <title id="title-chev">Tangga Kaizen - Ascending Progress Chevrons</title>
+  <!-- Foundation Step 1 (2-Minute Rule) -->
+  <path fill="none" stroke="#18181B" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" d="
+    M 88 196 L 128 160 L 168 196
+  "/>
+  <!-- Progression Step 2 (Consistency) -->
+  <path fill="none" stroke="#18181B" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" d="
+    M 68 136 L 128 84 L 188 136
+  "/>
+  <!-- Soaring Apex Step 3 (1% Compounding Breakthrough) -->
+  <path fill="none" stroke="#18181B" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" d="
+    M 48 76 L 128 8 L 208 76
+  "/>
+</svg>

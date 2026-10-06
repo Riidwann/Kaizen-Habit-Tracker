@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title-c">
+  <title id="title-c">Lingkar Momentum - Compounding Arc Ring</title>
+  <!-- Tier 1: Micro-Action (Day 1 - Delicate Foundation) -->
+  <path fill="none" stroke="#18181B" stroke-width="16" stroke-linecap="round" d="
+    M 41.55 96.53
+    A 92 92 0 0 1 104.19 39.13
+  "/>
+
+  <!-- Tier 2: Daily Consistency (Building Streak Momentum) -->
+  <path fill="none" stroke="#18181B" stroke-width="26" stroke-linecap="round" d="
+    M 151.81 39.13
+    A 92 92 0 0 1 216.87 104.19
+  "/>
+
+  <!-- Tier 3: Exponential Compound (The 37x Transformation) -->
+  <path fill="none" stroke="#18181B" stroke-width="36" stroke-linecap="round" d="
+    M 216.87 151.81
+    A 92 92 0 0 1 37.4 143.98
+  "/>
+</svg>

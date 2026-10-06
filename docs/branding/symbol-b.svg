@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title-b">
+  <title id="title-b">Tunas Kaizen - The Stepping Sprout</title>
+  <!-- Left Leaf Blade (Grounded Discipline) -->
+  <path fill="#18181B" d="
+    M 122 192
+    C 76 172, 58 132, 64 96
+    C 72 64, 96 46, 122 40
+    C 122 84, 118 140, 122 192
+    Z
+  "/>
+  <!-- Right Leaf Blade (1% Ascending Growth - Elevated) -->
+  <path fill="#18181B" d="
+    M 134 176
+    C 134 130, 138 78, 134 32
+    C 162 38, 192 62, 196 98
+    C 200 138, 178 168, 134 176
+    Z
+  "/>
+  <!-- Habit Foundation Pebble (2-Minute Root) -->
+  <circle cx="128" cy="216" r="12" fill="#18181B" />
+</svg>

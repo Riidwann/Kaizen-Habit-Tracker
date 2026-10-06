@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title-b">
+  <title id="title-b">Tobi-Ishi K - Zen Stepping Stones Monogram</title>
+  <!-- Grounded Habit Spine (Daily Discipline) -->
+  <rect x="50" y="42" width="32" height="172" rx="16" fill="#18181B" />
+
+  <!-- Upper Stepping Stone: 1% Continuous Growth (Soaring Ascending Reach) -->
+  <g transform="translate(116, 114) rotate(-45)">
+    <rect x="0" y="-16" width="122" height="32" rx="16" fill="#18181B" />
+  </g>
+
+  <!-- Lower Stepping Stone: Daily Consistency Foundation -->
+  <g transform="translate(116, 142) rotate(45)">
+    <rect x="0" y="-16" width="94" height="32" rx="16" fill="#18181B" />
+  </g>
+</svg>

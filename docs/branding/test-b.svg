@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title-b">
+  <title id="title-b">Tunas Kaizen - Stepping Sprout Chevron</title>
+  <!-- Grounding Habit Pebble (The 2-Minute Habit) -->
+  <circle cx="64" cy="192" r="16" fill="#18181B" />
+
+  <!-- Foundation Sprout (Consistent Action) -->
+  <path fill="#18181B" d="
+    M 90 166
+    A 54 54 0 0 1 152 104
+    A 54 54 0 0 1 90 166
+    Z
+  "/>
+
+  <!-- Soaring Apex Leaf (Compounded Self-Improvement) -->
+  <path fill="#18181B" d="
+    M 132 124
+    A 82 82 0 0 1 216 40
+    A 82 82 0 0 1 132 124
+    Z
+  "/>
+</svg>

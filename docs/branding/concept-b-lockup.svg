@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 256" width="800" height="256" role="img" aria-labelledby="title-lockup-b">
+  <title id="title-lockup-b">KaizenFlow - Tobi-Ishi K Horizontal Lockup</title>
+  <!-- Symbol -->
+  <g transform="translate(16, 28) scale(0.78)">
+    <rect x="50" y="42" width="32" height="172" rx="16" fill="#18181B" />
+    <g transform="translate(116, 114) rotate(-45)">
+      <rect x="0" y="-16" width="122" height="32" rx="16" fill="#18181B" />
+    </g>
+    <g transform="translate(116, 142) rotate(45)">
+      <rect x="0" y="-16" width="94" height="32" rx="16" fill="#18181B" />
+    </g>
+  </g>
+  <!-- Brand Wordmark -->
+  <text x="248" y="146" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Plus Jakarta Sans', sans-serif" font-size="64" font-weight="700" letter-spacing="-0.03em" fill="#18181B">Kaizen<tspan font-weight="400" fill="#52525B">Flow</tspan></text>
+  <!-- Tagline -->
+  <text x="250" y="182" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="500" letter-spacing="0.18em" fill="#71717A">1% BETTER EVERY DAY</text>
+</svg>

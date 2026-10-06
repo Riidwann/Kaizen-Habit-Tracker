@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title-sprout">
+  <title id="title-sprout">Tunas Kaizen - Stepping Sprout of Growth</title>
+  <!-- Micro-Habit Seed (2-Minute Rule) -->
+  <circle cx="60" cy="196" r="16" fill="#18181B" />
+
+  <!-- Foundation Leaf (Daily Consistency) -->
+  <path fill="#18181B" d="
+    M 84 172
+    C 84 136, 114 116, 144 116
+    C 144 152, 114 172, 84 172
+    Z
+  "/>
+
+  <!-- Soaring Apex Leaf (1% Better Every Day) -->
+  <path fill="#18181B" d="
+    M 124 132
+    C 124 76, 168 44, 214 44
+    C 214 100, 170 132, 124 132
+    Z
+  "/>
+</svg>

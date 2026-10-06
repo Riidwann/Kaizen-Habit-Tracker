@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 256" width="800" height="256" role="img" aria-labelledby="title-lockup-a">
+  <title id="title-lockup-a">KaizenFlow - Ensō 1% Horizontal Lockup</title>
+  <!-- Symbol -->
+  <g transform="translate(16, 28) scale(0.78)">
+    <path fill="none" stroke="#18181B" stroke-width="26" stroke-linecap="round" d="
+      M 178 184
+      A 86 86 0 1 1 184 76
+      L 208 52
+    "/>
+    <circle cx="180" cy="130" r="14" fill="#18181B" />
+  </g>
+  <!-- Brand Wordmark -->
+  <text x="248" y="146" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Plus Jakarta Sans', sans-serif" font-size="64" font-weight="700" letter-spacing="-0.03em" fill="#18181B">Kaizen<tspan font-weight="400" fill="#52525B">Flow</tspan></text>
+  <!-- Tagline -->
+  <text x="250" y="182" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="500" letter-spacing="0.18em" fill="#71717A">1% BETTER EVERY DAY</text>
+</svg>

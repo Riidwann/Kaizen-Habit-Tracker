@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title-nenrin">
+  <title id="title-nenrin">Nenrin - The Compounding Growth Rings</title>
+  <!-- Focal Origin Pebble (2-Minute Rule / Day 1 Action) -->
+  <circle cx="68" cy="188" r="14" fill="#18181B" />
+
+  <!-- Tier 1: Micro Consistency Arc -->
+  <path fill="none" stroke="#18181B" stroke-width="22" stroke-linecap="round" d="
+    M 116 188
+    A 48 48 0 0 0 68 140
+  "/>
+
+  <!-- Tier 2: Habit Solidification Arc -->
+  <path fill="none" stroke="#18181B" stroke-width="22" stroke-linecap="round" d="
+    M 158 188
+    A 90 90 0 0 0 68 98
+  "/>
+
+  <!-- Tier 3: 37x Compounding Transformation Arc -->
+  <path fill="none" stroke="#18181B" stroke-width="22" stroke-linecap="round" d="
+    M 200 188
+    A 132 132 0 0 0 68 56
+  "/>
+</svg>
