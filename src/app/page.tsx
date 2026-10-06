@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "@/components/layout/Header";
+import { SplashScreen } from "@/components/layout/SplashScreen";
 import { TabNavigation, TabId } from "@/components/layout/TabNavigation";
 import { usePwaInstall } from "@/hooks/usePwaInstall";
 
@@ -89,6 +90,23 @@ export default function HomePage() {
   const [isGuideModalOpen, setIsGuideModalOpen] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [drawerTab, setDrawerTab] = useState<DrawerTab>("todo");
+  const [showSplash, setShowSplash] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const seen = sessionStorage.getItem("kaizenflow_splash_seen");
+      if (!seen) {
+        setShowSplash(true);
+      }
+    }
+  }, []);
+
+  const handleSplashComplete = useCallback(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("kaizenflow_splash_seen", "1");
+    }
+    setShowSplash(false);
+  }, []);
 
   // Initialize Controllers
   const goalsController = useGoalsController();
@@ -260,6 +278,9 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-sand-50 dark:bg-charcoal-950 text-charcoal-900 dark:text-sand-100 transition-colors overflow-x-hidden">
+      {/* 0. Animated Zen Splash Screen on initial launch */}
+      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+
       {/* 1. Zen Japandi Header */}
       <Header
         currentStreak={reflectionController.stats.currentStreak}
