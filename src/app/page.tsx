@@ -17,9 +17,9 @@ import {
 import { LocalStorageSanctuaryRepository } from "@/modules/sanctuary/infrastructure/LocalStorageSanctuaryRepository";
 import { useReflectionController } from "@/modules/reflection";
 import { useBackupController } from "@/modules/backup";
-import type { DrawerTab } from "@/components/layout/SlideOverDrawer";
-import { useTodoController } from "@/modules/todo";
-import { useRoutineController } from "@/modules/routines";
+import { SlideOverDrawer, type DrawerTab } from "@/components/layout/SlideOverDrawer";
+import { useTodoController, TodoListPanel } from "@/modules/todo";
+import { useRoutineController, RoutineSchedulePanel } from "@/modules/routines";
 import {
   useRewardController,
   SelfRewardBanner,
@@ -42,18 +42,6 @@ const DataBackupModal = dynamic(
 );
 const KaizenGuideModal = dynamic(
   () => import("@/components/layout/KaizenGuideModal").then((mod) => mod.KaizenGuideModal),
-  { ssr: false }
-);
-const SlideOverDrawer = dynamic(
-  () => import("@/components/layout/SlideOverDrawer").then((mod) => mod.SlideOverDrawer),
-  { ssr: false }
-);
-const TodoListPanel = dynamic(
-  () => import("@/modules/todo").then((mod) => mod.TodoListPanel),
-  { ssr: false }
-);
-const RoutineSchedulePanel = dynamic(
-  () => import("@/modules/routines").then((mod) => mod.RoutineSchedulePanel),
   { ssr: false }
 );
 
@@ -90,22 +78,34 @@ export default function HomePage() {
   const [isGuideModalOpen, setIsGuideModalOpen] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [drawerTab, setDrawerTab] = useState<DrawerTab>("todo");
-  const [showSplash, setShowSplash] = useState<boolean>(false);
-
-  useEffect(() => {
+  const [showSplash, setShowSplash] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
-      const seen = sessionStorage.getItem("kaizenflow_splash_seen");
-      if (!seen) {
-        setShowSplash(true);
-      }
+      return !sessionStorage.getItem("kaizenflow_splash_seen");
     }
-  }, []);
+    return true;
+  });
 
   const handleSplashComplete = useCallback(() => {
     if (typeof window !== "undefined") {
       sessionStorage.setItem("kaizenflow_splash_seen", "1");
     }
     setShowSplash(false);
+  }, []);
+
+  // Idle preloader for dynamic modal chunks to guarantee instant 0-delay modal opening
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const preloadModals = () => {
+        import("@/modules/goals").catch(() => {});
+        import("@/modules/reflection").catch(() => {});
+        import("@/modules/backup").catch(() => {});
+      };
+      if ("requestIdleCallback" in window) {
+        (window as any).requestIdleCallback(preloadModals);
+      } else {
+        setTimeout(preloadModals, 1200);
+      }
+    }
   }, []);
 
   // Initialize Controllers

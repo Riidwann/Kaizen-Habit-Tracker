@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Modal } from "@/shared/presentation/Modal";
 import { Button } from "@/shared/presentation/Button";
 import { Input, Textarea } from "@/shared/presentation/Input";
@@ -97,6 +97,124 @@ const COLOR_OPTIONS: Array<{
     previewBg: "bg-sand-400",
   },
 ];
+
+interface StepProgressBarProps {
+  step: 1 | 2 | 3 | 4;
+  isInitialGoal: boolean;
+}
+
+const StepProgressBar = React.memo<StepProgressBarProps>(({ step, isInitialGoal }) => {
+  return (
+    <div>
+      <div className="flex items-center justify-between text-xs text-charcoal-500 dark:text-sand-400 font-medium mb-1.5">
+        <span>
+          Langkah {step} dari 4:{" "}
+          {step === 1 && "Target & Kategori"}
+          {step === 2 && "Motivasi Utama (Alasan Anda)"}
+          {step === 3 && (isInitialGoal ? "Tonggak Pencapaian" : "Tonggak Pencapaian Pertama")}
+          {step === 4 && "Kebiasaan Mikro 2-Menit"}
+        </span>
+        <span className="font-semibold">{step * 25}%</span>
+      </div>
+      <div className="w-full bg-sand-200 dark:bg-charcoal-800 h-1.5 rounded-full overflow-hidden">
+        <div
+          className="bg-sage-600 h-full rounded-full transition-all duration-300 ease-out"
+          style={{ width: `${step * 25}%` }}
+        />
+      </div>
+    </div>
+  );
+});
+StepProgressBar.displayName = "StepProgressBar";
+
+interface CategoryCardProps {
+  cat: GoalCategoryMeta;
+  isSelected: boolean;
+  onSelect: (id: GoalCategory) => void;
+  onDelete?: (id: string) => void | boolean | Promise<void | boolean>;
+}
+
+const CategoryCard = React.memo<CategoryCardProps>(({ cat, isSelected, onSelect, onDelete }) => {
+  const Icon = CATEGORY_ICONS[cat.id] || Tag;
+
+  return (
+    <div className="relative group">
+      <button
+        type="button"
+        onClick={() => onSelect(cat.id)}
+        className={cn(
+          "w-full flex flex-col justify-between p-3 rounded-xl border text-left transition-all min-h-[76px]",
+          "hover:border-sage-400 dark:hover:border-sage-600",
+          isSelected
+            ? "border-sage-600 bg-sage-50/60 dark:bg-sage-950/40 ring-2 ring-sage-500/20"
+            : "border-sand-200 dark:border-charcoal-800 bg-white dark:bg-charcoal-900"
+        )}
+      >
+        <div className="flex items-center gap-1.5 min-w-0 pr-6">
+          <Icon
+            className={cn(
+              "w-4 h-4 shrink-0",
+              isSelected
+                ? "text-sage-600 dark:text-sage-400"
+                : "text-charcoal-400 dark:text-sand-400"
+            )}
+          />
+          <span className="text-xs font-semibold text-charcoal-900 dark:text-sand-100 truncate">
+            {cat.label.split(" & ")[0]}
+          </span>
+        </div>
+        <span className="text-[11px] text-charcoal-500 dark:text-sand-400 line-clamp-1">
+          {cat.description}
+        </span>
+      </button>
+
+      {cat.isCustom && onDelete && (
+        <button
+          type="button"
+          onClick={async (e) => {
+            e.stopPropagation();
+            await onDelete(cat.id);
+          }}
+          className="absolute top-2 right-2 p-1.5 rounded-lg text-charcoal-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors focus:outline-none focus:ring-1 focus:ring-rose-500 z-10"
+          title="Hapus Kategori"
+          aria-label={`Hapus kategori ${cat.label}`}
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      )}
+    </div>
+  );
+});
+CategoryCard.displayName = "CategoryCard";
+
+interface CategoryGridProps {
+  categoryList: GoalCategoryMeta[];
+  selectedCategory: GoalCategory;
+  onSelectCategory: (id: GoalCategory) => void;
+  onDeleteCategory?: (id: string) => void | boolean | Promise<void | boolean>;
+}
+
+const CategoryGrid = React.memo<CategoryGridProps>(({
+  categoryList,
+  selectedCategory,
+  onSelectCategory,
+  onDeleteCategory,
+}) => {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+      {categoryList.map((cat) => (
+        <CategoryCard
+          key={cat.id}
+          cat={cat}
+          isSelected={selectedCategory === cat.id}
+          onSelect={onSelectCategory}
+          onDelete={onDeleteCategory}
+        />
+      ))}
+    </div>
+  );
+});
+CategoryGrid.displayName = "CategoryGrid";
 
 export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
   isOpen,
@@ -221,6 +339,20 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
     setCategoryError("");
   };
 
+  const handleSelectCategory = useCallback((id: GoalCategory) => {
+    setCategory(id);
+  }, []);
+
+  const handleDeleteCategory = useCallback(
+    async (id: string) => {
+      if (onDeleteCategory) {
+        await onDeleteCategory(id);
+        setCategory((prev) => (prev === id ? "health" : prev));
+      }
+    },
+    [onDeleteCategory]
+  );
+
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const finalMilestones =
@@ -260,24 +392,7 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
     >
       <div className="flex flex-col gap-6">
         {/* Step Progress Bar */}
-        <div>
-          <div className="flex items-center justify-between text-xs text-charcoal-500 dark:text-sand-400 font-medium mb-1.5">
-            <span>
-              Langkah {step} dari 4:{" "}
-              {step === 1 && "Target & Kategori"}
-              {step === 2 && "Motivasi Utama (Alasan Anda)"}
-              {step === 3 && (initialGoal ? "Tonggak Pencapaian" : "Tonggak Pencapaian Pertama")}
-              {step === 4 && "Kebiasaan Mikro 2-Menit"}
-            </span>
-            <span className="font-semibold">{step * 25}%</span>
-          </div>
-          <div className="w-full bg-sand-200 dark:bg-charcoal-800 h-1.5 rounded-full overflow-hidden">
-            <div
-              className="bg-sage-600 h-full rounded-full transition-all duration-300 ease-out"
-              style={{ width: `${step * 25}%` }}
-            />
-          </div>
-        </div>
+        <StepProgressBar step={step} isInitialGoal={Boolean(initialGoal)} />
 
         {/* Step 1: Vision Title & Category */}
         {step === 1 && (
@@ -397,62 +512,12 @@ export const GoalForgeWizard: React.FC<GoalForgeWizardProps> = ({
               )}
 
               {/* Categories Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                {categoryList.map((cat) => {
-                  const Icon = CATEGORY_ICONS[cat.id] || Tag;
-                  const isSelected = category === cat.id;
-                  return (
-                    <div key={cat.id} className="relative group">
-                      <button
-                        type="button"
-                        onClick={() => setCategory(cat.id)}
-                        className={cn(
-                          "w-full flex flex-col justify-between p-3 rounded-xl border text-left transition-all min-h-[76px]",
-                          "hover:border-sage-400 dark:hover:border-sage-600",
-                          isSelected
-                            ? "border-sage-600 bg-sage-50/60 dark:bg-sage-950/40 ring-2 ring-sage-500/20"
-                            : "border-sand-200 dark:border-charcoal-800 bg-white dark:bg-charcoal-900"
-                        )}
-                      >
-                        <div className="flex items-center gap-1.5 min-w-0 pr-6">
-                          <Icon
-                            className={cn(
-                              "w-4 h-4 shrink-0",
-                              isSelected
-                                ? "text-sage-600 dark:text-sage-400"
-                                : "text-charcoal-400 dark:text-sand-400"
-                            )}
-                          />
-                          <span className="text-xs font-semibold text-charcoal-900 dark:text-sand-100 truncate">
-                            {cat.label.split(" & ")[0]}
-                          </span>
-                        </div>
-                        <span className="text-[11px] text-charcoal-500 dark:text-sand-400 line-clamp-1">
-                          {cat.description}
-                        </span>
-                      </button>
-
-                      {cat.isCustom && onDeleteCategory && (
-                        <button
-                          type="button"
-                          onClick={async (e) => {
-                            e.stopPropagation();
-                            await onDeleteCategory(cat.id);
-                            if (category === cat.id) {
-                              setCategory("health");
-                            }
-                          }}
-                          className="absolute top-2 right-2 p-1.5 rounded-lg text-charcoal-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors focus:outline-none focus:ring-1 focus:ring-rose-500 z-10"
-                          title="Hapus Kategori"
-                          aria-label={`Hapus kategori ${cat.label}`}
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+              <CategoryGrid
+                categoryList={categoryList}
+                selectedCategory={category}
+                onSelectCategory={handleSelectCategory}
+                onDeleteCategory={onDeleteCategory ? handleDeleteCategory : undefined}
+              />
             </div>
           </div>
         )}

@@ -99,9 +99,9 @@ export const SlideOverDrawer: React.FC<SlideOverDrawerProps> = ({
             initial="hidden"
             animate="visible"
             exit="exit"
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
-              "relative z-10 flex flex-col bg-white dark:bg-charcoal-900 shadow-2xl",
+              "relative z-10 flex flex-col bg-white dark:bg-charcoal-900 shadow-2xl transform-gpu will-change-transform",
               "border-sand-200/80 dark:border-charcoal-800",
               // Mobile layout: Bottom sheet
               "w-full max-h-[88vh] mt-auto rounded-t-3xl border-t",

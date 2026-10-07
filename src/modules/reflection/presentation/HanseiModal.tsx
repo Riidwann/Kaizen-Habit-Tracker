@@ -18,6 +18,17 @@ export interface HanseiModalProps {
   className?: string;
 }
 
+const HanseiBanner = React.memo(() => (
+  <div className="rounded-xl p-3.5 bg-charcoal-800/80 border border-charcoal-700/60 flex items-start gap-3">
+    <Moon className="w-5 h-5 text-amber-300 mt-0.5 shrink-0" />
+    <p className="text-xs text-sand-300 leading-relaxed">
+      <span className="font-semibold text-sand-100">Hansei (反省)</span> adalah ritual penutup hari.
+      Bukan untuk menghakimi diri, melainkan untuk merayakan 1 mikro-kemenangan dan menentukan 1 penyesuaian kecil tanpa rasa bersalah.
+    </p>
+  </div>
+));
+HanseiBanner.displayName = "HanseiBanner";
+
 export const HanseiModal: React.FC<HanseiModalProps> = ({
   isOpen,
   onClose,
@@ -39,6 +50,16 @@ export const HanseiModal: React.FC<HanseiModalProps> = ({
       setError(null);
     }
   }, [isOpen, initialWin, initialAdjustment]);
+
+  const handleWinChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setWinOfTheDay(e.target.value);
+    if (error) setError(null);
+  };
+
+  const handleAdjustmentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setTomorrowAdjustment(e.target.value);
+    if (error) setError(null);
+  };
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -83,13 +104,7 @@ export const HanseiModal: React.FC<HanseiModalProps> = ({
     >
       <form onSubmit={handleSubmit} className="space-y-5 pt-2">
         {/* Zen Encouragement Banner */}
-        <div className="rounded-xl p-3.5 bg-charcoal-800/80 border border-charcoal-700/60 flex items-start gap-3">
-          <Moon className="w-5 h-5 text-amber-300 mt-0.5 shrink-0" />
-          <p className="text-xs text-sand-300 leading-relaxed">
-            <span className="font-semibold text-sand-100">Hansei (反省)</span> adalah ritual penutup hari.
-            Bukan untuk menghakimi diri, melainkan untuk merayakan 1 mikro-kemenangan dan menentukan 1 penyesuaian kecil tanpa rasa bersalah.
-          </p>
-        </div>
+        <HanseiBanner />
 
         {/* Question 1: Micro-Win */}
         <div className="space-y-2">
@@ -100,10 +115,7 @@ export const HanseiModal: React.FC<HanseiModalProps> = ({
           <textarea
             rows={2}
             value={winOfTheDay}
-            onChange={(e) => {
-              setWinOfTheDay(e.target.value);
-              if (error) setError(null);
-            }}
+            onChange={handleWinChange}
             placeholder="1 hal kecil yang berhasil saya lakukan hari ini... (contoh: berjalan 2 menit atau minum air)"
             className="w-full rounded-xl bg-charcoal-950/70 border border-charcoal-700/80 p-3 text-sm text-sand-100 placeholder:text-sand-400/80 focus:outline-none focus:ring-2 focus:ring-sage-400 focus:border-transparent transition-all resize-none"
           />
@@ -118,10 +130,7 @@ export const HanseiModal: React.FC<HanseiModalProps> = ({
           <textarea
             rows={2}
             value={tomorrowAdjustment}
-            onChange={(e) => {
-              setTomorrowAdjustment(e.target.value);
-              if (error) setError(null);
-            }}
+            onChange={handleAdjustmentChange}
             placeholder="1 penyesuaian 1% untuk esok hari... (contoh: siapkan sepatu di depan pintu malam ini)"
             className="w-full rounded-xl bg-charcoal-950/70 border border-charcoal-700/80 p-3 text-sm text-sand-100 placeholder:text-sand-400/80 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all resize-none"
           />

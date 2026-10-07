@@ -64,17 +64,17 @@ export const Modal: React.FC<ModalProps> = ({
             data-testid="modal-backdrop"
           />
 
-          {/* Dialog Container */}
+          {/* Dialog Container with GPU acceleration */}
           <motion.div
             key="modal-dialog"
-            initial={{ opacity: 0, scale: 0.96, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: 8 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 6 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             className={cn(
               "relative w-full max-w-lg max-h-[92vh] flex flex-col rounded-2xl bg-white dark:bg-charcoal-900",
               "border border-sand-200/80 dark:border-charcoal-800",
-              "shadow-2xl z-10 p-4 sm:p-6",
+              "shadow-2xl z-10 p-4 sm:p-6 transform-gpu will-change-transform",
               className
             )}
           >

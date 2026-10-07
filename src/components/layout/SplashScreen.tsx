@@ -65,47 +65,49 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
               role="img"
               aria-label="KaizenFlow Tobi-Ishi K Monogram"
             >
-              {/* Grounded Habit Spine */}
-              <motion.rect
-                x="50"
-                y="42"
-                width="32"
-                height="172"
-                rx="16"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                className="fill-charcoal-900 dark:fill-sand-50"
-              />
-
-              {/* Upper Stepping Stone: 1% Continuous Growth */}
-              <g transform="translate(116, 114) rotate(-45)">
+              <g transform="translate(-3.8, 9.9)">
+                {/* Grounded Habit Spine */}
                 <motion.rect
-                  x="0"
-                  y="-16"
-                  width="122"
-                  height="32"
+                  x="50"
+                  y="42"
+                  width="32"
+                  height="172"
                   rx="16"
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
-                  className="fill-emerald-600 dark:fill-emerald-400"
-                />
-              </g>
-
-              {/* Lower Stepping Stone */}
-              <g transform="translate(116, 142) rotate(45)">
-                <motion.rect
-                  x="0"
-                  y="-16"
-                  width="94"
-                  height="32"
-                  rx="16"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.35, delay: 0.35, ease: "easeOut" }}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                   className="fill-charcoal-900 dark:fill-sand-50"
                 />
+
+                {/* Upper Stepping Stone: 1% Continuous Growth */}
+                <g transform="translate(116, 114) rotate(-45)">
+                  <motion.rect
+                    x="0"
+                    y="-16"
+                    width="122"
+                    height="32"
+                    rx="16"
+                    initial={{ opacity: 0, x: -30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+                    className="fill-emerald-600 dark:fill-emerald-400"
+                  />
+                </g>
+
+                {/* Lower Stepping Stone */}
+                <g transform="translate(116, 142) rotate(45)">
+                  <motion.rect
+                    x="0"
+                    y="-16"
+                    width="94"
+                    height="32"
+                    rx="16"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.35, delay: 0.35, ease: "easeOut" }}
+                    className="fill-charcoal-900 dark:fill-sand-50"
+                  />
+                </g>
               </g>
             </svg>
           </div>

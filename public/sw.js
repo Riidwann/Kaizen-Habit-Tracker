@@ -1,8 +1,11 @@
 // KaizenFlow Service Worker for Offline Habit Tracking
-const CACHE_NAME = "kaizenflow-v1";
+const CACHE_NAME = "kaizenflow-v2";
 const STATIC_ASSETS = [
   "/",
   "/manifest.json",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
+  "/icons/apple-touch-icon.png",
   "/icons/icon-192.svg",
   "/icons/icon-512.svg",
 ];
@@ -35,7 +38,7 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Fetch: Network-first for HTML navigation, Cache-first for static chunks
+// Fetch: Stale-While-Revalidate for instant launch, Cache-first for static chunks
 self.addEventListener("fetch", (event) => {
   const request = event.request;
 
@@ -44,21 +47,33 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Navigation requests (HTML pages)
+  // Navigation requests (HTML pages) - Instant cached response to dismiss OS splash immediately
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          return response;
-        })
-        .catch(async () => {
-          const cached = await caches.match(request);
-          if (cached) return cached;
+      caches.match(request).then((cachedResponse) => {
+        // Fetch latest version in background
+        const networkFetch = fetch(request)
+          .then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              const clone = networkResponse.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+            }
+            return networkResponse;
+          })
+          .catch(() => null);
+
+        // Return instant cached response if available (renders in < 30ms, zero OS freeze)
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+
+        // First visit / no cache: wait for network response or root cache fallback
+        return networkFetch.then(async (res) => {
+          if (res) return res;
           const rootCached = await caches.match("/");
           return rootCached || new Response("Offline", { status: 200, headers: { "Content-Type": "text/html" } });
-        })
+        });
+      })
     );
     return;
   }

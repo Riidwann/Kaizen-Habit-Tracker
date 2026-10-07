@@ -4,11 +4,12 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { SplashScreen } from "@/components/layout/SplashScreen";
 
 describe("SplashScreen", () => {
-  it("renders brand logo, wordmark, and tagline", () => {
-    render(<SplashScreen minDurationMs={1000} />);
+  it("renders brand logo with centered monogram, wordmark, and tagline", () => {
+    const { container } = render(<SplashScreen minDurationMs={1000} />);
     expect(screen.getByText("Kaizen")).toBeInTheDocument();
     expect(screen.getByText("Flow")).toBeInTheDocument();
     expect(screen.getByText(/1% BETTER EVERY DAY/i)).toBeInTheDocument();
+    expect(container.querySelector("g[transform='translate(-3.8, 9.9)']")).toBeInTheDocument();
   });
 
   it("calls onComplete when user taps the screen to skip", async () => {

@@ -34,15 +34,17 @@ export const TobiIshiLogo: React.FC<{ className?: string }> = ({ className = "w-
     className={cn("shrink-0", className)}
     aria-label="Tobi-Ishi K - KaizenFlow Logo"
   >
-    {/* Grounded Habit Spine */}
-    <rect x="50" y="42" width="32" height="172" rx="16" className="fill-charcoal-900 dark:fill-sand-50" />
-    {/* Upper Stepping Stone: 1% Continuous Growth Accent */}
-    <g transform="translate(116, 114) rotate(-45)">
-      <rect x="0" y="-16" width="122" height="32" rx="16" className="fill-emerald-600 dark:fill-emerald-400" />
-    </g>
-    {/* Lower Stepping Stone */}
-    <g transform="translate(116, 142) rotate(45)">
-      <rect x="0" y="-16" width="94" height="32" rx="16" className="fill-charcoal-900 dark:fill-sand-50" />
+    <g transform="translate(-3.8, 9.9)">
+      {/* Grounded Habit Spine */}
+      <rect x="50" y="42" width="32" height="172" rx="16" className="fill-charcoal-900 dark:fill-sand-50" />
+      {/* Upper Stepping Stone: 1% Continuous Growth Accent */}
+      <g transform="translate(116, 114) rotate(-45)">
+        <rect x="0" y="-16" width="122" height="32" rx="16" className="fill-emerald-600 dark:fill-emerald-400" />
+      </g>
+      {/* Lower Stepping Stone */}
+      <g transform="translate(116, 142) rotate(45)">
+        <rect x="0" y="-16" width="94" height="32" rx="16" className="fill-charcoal-900 dark:fill-sand-50" />
+      </g>
     </g>
   </svg>
 );

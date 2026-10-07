@@ -20,10 +20,12 @@ describe("Header with HeaderMenu", () => {
     expect(screen.getByRole("button", { name: /Switch to/i })).toBeInTheDocument();
   });
 
-  it("renders TobiIshiLogo (Concept B monogram) with correct aria-label and accessible graphic", () => {
+  it("renders TobiIshiLogo (Concept B monogram) with correct aria-label, accessible graphic, and centered symmetry", () => {
     render(<TobiIshiLogo />);
     const logo = screen.getByLabelText("Tobi-Ishi K - KaizenFlow Logo");
     expect(logo).toBeInTheDocument();
+    const centeredGroup = logo.querySelector("g[transform='translate(-3.8, 9.9)']");
+    expect(centeredGroup).toBeInTheDocument();
   });
 
   it("exports EnsoLogo as an alias to TobiIshiLogo for backward compatibility", () => {
