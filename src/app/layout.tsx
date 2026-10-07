@@ -46,10 +46,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js').catch(function(err) {
-                    console.log('SW registration note:', err);
-                  });
+                navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                  console.log('SW registration note:', err);
                 });
               }
             `,
