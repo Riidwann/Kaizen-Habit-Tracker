@@ -290,12 +290,12 @@ export const TodoListPanel: React.FC<TodoListPanelProps> = ({
             return (
               <motion.div
                 key={todo.id}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.18 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.12 }}
                 className={cn(
-                  "group flex items-start gap-2.5 p-3 rounded-2xl border transition-all",
+                  "group flex items-start gap-2.5 p-3 rounded-2xl border transition-colors",
                   todo.isCompleted
                     ? "bg-sand-100/50 dark:bg-charcoal-950/40 border-sand-200/50 dark:border-charcoal-800/60 opacity-80"
                     : "bg-white dark:bg-charcoal-900 border-sand-200/80 dark:border-charcoal-800 shadow-sm hover:border-sand-300 dark:hover:border-charcoal-700"

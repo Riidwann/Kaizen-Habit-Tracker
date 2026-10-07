@@ -9,7 +9,7 @@ describe("SplashScreen", () => {
     expect(screen.getByText("Kaizen")).toBeInTheDocument();
     expect(screen.getByText("Flow")).toBeInTheDocument();
     expect(screen.getByText(/1% BETTER EVERY DAY/i)).toBeInTheDocument();
-    expect(container.querySelector("g[transform='translate(-3.8, 9.9)']")).toBeInTheDocument();
+    expect(container.querySelector("g[transform='translate(-1, 0)']")).toBeInTheDocument();
   });
 
   it("calls onComplete when user taps the screen to skip", async () => {

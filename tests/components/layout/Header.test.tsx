@@ -24,7 +24,7 @@ describe("Header with HeaderMenu", () => {
     render(<TobiIshiLogo />);
     const logo = screen.getByLabelText("Tobi-Ishi K - KaizenFlow Logo");
     expect(logo).toBeInTheDocument();
-    const centeredGroup = logo.querySelector("g[transform='translate(-3.8, 9.9)']");
+    const centeredGroup = logo.querySelector("g[transform='translate(-1, 0)']");
     expect(centeredGroup).toBeInTheDocument();
   });
 

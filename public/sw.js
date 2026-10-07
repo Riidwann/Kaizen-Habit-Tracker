@@ -1,5 +1,5 @@
 // KaizenFlow Service Worker for Offline Habit Tracking
-const CACHE_NAME = "kaizenflow-v2";
+const CACHE_NAME = "kaizenflow-v3";
 const STATIC_ASSETS = [
   "/",
   "/manifest.json",
@@ -47,22 +47,22 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Navigation requests (HTML pages) - Instant cached response to dismiss OS splash immediately
+  // Navigation requests (HTML pages) - Instant cached response to dismiss OS splash immediately (< 20ms)
   if (request.mode === "navigate") {
     event.respondWith(
-      caches.match(request).then((cachedResponse) => {
+      caches.match("/", { ignoreSearch: true }).then((cachedResponse) => {
         // Fetch latest version in background
         const networkFetch = fetch(request)
           .then((networkResponse) => {
             if (networkResponse && networkResponse.status === 200) {
               const clone = networkResponse.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+              caches.open(CACHE_NAME).then((cache) => cache.put("/", clone));
             }
             return networkResponse;
           })
           .catch(() => null);
 
-        // Return instant cached response if available (renders in < 30ms, zero OS freeze)
+        // Return instant cached response if available (renders in < 20ms, zero OS freeze)
         if (cachedResponse) {
           return cachedResponse;
         }
@@ -70,7 +70,7 @@ self.addEventListener("fetch", (event) => {
         // First visit / no cache: wait for network response or root cache fallback
         return networkFetch.then(async (res) => {
           if (res) return res;
-          const rootCached = await caches.match("/");
+          const rootCached = await caches.match("/", { ignoreSearch: true });
           return rootCached || new Response("Offline", { status: 200, headers: { "Content-Type": "text/html" } });
         });
       })

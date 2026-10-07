@@ -82,7 +82,7 @@ export const SlideOverDrawer: React.FC<SlideOverDrawerProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
+          transition={{ duration: 0.16, ease: "easeOut" }}
           className="fixed inset-0 z-50 flex sm:justify-end"
         >
           {/* Backdrop with solid semi-transparent color - zero blur texture flicker */}
@@ -99,7 +99,7 @@ export const SlideOverDrawer: React.FC<SlideOverDrawerProps> = ({
             initial="hidden"
             animate="visible"
             exit="exit"
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.16, ease: "easeOut" }}
             className={cn(
               "relative z-10 flex flex-col bg-white dark:bg-charcoal-900 shadow-2xl transform-gpu will-change-transform",
               "border-sand-200/80 dark:border-charcoal-800",

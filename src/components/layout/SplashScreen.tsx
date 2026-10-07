@@ -12,7 +12,7 @@ export interface SplashScreenProps {
 export const SplashScreen: React.FC<SplashScreenProps> = ({
   onComplete,
   forceShow = false,
-  minDurationMs = 1400,
+  minDurationMs = 850,
 }) => {
   const [isVisible, setIsVisible] = useState(true);
 
@@ -43,8 +43,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             }
           }}
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.03 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
           className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-sand-50 dark:bg-charcoal-950 cursor-pointer select-none"
         >
           {/* Animated Tobi-Ishi K Monogram */}
@@ -65,7 +65,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
               role="img"
               aria-label="KaizenFlow Tobi-Ishi K Monogram"
             >
-              <g transform="translate(-3.8, 9.9)">
+              <g transform="translate(-1, 0)">
                 {/* Grounded Habit Spine */}
                 <motion.rect
                   x="50"

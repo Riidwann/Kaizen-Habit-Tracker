@@ -34,7 +34,7 @@ export const TobiIshiLogo: React.FC<{ className?: string }> = ({ className = "w-
     className={cn("shrink-0", className)}
     aria-label="Tobi-Ishi K - KaizenFlow Logo"
   >
-    <g transform="translate(-3.8, 9.9)">
+    <g transform="translate(-1, 0)">
       {/* Grounded Habit Spine */}
       <rect x="50" y="42" width="32" height="172" rx="16" className="fill-charcoal-900 dark:fill-sand-50" />
       {/* Upper Stepping Stone: 1% Continuous Growth Accent */}
