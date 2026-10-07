@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: "KaizenFlow",
   },
   icons: {
-    icon: "/icons/icon-192.svg",
-    apple: "/icons/icon-192.svg",
+    icon: "/icons/icon-192.png",
+    apple: "/icons/apple-touch-icon.png",
   },
 };
 
@@ -36,7 +36,7 @@ export default function RootLayout({
     <html lang="id" className="h-full scroll-smooth">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>

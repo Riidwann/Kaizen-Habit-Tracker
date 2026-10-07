@@ -53,7 +53,8 @@ describe("Environment & Next.js Configuration", () => {
     const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
     expect(manifest.background_color).toBe("#FDFBF7");
     expect(manifest.theme_color).toBe("#121214");
-    expect(manifest.icons).toHaveLength(2);
+    expect(manifest.icons.length).toBeGreaterThanOrEqual(2);
+    expect(manifest.icons.some((i: any) => i.src === "/icons/icon-192.png")).toBe(true);
   });
 });
 
